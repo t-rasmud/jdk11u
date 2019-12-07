@@ -1362,35 +1362,37 @@ Node* GraphKit::null_check_common(Node* value, BasicType type,
 
   // Cast obj to not-null on this path, if there is no null_control.
   // (If there is a null_control, a non-null value may come back to haunt us.)
-  if (type == T_OBJECT) {
-    Node* cast = cast_not_null(value, false);
-    if (null_control == NULL || (*null_control) == top())
-      replace_in_map(value, cast);
-    value = cast;
-  }
-
-  return value;
+  return cast_not_null(value, (null_control == NULL || (*null_control) == top()));
 }
 
 
 //------------------------------cast_not_null----------------------------------
 // Cast obj to not-null on this path
 Node* GraphKit::cast_not_null(Node* obj, bool do_replace_in_map) {
-  const Type *t = _gvn.type(obj);
-  const Type *t_not_null = t->join_speculative(TypePtr::NOTNULL);
-  // Object is already not-null?
-  if( t == t_not_null ) return obj;
-
-  Node *cast = new CastPPNode(obj,t_not_null);
-  cast->init_req(0, control());
-  cast = _gvn.transform( cast );
+  Node* cast = NULL;
+  const Type* t = _gvn.type(obj);
+  if (t->make_ptr() != NULL) {
+    const Type* t_not_null = t->join_speculative(TypePtr::NOTNULL);
+    // Object is already not-null?
+    if (t == t_not_null) {
+      return obj;
+    }
+    cast = ConstraintCastNode::make_cast(Op_CastPP, control(), obj, t_not_null, false);
+  } else if (t->isa_int() != NULL) {
+    cast = ConstraintCastNode::make_cast(Op_CastII, control(), obj, TypeInt::INT, true);
+  } else if (t->isa_long() != NULL) {
+    cast = ConstraintCastNode::make_cast(Op_CastLL, control(), obj, TypeLong::LONG, true);
+  } else {
+    fatal("unexpected type: %s", type2name(t->basic_type()));
+  }
+  cast = _gvn.transform(cast);
 
   // Scan for instances of 'obj' in the current JVM mapping.
   // These instances are known to be not-null after the test.
-  if (do_replace_in_map)
+  if (do_replace_in_map) {
     replace_in_map(obj, cast);
-
-  return cast;                  // Return casted value
+  }
+  return cast;
 }
 
 // Sometimes in intrinsics, we implicitly know an object is not null
@@ -1489,18 +1491,19 @@ Node* GraphKit::make_load(Node* ctl, Node* adr, const Type* t, BasicType bt,
                           LoadNode::ControlDependency control_dependency,
                           bool require_atomic_access,
                           bool unaligned,
-                          bool mismatched) {
+                          bool mismatched,
+                          bool unsafe) {
   assert(adr_idx != Compile::AliasIdxTop, "use other make_load factory" );
   const TypePtr* adr_type = NULL; // debug-mode-only argument
   debug_only(adr_type = C->get_adr_type(adr_idx));
   Node* mem = memory(adr_idx);
   Node* ld;
   if (require_atomic_access && bt == T_LONG) {
-    ld = LoadLNode::make_atomic(ctl, mem, adr, adr_type, t, mo, control_dependency, unaligned, mismatched);
+    ld = LoadLNode::make_atomic(ctl, mem, adr, adr_type, t, mo, control_dependency, unaligned, mismatched, unsafe);
   } else if (require_atomic_access && bt == T_DOUBLE) {
-    ld = LoadDNode::make_atomic(ctl, mem, adr, adr_type, t, mo, control_dependency, unaligned, mismatched);
+    ld = LoadDNode::make_atomic(ctl, mem, adr, adr_type, t, mo, control_dependency, unaligned, mismatched, unsafe);
   } else {
-    ld = LoadNode::make(_gvn, ctl, mem, adr, adr_type, t, bt, mo, control_dependency, unaligned, mismatched);
+    ld = LoadNode::make(_gvn, ctl, mem, adr, adr_type, t, bt, mo, control_dependency, unaligned, mismatched, unsafe);
   }
   ld = _gvn.transform(ld);
   if (((bt == T_OBJECT) && C->do_escape_analysis()) || C->eliminate_boxing()) {
@@ -1515,7 +1518,8 @@ Node* GraphKit::store_to_memory(Node* ctl, Node* adr, Node *val, BasicType bt,
                                 MemNode::MemOrd mo,
                                 bool require_atomic_access,
                                 bool unaligned,
-                                bool mismatched) {
+                                bool mismatched,
+                                bool unsafe) {
   assert(adr_idx != Compile::AliasIdxTop, "use other store_to_memory factory" );
   const TypePtr* adr_type = NULL;
   debug_only(adr_type = C->get_adr_type(adr_idx));
@@ -1533,6 +1537,9 @@ Node* GraphKit::store_to_memory(Node* ctl, Node* adr, Node *val, BasicType bt,
   }
   if (mismatched) {
     st->as_Store()->set_mismatched_access();
+  }
+  if (unsafe) {
+    st->as_Store()->set_unsafe_access();
   }
   st = _gvn.transform(st);
   set_memory(st, adr_idx);
@@ -1588,6 +1595,23 @@ Node* GraphKit::access_load_at(Node* obj,   // containing obj
 
   C2AccessValuePtr addr(adr, adr_type);
   C2Access access(this, decorators | C2_READ_ACCESS, bt, obj, addr);
+  if (access.is_raw()) {
+    return _barrier_set->BarrierSetC2::load_at(access, val_type);
+  } else {
+    return _barrier_set->load_at(access, val_type);
+  }
+}
+
+Node* GraphKit::access_load(Node* adr,   // actual adress to load val at
+                            const Type* val_type,
+                            BasicType bt,
+                            DecoratorSet decorators) {
+  if (stopped()) {
+    return top(); // Dead path ?
+  }
+
+  C2AccessValuePtr addr(adr, NULL);
+  C2Access access(this, decorators | C2_READ_ACCESS, bt, NULL, addr);
   if (access.is_raw()) {
     return _barrier_set->BarrierSetC2::load_at(access, val_type);
   } else {
@@ -1755,7 +1779,7 @@ void GraphKit::set_edges_for_java_call(CallJavaNode* call, bool must_throw, bool
   //return xcall;   // no need, caller already has it
 }
 
-Node* GraphKit::set_results_for_java_call(CallJavaNode* call, bool separate_io_proj) {
+Node* GraphKit::set_results_for_java_call(CallJavaNode* call, bool separate_io_proj, bool deoptimize) {
   if (stopped())  return top();  // maybe the call folded up?
 
   // Capture the return value, if any.
@@ -1768,7 +1792,7 @@ Node* GraphKit::set_results_for_java_call(CallJavaNode* call, bool separate_io_p
   // Note:  Since any out-of-line call can produce an exception,
   // we always insert an I_O projection from the call into the result.
 
-  make_slow_call_ex(call, env()->Throwable_klass(), separate_io_proj);
+  make_slow_call_ex(call, env()->Throwable_klass(), separate_io_proj, deoptimize);
 
   if (separate_io_proj) {
     // The caller requested separate projections be used by the fall
@@ -2555,7 +2579,7 @@ void GraphKit::make_slow_call_ex(Node* call, ciInstanceKlass* ex_klass, bool sep
                       Deoptimization::Action_none);
       } else {
         // Create an exception state also.
-        // Use an exact type if the caller has specified a specific exception.
+        // Use an exact type if the caller has a specific exception.
         const Type* ex_type = TypeOopPtr::make_from_klass_unique(ex_klass)->cast_to_ptr_type(TypePtr::NotNull);
         Node*       ex_oop  = new CreateExNode(ex_type, control(), i_o);
         add_exception_state(make_exception_state(_gvn.transform(ex_oop)));

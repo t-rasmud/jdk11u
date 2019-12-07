@@ -542,7 +542,7 @@ define_pd_global(uint64_t,MaxRAM,                    1ULL*G);
   diagnostic(bool, LogEvents, true,                                         \
           "Enable the various ring buffer event logs")                      \
                                                                             \
-  diagnostic(uintx, LogEventsBufferEntries, 10,                             \
+  diagnostic(uintx, LogEventsBufferEntries, 20,                             \
           "Number of ring buffer event logs")                               \
           range(1, NOT_LP64(1*K) LP64_ONLY(1*M))                            \
                                                                             \
@@ -1965,13 +1965,13 @@ define_pd_global(uint64_t,MaxRAM,                    1ULL*G);
           range(0, 100)                                                     \
                                                                             \
   /* AOT parameters */                                                      \
-  product(bool, UseAOT, AOT_ONLY(true) NOT_AOT(false),                      \
+  experimental(bool, UseAOT, false,                                         \
           "Use AOT compiled files")                                         \
                                                                             \
-  product(ccstrlist, AOTLibrary, NULL,                                      \
+  experimental(ccstrlist, AOTLibrary, NULL,                                 \
           "AOT library")                                                    \
                                                                             \
-  product(bool, PrintAOT, false,                                            \
+  experimental(bool, PrintAOT, false,                                       \
           "Print used AOT klasses and methods")                             \
                                                                             \
   notproduct(bool, PrintAOTStatistics, false,                               \

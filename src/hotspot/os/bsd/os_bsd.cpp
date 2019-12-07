@@ -1279,15 +1279,27 @@ void * os::dll_load(const char *filename, char *ebuf, int ebuflen) {
 #ifdef STATIC_BUILD
   return os::get_default_process_handle();
 #else
+  log_info(os)("attempting shared library load of %s", filename);
+
   void * result= ::dlopen(filename, RTLD_LAZY);
   if (result != NULL) {
+    Events::log(NULL, "Loaded shared library %s", filename);
     // Successful loading
+    log_info(os)("shared library load of %s was successful", filename);
     return result;
   }
 
-  // Read system error message into ebuf
-  ::strncpy(ebuf, ::dlerror(), ebuflen-1);
-  ebuf[ebuflen-1]='\0';
+  const char* error_report = ::dlerror();
+  if (error_report == NULL) {
+    error_report = "dlerror returned no error description";
+  }
+  if (ebuf != NULL && ebuflen > 0) {
+    // Read system error message into ebuf
+    ::strncpy(ebuf, error_report, ebuflen-1);
+    ebuf[ebuflen-1]='\0';
+  }
+  Events::log(NULL, "Loading shared library %s failed, %s", filename, error_report);
+  log_info(os)("shared library load of %s failed, %s", filename, error_report);
 
   return NULL;
 #endif // STATIC_BUILD
@@ -1297,18 +1309,29 @@ void * os::dll_load(const char *filename, char *ebuf, int ebuflen) {
 #ifdef STATIC_BUILD
   return os::get_default_process_handle();
 #else
+  log_info(os)("attempting shared library load of %s", filename);
   void * result= ::dlopen(filename, RTLD_LAZY);
   if (result != NULL) {
+    Events::log(NULL, "Loaded shared library %s", filename);
     // Successful loading
+    log_info(os)("shared library load of %s was successful", filename);
     return result;
   }
 
   Elf32_Ehdr elf_head;
 
-  // Read system error message into ebuf
-  // It may or may not be overwritten below
-  ::strncpy(ebuf, ::dlerror(), ebuflen-1);
-  ebuf[ebuflen-1]='\0';
+  const char* const error_report = ::dlerror();
+  if (error_report == NULL) {
+    error_report = "dlerror returned no error description";
+  }
+  if (ebuf != NULL && ebuflen > 0) {
+    // Read system error message into ebuf
+    ::strncpy(ebuf, error_report, ebuflen-1);
+    ebuf[ebuflen-1]='\0';
+  }
+  Events::log(NULL, "Loading shared library %s failed, %s", filename, error_report);
+  log_info(os)("shared library load of %s failed, %s", filename, error_report);
+
   int diag_msg_max_length=ebuflen-strlen(ebuf);
   char* diag_msg_buf=ebuf+strlen(ebuf);
 
@@ -1956,6 +1979,7 @@ bool os::pd_commit_memory(char* addr, size_t size, bool exec) {
   int prot = exec ? PROT_READ|PROT_WRITE|PROT_EXEC : PROT_READ|PROT_WRITE;
 #ifdef __OpenBSD__
   // XXX: Work-around mmap/MAP_FIXED bug temporarily on OpenBSD
+  Events::log(NULL, "Protecting memory [" INTPTR_FORMAT "," INTPTR_FORMAT "] with protection modes %x", p2i(addr), p2i(addr+size), prot);
   if (::mprotect(addr, size, prot) == 0) {
     return true;
   }
@@ -2040,6 +2064,7 @@ char *os::scan_pages(char *start, char* end, page_info* page_expected, page_info
 bool os::pd_uncommit_memory(char* addr, size_t size) {
 #ifdef __OpenBSD__
   // XXX: Work-around mmap/MAP_FIXED bug temporarily on OpenBSD
+  Events::log(NULL, "Protecting memory [" INTPTR_FORMAT "," INTPTR_FORMAT "] with PROT_NONE", p2i(addr), p2i(addr+size));
   return ::mprotect(addr, size, PROT_NONE) == 0;
 #else
   uintptr_t res = (uintptr_t) ::mmap(addr, size, PROT_NONE,
@@ -2108,6 +2133,7 @@ static bool bsd_mprotect(char* addr, size_t size, int prot) {
   assert(addr == bottom, "sanity check");
 
   size = align_up(pointer_delta(addr, bottom, 1) + size, os::Bsd::page_size());
+  Events::log(NULL, "Protecting memory [" INTPTR_FORMAT "," INTPTR_FORMAT "] with protection modes %x", p2i(bottom), p2i(bottom+size), prot);
   return ::mprotect(bottom, size, prot) == 0;
 }
 
@@ -3786,7 +3812,7 @@ int os::loadavg(double loadavg[], int nelem) {
 void os::pause() {
   char filename[MAX_PATH];
   if (PauseAtStartupFile && PauseAtStartupFile[0]) {
-    jio_snprintf(filename, MAX_PATH, PauseAtStartupFile);
+    jio_snprintf(filename, MAX_PATH, "%s", PauseAtStartupFile);
   } else {
     jio_snprintf(filename, MAX_PATH, "./vm.paused.%d", current_process_id());
   }

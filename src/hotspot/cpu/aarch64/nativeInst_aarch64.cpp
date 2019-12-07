@@ -230,7 +230,11 @@ void NativeCall::insert(address code_pos, address entry) { Unimplemented(); }
 //-------------------------------------------------------------------
 
 void NativeMovConstReg::verify() {
-  // make sure code pattern is actually mov reg64, imm64 instructions
+  if (! (nativeInstruction_at(instruction_address())->is_movz() ||
+        is_adrp_at(instruction_address()) ||
+        is_ldr_literal_at(instruction_address())) ) {
+    fatal("should be MOVZ or ADRP or LDR (literal)");
+  }
 }
 
 
@@ -280,8 +284,6 @@ void NativeMovConstReg::print() {
 }
 
 //-------------------------------------------------------------------
-
-address NativeMovRegMem::instruction_address() const      { return addr_at(instruction_offset); }
 
 int NativeMovRegMem::offset() const  {
   address pc = instruction_address();

@@ -1441,7 +1441,11 @@ public final @UsesObjectEquals class Pattern
         localTCNCount = 0;
 
         if (!pattern.isEmpty()) {
-            compile();
+            try {
+                compile();
+            } catch (StackOverflowError soe) {
+                throw error("Stack overflow during pattern compilation");
+            }
         } else {
             root = new Start(lastAccept);
             matchRoot = lastAccept;
@@ -1980,6 +1984,10 @@ loop:   for(int x=0, offset=0; x<nCodePoints; x++, offset+=len) {
         int ch = temp[cursor++];
         while (ch != 0 && !isLineSeparator(ch))
             ch = temp[cursor++];
+        if (ch == 0 && cursor > patternLength) {
+            cursor = patternLength;
+            ch = temp[cursor++];
+        }
         return ch;
     }
 
@@ -1990,6 +1998,10 @@ loop:   for(int x=0, offset=0; x<nCodePoints; x++, offset+=len) {
         int ch = temp[++cursor];
         while (ch != 0 && !isLineSeparator(ch))
             ch = temp[++cursor];
+        if (ch == 0 && cursor > patternLength) {
+            cursor = patternLength;
+            ch = temp[cursor];
+        }
         return ch;
     }
 
@@ -3424,9 +3436,10 @@ loop:   for(int x=0, offset=0; x<nCodePoints; x++, offset+=len) {
     private int N() {
         if (read() == '{') {
             int i = cursor;
-            while (cursor < patternLength && read() != '}') {}
-            if (cursor > patternLength)
-                throw error("Unclosed character name escape sequence");
+            while (read() != '}') {
+                if (cursor >= patternLength)
+                    throw error("Unclosed character name escape sequence");
+            }
             String name = new String(temp, i, cursor - i - 1);
             try {
                 return Character.codePointOf(name);

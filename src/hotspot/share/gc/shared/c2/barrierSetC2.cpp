@@ -27,7 +27,9 @@
 #include "opto/arraycopynode.hpp"
 #include "opto/graphKit.hpp"
 #include "opto/idealKit.hpp"
+#include "opto/macro.hpp"
 #include "opto/narrowptrnode.hpp"
+#include "opto/runtime.hpp"
 #include "utilities/macros.hpp"
 
 // By default this is a no-op.
@@ -72,6 +74,7 @@ Node* BarrierSetC2::store_at_resolved(C2Access& access, C2AccessValue& val) cons
 
   bool mismatched = (decorators & C2_MISMATCHED) != 0;
   bool unaligned = (decorators & C2_UNALIGNED) != 0;
+  bool unsafe = (decorators & C2_UNSAFE_ACCESS) != 0;
   bool requires_atomic_access = (decorators & MO_UNORDERED) == 0;
 
   bool in_native = (decorators & IN_NATIVE) != 0;
@@ -85,7 +88,7 @@ Node* BarrierSetC2::store_at_resolved(C2Access& access, C2AccessValue& val) cons
   MemNode::MemOrd mo = access.mem_node_mo();
 
   Node* store = kit->store_to_memory(kit->control(), access.addr().node(), val.node(), access.type(),
-                                     access.addr().type(), mo, requires_atomic_access, unaligned, mismatched);
+                                     access.addr().type(), mo, requires_atomic_access, unaligned, mismatched, unsafe);
   access.set_raw_access(store);
   return store;
 }
@@ -102,16 +105,22 @@ Node* BarrierSetC2::load_at_resolved(C2Access& access, const Type* val_type) con
   bool unaligned = (decorators & C2_UNALIGNED) != 0;
   bool control_dependent = (decorators & C2_CONTROL_DEPENDENT_LOAD) != 0;
   bool pinned = (decorators & C2_PINNED_LOAD) != 0;
+  bool unsafe = (decorators & C2_UNSAFE_ACCESS) != 0;
 
   bool in_native = (decorators & IN_NATIVE) != 0;
-  assert(!in_native, "not supported yet");
 
   MemNode::MemOrd mo = access.mem_node_mo();
   LoadNode::ControlDependency dep = pinned ? LoadNode::Pinned : LoadNode::DependsOnlyOnTest;
   Node* control = control_dependent ? kit->control() : NULL;
 
-  Node* load = kit->make_load(control, adr, val_type, access.type(), adr_type, mo,
-                              dep, requires_atomic_access, unaligned, mismatched);
+  Node* load;
+  if (in_native) {
+    load = kit->make_load(control, adr, val_type, access.type(), mo);
+  } else {
+    load = kit->make_load(control, adr, val_type, access.type(), adr_type, mo,
+                          dep, requires_atomic_access, unaligned, mismatched, unsafe);
+  }
+
   access.set_raw_access(load);
 
   return load;
@@ -119,10 +128,11 @@ Node* BarrierSetC2::load_at_resolved(C2Access& access, const Type* val_type) con
 
 class C2AccessFence: public StackObj {
   C2Access& _access;
+  Node* _leading_membar;
 
 public:
   C2AccessFence(C2Access& access) :
-    _access(access) {
+    _access(access), _leading_membar(NULL) {
     GraphKit* kit = access.kit();
     DecoratorSet decorators = access.decorators();
 
@@ -139,12 +149,12 @@ public:
       // into actual barriers on most machines, but we still need rest of
       // compiler to respect ordering.
       if (is_release) {
-        kit->insert_mem_bar(Op_MemBarRelease);
+        _leading_membar = kit->insert_mem_bar(Op_MemBarRelease);
       } else if (is_volatile) {
         if (support_IRIW_for_not_multiple_copy_atomic_cpu) {
-          kit->insert_mem_bar(Op_MemBarVolatile);
+          _leading_membar = kit->insert_mem_bar(Op_MemBarVolatile);
         } else {
-          kit->insert_mem_bar(Op_MemBarRelease);
+          _leading_membar = kit->insert_mem_bar(Op_MemBarRelease);
         }
       }
     } else if (is_write) {
@@ -152,7 +162,7 @@ public:
       // floating down past the volatile write.  Also prevents commoning
       // another volatile read.
       if (is_volatile || is_release) {
-        kit->insert_mem_bar(Op_MemBarRelease);
+        _leading_membar = kit->insert_mem_bar(Op_MemBarRelease);
       }
     } else {
       // Memory barrier to prevent normal and 'unsafe' accesses from
@@ -161,7 +171,7 @@ public:
       // so there's no problems making a strong assert about mixing users
       // of safe & unsafe memory.
       if (is_volatile && support_IRIW_for_not_multiple_copy_atomic_cpu) {
-        kit->insert_mem_bar(Op_MemBarVolatile);
+        _leading_membar = kit->insert_mem_bar(Op_MemBarVolatile);
       }
     }
 
@@ -196,20 +206,30 @@ public:
 
     if (is_atomic) {
       if (is_acquire || is_volatile) {
-        kit->insert_mem_bar(Op_MemBarAcquire);
+        Node* n = _access.raw_access();
+        Node* mb = kit->insert_mem_bar(Op_MemBarAcquire, n);
+        if (_leading_membar != NULL) {
+          MemBarNode::set_load_store_pair(_leading_membar->as_MemBar(), mb->as_MemBar());
+        }
       }
     } else if (is_write) {
       // If not multiple copy atomic, we do the MemBarVolatile before the load.
       if (is_volatile && !support_IRIW_for_not_multiple_copy_atomic_cpu) {
-        kit->insert_mem_bar(Op_MemBarVolatile); // Use fat membar
+        Node* n = _access.raw_access();
+        Node* mb = kit->insert_mem_bar(Op_MemBarVolatile, n); // Use fat membar
+        if (_leading_membar != NULL) {
+          MemBarNode::set_store_pair(_leading_membar->as_MemBar(), mb->as_MemBar());
+        }
       }
     } else {
       if (is_volatile || is_acquire) {
-        kit->insert_mem_bar(Op_MemBarAcquire, _access.raw_access());
+        Node* n = _access.raw_access();
+        assert(_leading_membar == NULL || support_IRIW_for_not_multiple_copy_atomic_cpu, "no leading membar expected");
+        Node* mb = kit->insert_mem_bar(Op_MemBarAcquire, n);
+        mb->as_MemBar()->set_trailing_load();
       }
     }
   }
-
 };
 
 Node* BarrierSetC2::store_at(C2Access& access, C2AccessValue& val) const {
@@ -585,4 +605,31 @@ void BarrierSetC2::clone(GraphKit* kit, Node* src, Node* dst, Node* size, bool i
   } else {
     kit->set_all_memory(n);
   }
+}
+
+#define XTOP LP64_ONLY(COMMA phase->top())
+
+void BarrierSetC2::clone_at_expansion(PhaseMacroExpand* phase, ArrayCopyNode* ac) const {
+  Node* ctrl = ac->in(TypeFunc::Control);
+  Node* mem = ac->in(TypeFunc::Memory);
+  Node* src = ac->in(ArrayCopyNode::Src);
+  Node* src_offset = ac->in(ArrayCopyNode::SrcPos);
+  Node* dest = ac->in(ArrayCopyNode::Dest);
+  Node* dest_offset = ac->in(ArrayCopyNode::DestPos);
+  Node* length = ac->in(ArrayCopyNode::Length);
+
+  assert (src_offset == NULL && dest_offset == NULL, "for clone offsets should be null");
+
+  const char* copyfunc_name = "arraycopy";
+  address     copyfunc_addr =
+          phase->basictype2arraycopy(T_LONG, NULL, NULL,
+                              true, copyfunc_name, true);
+
+  const TypePtr* raw_adr_type = TypeRawPtr::BOTTOM;
+  const TypeFunc* call_type = OptoRuntime::fast_arraycopy_Type();
+
+  Node* call = phase->make_leaf_call(ctrl, mem, call_type, copyfunc_addr, copyfunc_name, raw_adr_type, src, dest, length XTOP);
+  phase->transform_later(call);
+
+  phase->igvn().replace_node(ac, call);
 }

@@ -29,6 +29,8 @@ import org.checkerframework.checker.interning.qual.UsesObjectEquals;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
+import sun.security.util.SecurityConstants;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
@@ -166,14 +168,30 @@ public
      *
      * @exception SocketException if there is an error in the underlying protocol,
      * such as a TCP error.
+     *
+     * @throws SecurityException if {@code impl} is non-null and a security manager is set
+     * and its {@code checkPermission} method doesn't allow {@code NetPermission("setSocketImpl")}.
+     *
      * @since   1.1
      */
     protected Socket(SocketImpl impl) throws SocketException {
+        checkPermission(impl);
         this.impl = impl;
         if (impl != null) {
             checkOldImpl();
             this.impl.setSocket(this);
         }
+    }
+
+    private static Void checkPermission(SocketImpl impl) {
+        if (impl == null) {
+            return null;
+        }
+        SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(SecurityConstants.SET_SOCKETIMPL_PERMISSION);
+        }
+        return null;
     }
 
     /**

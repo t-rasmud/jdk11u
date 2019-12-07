@@ -2216,7 +2216,8 @@ public abstract class Calendar implements Serializable, Cloneable, Comparable<Ca
         }
 
         String calendarType = getCalendarType();
-        if (style == ALL_STYLES || isStandaloneStyle(style) || isNarrowFormatStyle(style)) {
+        if (style == ALL_STYLES || isStandaloneStyle(style) || isNarrowFormatStyle(style) ||
+            field == ERA && (style & SHORT) == SHORT) {
             Map<String, Integer> map;
             map = CalendarDataUtility.retrieveFieldValueNames(calendarType, field, style, locale);
 

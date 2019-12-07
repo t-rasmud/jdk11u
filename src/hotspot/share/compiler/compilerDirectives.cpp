@@ -398,13 +398,14 @@ bool DirectiveSet::is_intrinsic_disabled(const methodHandle& method) {
   size_t length = strlen(DisableIntrinsicOption);
   char* local_list = NEW_RESOURCE_ARRAY(char, length + 1);
   strncpy(local_list, DisableIntrinsicOption, length + 1);
+  char* save_ptr;
 
-  char* token = strtok(local_list, ",");
+  char* token = strtok_r(local_list, ",", &save_ptr);
   while (token != NULL) {
     if (strcmp(token, vmIntrinsics::name_at(id)) == 0) {
       return true;
     } else {
-      token = strtok(NULL, ",");
+      token = strtok_r(NULL, ",", &save_ptr);
     }
   }
 
@@ -442,7 +443,7 @@ void DirectivesStack::init() {
   char str[] = "*.*";
   const char* error_msg = NULL;
   _default_directives->add_match(str, error_msg);
-#ifdef COMPILER1
+#if defined(COMPILER1) || INCLUDE_JVMCI
   _default_directives->_c1_store->EnableOption = true;
 #endif
 #ifdef COMPILER2

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2017, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2018, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -142,6 +142,11 @@ static BOOL shouldUsePressAndHold() {
         fInputMethodLOCKABLE = NULL;
     }
 
+    if (rolloverTrackingArea != nil) {
+        [self removeTrackingArea:rolloverTrackingArea];
+        [rolloverTrackingArea release];
+        rolloverTrackingArea = nil;
+    }
 
     [super dealloc];
 }
@@ -282,7 +287,7 @@ static BOOL shouldUsePressAndHold() {
     // Allow TSM to look at the event and potentially send back NSTextInputClient messages.
     [self interpretKeyEvents:[NSArray arrayWithObject:event]];
 
-    if (fEnablePressAndHold && [event willBeHandledByComplexInputMethod] && 
+    if (fEnablePressAndHold && [event willBeHandledByComplexInputMethod] &&
         fInputMethodLOCKABLE)
     {
         fProcessingKeystroke = NO;
@@ -290,7 +295,7 @@ static BOOL shouldUsePressAndHold() {
             fInPressAndHold = YES;
             fPAHNeedsToSelect = YES;
         } else {
-            // Abandon input to reset IM and unblock input after canceling 
+            // Abandon input to reset IM and unblock input after canceling
             // input accented symbols
 
             switch([event keyCode]) {
@@ -1424,10 +1429,8 @@ Java_sun_lwawt_macosx_CPlatformView_nativeGetNSViewDisplayID
     JNF_COCOA_ENTER(env);
 
     NSView *view = (NSView *)jlong_to_ptr(viewPtr);
-    NSWindow *window = [view window];
-
     [ThreadUtilities performOnMainThreadWaiting:YES block:^(){
-
+        NSWindow *window = [view window];
         ret = (jint)[[AWTWindow getNSWindowDisplayID_AppKitThread: window] intValue];
     }];
 

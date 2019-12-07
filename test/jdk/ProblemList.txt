@@ -115,6 +115,7 @@
 # jdk_awt
 
 java/awt/event/MouseEvent/MouseClickTest/MouseClickTest.html 8168389 windows-all,macosx-all
+java/awt/event/KeyEvent/SwallowKeyEvents/SwallowKeyEvents.java 8224055 macosx-all
 java/awt/Focus/ActualFocusedWindowTest/ActualFocusedWindowBlockingTest.java 8168408 windows-all,macosx-all
 java/awt/Focus/FocusOwnerFrameOnClick/FocusOwnerFrameOnClick.java 8081489 generic-all
 java/awt/Focus/IconifiedFrameFocusChangeTest/IconifiedFrameFocusChangeTest.java 6849364 generic-all
@@ -178,7 +179,7 @@ java/awt/Focus/8073453/AWTFocusTransitionTest.java 8136517 macosx-all
 java/awt/Focus/8073453/SwingFocusTransitionTest.java 8136517 macosx-all
 java/awt/Focus/6981400/Test3.java 8173264 generic-all
 java/awt/event/KeyEvent/ExtendedKeyCode/ExtendedKeyCodeTest.java 8169476 windows-all
-java/awt/event/KeyEvent/KeyChar/KeyCharTest.java 8169474 windows-all
+java/awt/event/KeyEvent/KeyChar/KeyCharTest.java 8169474,8224055 macosx-all,windows-all
 java/awt/event/MouseEvent/SpuriousExitEnter/SpuriousExitEnter_3.java 6854300 generic-all
 java/awt/event/KeyEvent/ExtendedModifiersTest/ExtendedModifiersTest.java 8129778 generic-all
 java/awt/event/KeyEvent/KeyMaskTest/KeyMaskTest.java 8129778 generic-all
@@ -221,7 +222,7 @@ java/awt/font/TextLayout/CombiningPerf.java 8192931 generic-all
 java/awt/font/TextLayout/TextLayoutBounds.java 8169188 generic-all
 java/awt/font/StyledMetrics/BoldSpace.java 8198422 linux-all
 java/awt/FontMetrics/FontCrash.java 8198336 windows-all
-java/awt/FontMetrics/MaxAdvanceIsMax.java 8221305 solaris-all,macosx-all
+java/awt/FontMetrics/MaxAdvanceIsMax.java 8221305,8231495 solaris-all,macosx-all,linux-all
 java/awt/image/DrawImage/IncorrectAlphaSurface2SW.java 8056077 generic-all
 java/awt/image/DrawImage/IncorrectClipXorModeSW2Surface.java 8196025 windows-all
 java/awt/image/DrawImage/IncorrectClipXorModeSurface2Surface.java 8196025 windows-all
@@ -618,77 +619,44 @@ com/sun/nio/sctp/SctpChannel/SocketOptionTests.java             8141694 linux-al
 sun/security/pkcs11/ec/TestKeyFactory.java                      8026976 generic-all
 sun/security/pkcs11/Secmod/AddTrustedCert.java                  8180837 generic-all
 sun/security/pkcs11/tls/TestKeyMaterial.java                    8180837 generic-all
+sun/security/pkcs11/sslecc/ClientJSSEServerJSSE.java            8161536 generic-all
 
 sun/security/tools/keytool/ListKeychainStore.sh                 8156889 macosx-all
 
 sun/security/tools/jarsigner/warnings/BadKeyUsageTest.java      8026393 generic-all
 
+javax/net/ssl/ServerName/SSLEngineExplorerMatchedSNI.java       8212096 generic-all
 javax/net/ssl/DTLS/PacketLossRetransmission.java                8169086 macosx-x64
 javax/net/ssl/DTLS/RespondToRetransmit.java                     8169086 macosx-x64
 javax/net/ssl/DTLS/CipherSuite.java                             8202059 macosx-x64
 
 sun/security/provider/KeyStore/DKSTest.sh                       8180266 windows-all
 
-sun/security/pkcs11/Cipher/ReinitCipher.java                    8204203 windows-all
-sun/security/pkcs11/Cipher/TestPKCS5PaddingError.java           8204203 windows-all
-sun/security/pkcs11/Cipher/TestRSACipher.java                   8204203 windows-all
-sun/security/pkcs11/Cipher/TestRSACipherWrap.java               8204203 windows-all
-sun/security/pkcs11/Cipher/TestRawRSACipher.java                8204203 windows-all
-sun/security/pkcs11/Cipher/TestSymmCiphers.java                 8204203 windows-all
-sun/security/pkcs11/Cipher/TestSymmCiphersNoPad.java            8204203 windows-all
-sun/security/pkcs11/KeyAgreement/SupportedDHKeys.java           8204203 windows-all
-sun/security/pkcs11/KeyAgreement/TestDH.java                    8204203 windows-all
-sun/security/pkcs11/KeyAgreement/TestInterop.java               8204203 windows-all
-sun/security/pkcs11/KeyAgreement/TestShort.java                 8204203 windows-all
-sun/security/pkcs11/KeyAgreement/UnsupportedDHKeys.java         8204203 windows-all
-sun/security/pkcs11/KeyGenerator/DESParity.java                 8204203 windows-all
-sun/security/pkcs11/KeyGenerator/TestKeyGenerator.java          8204203 windows-all
-sun/security/pkcs11/KeyPairGenerator/TestDH2048.java            8204203 windows-all
-sun/security/pkcs11/KeyStore/SecretKeysBasic.sh                 8204203,8209398 generic-all
-sun/security/pkcs11/Mac/MacKAT.java                             8204203 windows-all
-sun/security/pkcs11/Mac/MacSameTest.java                        8204203 windows-all
-sun/security/pkcs11/Mac/ReinitMac.java                          8204203 windows-all
-sun/security/pkcs11/MessageDigest/ByteBuffers.java              8204203 windows-all
-sun/security/pkcs11/MessageDigest/DigestKAT.java                8204203 windows-all
-sun/security/pkcs11/MessageDigest/ReinitDigest.java             8204203 windows-all
-sun/security/pkcs11/MessageDigest/TestCloning.java              8204203 windows-all
-sun/security/pkcs11/Provider/ConfigQuotedString.sh              8204203 windows-all
-sun/security/pkcs11/Provider/Login.sh                           8204203 windows-all
-sun/security/pkcs11/SampleTest.java                             8204203 windows-all
-sun/security/pkcs11/Secmod/AddPrivateKey.java                   8204203 windows-all
-sun/security/pkcs11/Secmod/Crypto.java                          8204203 windows-all
-sun/security/pkcs11/Secmod/GetPrivateKey.java                   8204203 windows-all
-sun/security/pkcs11/Secmod/JksSetPrivateKey.java                8204203 windows-all
-sun/security/pkcs11/Secmod/LoadKeystore.java                    8204203 windows-all
-sun/security/pkcs11/Secmod/TestNssDbSqlite.java                 8204203 windows-all
-sun/security/pkcs11/SecureRandom/Basic.java                     8204203 windows-all
-sun/security/pkcs11/SecureRandom/TestDeserialization.java       8204203 windows-all
-sun/security/pkcs11/Serialize/SerializeProvider.java            8204203 windows-all
-sun/security/pkcs11/Signature/ByteBuffers.java                  8204203 windows-all
-sun/security/pkcs11/Signature/ReinitSignature.java              8204203 windows-all
-sun/security/pkcs11/Signature/TestDSA.java                      8204203 windows-all
-sun/security/pkcs11/Signature/TestDSAKeyLength.java             8204203 windows-all
-sun/security/pkcs11/Signature/TestRSAKeyLength.java             8204203 windows-all
-sun/security/pkcs11/ec/ReadCertificates.java                    8204203 windows-all
-sun/security/pkcs11/ec/ReadPKCS12.java                          8204203 windows-all
-sun/security/pkcs11/ec/TestCurves.java                          8204203 windows-all
-sun/security/pkcs11/ec/TestECDH.java                            8204203 windows-all
-sun/security/pkcs11/ec/TestECDH2.java                           8204203 windows-all
-sun/security/pkcs11/ec/TestECDSA.java                           8204203 windows-all
-sun/security/pkcs11/ec/TestECDSA2.java                          8204203 windows-all
-sun/security/pkcs11/ec/TestECGenSpec.java                       8204203 windows-all
-sun/security/pkcs11/rsa/KeyWrap.java                            8204203 windows-all
-sun/security/pkcs11/rsa/TestCACerts.java                        8204203 windows-all
-sun/security/pkcs11/rsa/TestKeyFactory.java                     8204203 windows-all
-sun/security/pkcs11/rsa/TestKeyPairGenerator.java               8204203 windows-all
-sun/security/pkcs11/rsa/TestSignatures.java                     8204203 windows-all
-sun/security/pkcs11/sslecc/ClientJSSEServerJSSE.java            8204203 windows-all
-sun/security/pkcs11/tls/TestLeadingZeroesP11.java               8204203 windows-all
-sun/security/pkcs11/tls/TestMasterSecret.java                   8204203 windows-all
-sun/security/pkcs11/tls/TestPRF.java                            8204203 windows-all
-sun/security/pkcs11/tls/TestPremaster.java                      8204203 windows-all
+sun/security/pkcs11/KeyStore/SecretKeysBasic.sh                 8209398 generic-all
 
 security/infra/java/security/cert/CertPathValidator/certification/ActalisCA.java  8224768 generic-all
+
+sun/security/smartcardio/TestChannel.java                       8039280 generic-all
+sun/security/smartcardio/TestConnect.java                       8039280 generic-all
+sun/security/smartcardio/TestConnectAgain.java                  8039280 generic-all
+sun/security/smartcardio/TestControl.java                       8039280 generic-all
+sun/security/smartcardio/TestDefault.java                       8039280 generic-all
+sun/security/smartcardio/TestDirect.java                        8039280 generic-all
+sun/security/smartcardio/TestExclusive.java                     8039280 generic-all
+sun/security/smartcardio/TestMultiplePresent.java               8039280 generic-all
+sun/security/smartcardio/TestPresent.java                       8039280 generic-all
+sun/security/smartcardio/TestTransmit.java                      8039280 generic-all
+com/sun/crypto/provider/Cipher/DES/PerformanceTest.java         8039280 generic-all
+com/sun/security/auth/callback/TextCallbackHandler/Default.java 8039280 generic-all
+com/sun/security/auth/callback/TextCallbackHandler/Password.java 8039280 generic-all
+com/sun/security/sasl/gsskerb/AuthOnly.java                     8039280 generic-all
+com/sun/security/sasl/gsskerb/ConfSecurityLayer.java            8039280 generic-all
+com/sun/security/sasl/gsskerb/NoSecurityLayer.java              8039280 generic-all
+javax/security/auth/kerberos/KerberosHashEqualsTest.java        8039280 generic-all
+javax/security/auth/kerberos/KerberosTixDateTest.java           8039280 generic-all
+sun/security/provider/PolicyFile/GrantAllPermToExtWhenNoPolicy.java 8039280 generic-all
+sun/security/provider/PolicyParser/ExtDirsChange.java           8039280 generic-all
+sun/security/provider/PolicyParser/PrincipalExpansionError.java 8039280 generic-all
 
 ############################################################################
 
@@ -712,6 +680,7 @@ javax/sound/midi/Sequencer/Recording.java 8167580 linux-all,solaris-all
 # jdk_swing
 
 com/sun/java/swing/plaf/windows/Test8173145.java 8198334 windows-all
+javax/swing/plaf/basic/BasicTextUI/8001470/bug8001470.java 8233177 linux-all
 
 javax/swing/border/Test6981576.java 8198339 generic-all
 javax/swing/JComponent/7154030/bug7154030.java 7190978 generic-all
@@ -778,6 +747,7 @@ javax/swing/MultiUIDefaults/Test6860438.java 8198391 generic-all
 javax/swing/MultiUIDefaults/4300666/bug4300666.java 7105119 macosx-all
 javax/swing/UITest/UITest.java 8198392 generic-all
 javax/swing/plaf/basic/BasicComboBoxEditor/Test8015336.java 8198394 generic-all
+javax/swing/plaf/basic/BasicGraphicsUtils/8132119/bug8132119.java linux-all
 javax/swing/plaf/metal/MetalLookAndFeel/Test8039750.java 8198395 generic-all
 javax/swing/text/DevanagariEditor.java 8198397 generic-all
 javax/swing/JColorChooser/Test6199676.java 8198398 generic-all
@@ -902,3 +872,4 @@ com/sun/jdi/RedefineCrossEvent.java                             8194308    gener
 
 jdk/jfr/event/io/TestInstrumentation.java                       8202142    generic-all
 jdk/jfr/event/sampling/TestNative.java                          8202142    generic-all
+jdk/jfr/event/runtime/TestNetworkUtilizationEvent.java          8228990,8229370    generic-all
