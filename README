@@ -3,6 +3,13 @@ Typetools fork of the JDK
 
 This fork of the JDK contains type annotations for pluggable type-checking.
 
+It does *not* contain annotations for certain files (because annotations in
+them cause build failures, especially in the interim builds):
+ * the jdk.rmic module
+ * objectweb/asm files
+ * src/java.base/share/classes/java/time/*
+ * src/jdk.compiler/share/classes/com/sun/tools/javac/*
+
 There are two annotated versions of the JDK:
  * A JDK 11 version, in this directory.
  * A JDK 8 version, in directory `checker/jdk/` of repository
@@ -41,6 +48,10 @@ SLUG=${URL#*:}
 ORG=${SLUG%/*}
 JDK11DIR=../jdk11u-fork-$ORG-branch-$BRANCH
 JDK11URL=`echo "$URL" | sed 's/jdk/jdk11u/'`
+echo BRANCH=$BRANCH
+echo URL=$URL
+echo JDK11DIR=$JDK11DIR
+echo JDK11URL=$JDK11URL
 if [ -d $JDK11DIR ] ; then
   (cd $JDK11DIR && git pull)
 else
@@ -70,7 +81,8 @@ Qualifier definitions
 The java.base module contains a copy of the Checker Framework qualifiers.
 To update that copy:
 
-VER=2.10.0
+# Get version number from https://checkerframework.org/ .
+VER=3.0.1
 cd src/java.base/share/classes
 rm -rf org/checkerframework
 wget https://repo1.maven.org/maven2/org/checkerframework/checker-qual/$VER/checker-qual-$VER-sources.jar
