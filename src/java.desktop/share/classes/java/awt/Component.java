@@ -2977,8 +2977,7 @@ public abstract @UsesObjectEquals @UIType class Component implements ImageObserv
             if (!wasValid && peer != null) {
                 Font newfont = getFont();
                 Font oldfont = peerFont;
-                if (newfont != oldfont && (oldfont == null
-                                           || !oldfont.equals(newfont))) {
+                if (newfont != null && !Objects.equals(oldfont, newfont)) {
                     peer.setFont(newfont);
                     peerFont = newfont;
                 }
