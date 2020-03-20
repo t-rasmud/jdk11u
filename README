@@ -104,6 +104,7 @@ Make changes here, in the `typetools/jdk` repository.
 
 To update jdk11u from its upstreams:
 ```
+git pull
 git pull https://github.com/openjdk/jdk11u.git
 git pull https://github.com/typetools/jdk.git
 ```
