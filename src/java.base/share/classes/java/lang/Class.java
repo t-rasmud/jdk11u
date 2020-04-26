@@ -1740,7 +1740,7 @@ public final @Interned class Class<@UnknownKeyFor T> implements java.io.Serializ
      * Returns {@code true} if this is a top level class.  Returns {@code false}
      * otherwise.
      */
-    private @PolyDet boolean isTopLevelClass(@PolyDet ) {
+    private @PolyDet boolean isTopLevelClass(@PolyDet @GuardSatisfied Class<T> this) {
         return !isLocalOrAnonymousClass() && getDeclaringClass0() == null;
     }
 
