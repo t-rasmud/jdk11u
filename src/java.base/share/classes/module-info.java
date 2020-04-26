@@ -77,6 +77,7 @@
 module java.base {
 
     exports org.checkerframework.checker.compilermsgs.qual;
+    exports org.checkerframework.checker.determinism.qual;
     exports org.checkerframework.checker.fenum.qual;
     exports org.checkerframework.checker.formatter;
     exports org.checkerframework.checker.formatter.qual;
