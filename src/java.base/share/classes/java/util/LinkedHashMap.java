@@ -352,7 +352,7 @@ public class LinkedHashMap<K,V>
      * @throws IllegalArgumentException if the initial capacity is negative
      *         or the load factor is nonpositive
      */
-    public LinkedHashMap(@NonNegative int initialCapacity, float loadFactor) {
+    public @PolyDet LinkedHashMap(@PolyDet @NonNegative int initialCapacity, @PolyDet float loadFactor) {
         super(initialCapacity, loadFactor);
         accessOrder = false;
     }
@@ -364,7 +364,7 @@ public class LinkedHashMap<K,V>
      * @param  initialCapacity the initial capacity
      * @throws IllegalArgumentException if the initial capacity is negative
      */
-    public LinkedHashMap(@NonNegative int initialCapacity) {
+    public @PolyDet LinkedHashMap(@PolyDet @NonNegative int initialCapacity) {
         super(initialCapacity);
         accessOrder = false;
     }
@@ -373,7 +373,7 @@ public class LinkedHashMap<K,V>
      * Constructs an empty insertion-ordered {@code LinkedHashMap} instance
      * with the default initial capacity (16) and load factor (0.75).
      */
-    public LinkedHashMap() {
+    public @Det LinkedHashMap() {
         super();
         accessOrder = false;
     }
@@ -387,7 +387,7 @@ public class LinkedHashMap<K,V>
      * @param  m the map whose mappings are to be placed in this map
      * @throws NullPointerException if the specified map is null
      */
-    public LinkedHashMap(Map<? extends K, ? extends V> m) {
+    public @PolyDet LinkedHashMap(@PolyDet Map<? extends K, ? extends V> m) {
         super();
         accessOrder = false;
         putMapEntries(m, false);
@@ -404,9 +404,9 @@ public class LinkedHashMap<K,V>
      * @throws IllegalArgumentException if the initial capacity is negative
      *         or the load factor is nonpositive
      */
-    public LinkedHashMap(@NonNegative int initialCapacity,
-                         float loadFactor,
-                         boolean accessOrder) {
+    public @PolyDet LinkedHashMap(@PolyDet @NonNegative int initialCapacity,
+                         @PolyDet float loadFactor,
+                         @PolyDet boolean accessOrder) {
         super(initialCapacity, loadFactor);
         this.accessOrder = accessOrder;
     }
@@ -421,7 +421,7 @@ public class LinkedHashMap<K,V>
      *         specified value
      */
     @Pure
-    public boolean containsValue(@GuardSatisfied LinkedHashMap<K, V> this, @GuardSatisfied @Nullable Object value) {
+    public @PolyDet("down") boolean containsValue(@GuardSatisfied @PolyDet LinkedHashMap<K, V> this, @GuardSatisfied @PolyDet @Nullable Object value) {
         for (LinkedHashMap.Entry<K,V> e = head; e != null; e = e.after) {
             V v = e.value;
             if (v == value || (value != null && value.equals(v)))
@@ -446,7 +446,7 @@ public class LinkedHashMap<K,V>
      * distinguish these two cases.
      */
     @Pure
-    public @Nullable V get(@GuardSatisfied LinkedHashMap<K, V> this, @GuardSatisfied @Nullable Object key) {
+    public @PolyDet @Nullable V get(@GuardSatisfied @PolyDet LinkedHashMap<K, V> this, @GuardSatisfied @PolyDet @Nullable Object key) {
         Node<K,V> e;
         if ((e = getNode(hash(key), key)) == null)
             return null;
@@ -458,7 +458,7 @@ public class LinkedHashMap<K,V>
     /**
      * {@inheritDoc}
      */
-    public V getOrDefault(@Nullable Object key, V defaultValue) {
+    public @PolyDet V getOrDefault(@GuardSatisfied @PolyDet LinkedHashMap<K, V> this, @PolyDet @Nullable Object key, V defaultValue) {
        Node<K,V> e;
        if ((e = getNode(hash(key), key)) == null)
            return defaultValue;
@@ -470,7 +470,7 @@ public class LinkedHashMap<K,V>
     /**
      * {@inheritDoc}
      */
-    public void clear(@GuardSatisfied LinkedHashMap<K, V> this) {
+    public void clear(@GuardSatisfied @PolyDet LinkedHashMap<K, V> this) {
         super.clear();
         head = tail = null;
     }
@@ -539,7 +539,7 @@ public class LinkedHashMap<K,V>
      * @return a set view of the keys contained in this map
      */
     @SideEffectFree
-    public Set<@KeyFor({"this"}) K> keySet() {
+    public @PolyDet Set<@KeyFor({"this"}) K> keySet(@GuardSatisfied @PolyDet LinkedHashMap<K, V> this) {
         Set<K> ks = keySet;
         if (ks == null) {
             ks = new LinkedKeySet();
@@ -595,7 +595,7 @@ public class LinkedHashMap<K,V>
      *
      * @return a view of the values contained in this map
      */
-    public Collection<V> values() {
+    public @PolyDet Collection<V> values(@GuardSatisfied @PolyDet LinkedHashMap<K, V> this) {
         Collection<V> vs = values;
         if (vs == null) {
             vs = new LinkedValues();
@@ -649,7 +649,7 @@ public class LinkedHashMap<K,V>
      * @return a set view of the mappings contained in this map
      */
     @SideEffectFree
-    public Set<Map.Entry<@KeyFor({"this"}) K,V>> entrySet(@GuardSatisfied LinkedHashMap<K, V> this) {
+    public @PolyDet Set<Map.@PolyDet("down") Entry<@KeyFor({"this"}) K,V>> entrySet(@GuardSatisfied @PolyDet LinkedHashMap<K, V> this) {
         Set<Map.Entry<K,V>> es;
         return (es = entrySet) == null ? (entrySet = new LinkedEntrySet()) : es;
     }
@@ -698,7 +698,7 @@ public class LinkedHashMap<K,V>
 
     // Map overrides
 
-    public void forEach(BiConsumer<? super K, ? super V> action) {
+    public void forEach(@GuardSatisfied @PolyDet LinkedHashMap<K, V> this, @PolyDet("use") BiConsumer<? super @PolyDet("up") K, ? super @PolyDet("up") V> action) {
         if (action == null)
             throw new NullPointerException();
         int mc = modCount;
@@ -708,7 +708,7 @@ public class LinkedHashMap<K,V>
             throw new ConcurrentModificationException();
     }
 
-    public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+    public void replaceAll(@GuardSatisfied @PolyDet LinkedHashMap<K, V> this, @PolyDet("use") BiFunction<? super K, ? super V, ? extends V> function) {
         if (function == null)
             throw new NullPointerException();
         int mc = modCount;

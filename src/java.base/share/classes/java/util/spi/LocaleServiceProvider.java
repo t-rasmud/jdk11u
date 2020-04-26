@@ -187,7 +187,7 @@ public abstract @UsesObjectEquals class LocaleServiceProvider {
      * @return An array of all locales for which this locale service provider
      * can provide localized objects or names.
      */
-    public abstract Locale[] getAvailableLocales();
+    public abstract @NonDet Locale @NonDet [] getAvailableLocales();
 
     /**
      * Returns {@code true} if the given {@code locale} is supported by

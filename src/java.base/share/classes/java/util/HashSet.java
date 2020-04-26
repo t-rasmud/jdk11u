@@ -110,7 +110,7 @@ public class HashSet<E>
      * Constructs a new, empty set; the backing {@code HashMap} instance has
      * default initial capacity (16) and load factor (0.75).
      */
-    public HashSet() {
+    public @OrderNonDet HashSet() {
         map = new HashMap<>();
     }
 
@@ -123,7 +123,7 @@ public class HashSet<E>
      * @param c the collection whose elements are to be placed into this set
      * @throws NullPointerException if the specified collection is null
      */
-    public HashSet(Collection<? extends E> c) {
+    public @PolyDet("upDet") HashSet(@PolyDet Collection<? extends E> c) {
         map = new HashMap<>(Math.max((int) (c.size()/.75f) + 1, 16));
         addAll(c);
     }
@@ -137,7 +137,7 @@ public class HashSet<E>
      * @throws     IllegalArgumentException if the initial capacity is less
      *             than zero, or if the load factor is nonpositive
      */
-    public HashSet(@NonNegative int initialCapacity, float loadFactor) {
+    public @PolyDet("upDet") HashSet(@PolyDet @NonNegative int initialCapacity, @PolyDet float loadFactor) {
         map = new HashMap<>(initialCapacity, loadFactor);
     }
 
@@ -149,7 +149,7 @@ public class HashSet<E>
      * @throws     IllegalArgumentException if the initial capacity is less
      *             than zero
      */
-    public HashSet(@NonNegative int initialCapacity) {
+    public @PolyDet("upDet") HashSet(@PolyDet @NonNegative int initialCapacity) {
         map = new HashMap<>(initialCapacity);
     }
 
@@ -166,7 +166,7 @@ public class HashSet<E>
      * @throws     IllegalArgumentException if the initial capacity is less
      *             than zero, or if the load factor is nonpositive
      */
-    HashSet(int initialCapacity, float loadFactor, boolean dummy) {
+    @PolyDet("upDet") HashSet(@PolyDet @NonNegative int initialCapacity, @PolyDet float loadFactor, @PolyDet boolean dummy) {
         map = new LinkedHashMap<>(initialCapacity, loadFactor);
     }
 
@@ -178,7 +178,7 @@ public class HashSet<E>
      * @see ConcurrentModificationException
      */
     @SideEffectFree
-    public Iterator<E> iterator() {
+    public @PolyDet Iterator<E> iterator(@PolyDet HashSet<E> this) {
         return map.keySet().iterator();
     }
 
@@ -188,7 +188,7 @@ public class HashSet<E>
      * @return the number of elements in this set (its cardinality)
      */
     @Pure
-    public @NonNegative int size(@GuardSatisfied HashSet<E> this) {
+    public @PolyDet("down") @NonNegative int size(@GuardSatisfied @PolyDet HashSet<E> this) {
         return map.size();
     }
 
@@ -198,7 +198,7 @@ public class HashSet<E>
      * @return {@code true} if this set contains no elements
      */
     @Pure
-    public boolean isEmpty(@GuardSatisfied HashSet<E> this) {
+    public @PolyDet("down") boolean isEmpty(@GuardSatisfied @PolyDet HashSet<E> this) {
         return map.isEmpty();
     }
 
@@ -212,7 +212,7 @@ public class HashSet<E>
      * @return {@code true} if this set contains the specified element
      */
     @Pure
-    public boolean contains(@GuardSatisfied HashSet<E> this, @GuardSatisfied @Nullable Object o) {
+    public @PolyDet("down") boolean contains(@GuardSatisfied @PolyDet HashSet<E> this, @GuardSatisfied @PolyDet @Nullable Object o) {
         return map.containsKey(o);
     }
 
@@ -228,7 +228,7 @@ public class HashSet<E>
      * @return {@code true} if this set did not already contain the specified
      * element
      */
-    public boolean add(@GuardSatisfied HashSet<E> this, E e) {
+    public @PolyDet("down") boolean add(@GuardSatisfied @PolyDet HashSet<E> this, E e) {
         return map.put(e, PRESENT)==null;
     }
 
@@ -244,7 +244,7 @@ public class HashSet<E>
      * @param o object to be removed from this set, if present
      * @return {@code true} if the set contained the specified element
      */
-    public boolean remove(@GuardSatisfied HashSet<E> this, @Nullable Object o) {
+    public @PolyDet("down") boolean remove(@GuardSatisfied @PolyDet HashSet<E> this, @PolyDet("use") @Nullable Object o) {
         return map.remove(o)==PRESENT;
     }
 
@@ -252,7 +252,7 @@ public class HashSet<E>
      * Removes all of the elements from this set.
      * The set will be empty after this call returns.
      */
-    public void clear(@GuardSatisfied HashSet<E> this) {
+    public void clear(@GuardSatisfied @PolyDet HashSet<E> this) {
         map.clear();
     }
 
@@ -264,7 +264,7 @@ public class HashSet<E>
      */
     @SideEffectFree
     @SuppressWarnings("unchecked")
-    public Object clone(@GuardSatisfied HashSet<E> this) {
+    public @PolyDet("up") Object clone(@GuardSatisfied @PolyDet HashSet<E> this) {
         try {
             HashSet<E> newSet = (HashSet<E>) super.clone();
             newSet.map = (HashMap<E, Object>) map.clone();
@@ -368,7 +368,7 @@ public class HashSet<E>
      * @return a {@code Spliterator} over the elements in this set
      * @since 1.8
      */
-    public Spliterator<E> spliterator() {
+    public @PolyDet Spliterator<E> spliterator(@GuardSatisfied @PolyDet HashSet<E> this) {
         return new HashMap.KeySpliterator<>(map, 0, -1, 0, 0);
     }
 }

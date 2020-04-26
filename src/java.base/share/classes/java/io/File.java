@@ -1144,7 +1144,7 @@ public class File
      *          SecurityManager#checkRead(String)} method denies read access to
      *          the directory
      */
-    public String @Nullable [] list() {
+    public @NonDet String @NonDet @Nullable [] list(@PolyDet File this) {
         SecurityManager security = System.getSecurityManager();
         if (security != null) {
             security.checkRead(path);
@@ -1184,7 +1184,7 @@ public class File
      *
      * @see java.nio.file.Files#newDirectoryStream(Path,String)
      */
-    public String @Nullable [] list(@Nullable FilenameFilter filter) {
+    public @NonDet String @NonDet @Nullable [] list(@PolyDet File this, @PolyDet @Nullable FilenameFilter filter) {
         String names[] = list();
         if ((names == null) || (filter == null)) {
             return names;
@@ -1236,7 +1236,7 @@ public class File
      *
      * @since  1.2
      */
-    public File @Nullable [] listFiles() {
+    public @NonDet File @Nullable @NonDet [] listFiles(@PolyDet File this) {
         String[] ss = list();
         if (ss == null) return null;
         int n = ss.length;
@@ -1277,7 +1277,7 @@ public class File
      * @since  1.2
      * @see java.nio.file.Files#newDirectoryStream(Path,String)
      */
-    public File @Nullable [] listFiles(@Nullable FilenameFilter filter) {
+    public @NonDet File @Nullable @NonDet [] listFiles(@PolyDet File this, @Nullable @PolyDet FilenameFilter filter) {
         String ss[] = list();
         if (ss == null) return null;
         ArrayList<File> files = new ArrayList<>();
@@ -1315,7 +1315,7 @@ public class File
      * @since  1.2
      * @see java.nio.file.Files#newDirectoryStream(Path,java.nio.file.DirectoryStream.Filter)
      */
-    public File @Nullable [] listFiles(@Nullable FileFilter filter) {
+    public @NonDet File @NonDet @Nullable [] listFiles(@PolyDet File this, @Nullable @PolyDet FileFilter filter) {
         String ss[] = list();
         if (ss == null) return null;
         ArrayList<File> files = new ArrayList<>();
@@ -1808,7 +1808,7 @@ public class File
      * @since  1.2
      * @see java.nio.file.FileStore
      */
-    public static File @Nullable [] listRoots() {
+    public static @NonDet File @Nullable @NonDet [] listRoots() {
         return fs.listRoots();
     }
 

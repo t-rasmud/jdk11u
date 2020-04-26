@@ -110,7 +110,7 @@ public
      * the seed of the random number generator to a value very likely
      * to be distinct from any other invocation of this constructor.
      */
-    public Random() {
+    public @NonDet Random() {
         this(seedUniquifier() ^ System.nanoTime());
     }
 
@@ -141,7 +141,7 @@ public
      * @param seed the initial seed
      * @see   #setSeed(long)
      */
-    public Random(long seed) {
+    public @PolyDet Random(@PolyDet long seed) {
         if (getClass() == Random.class)
             this.seed = new AtomicLong(initialScramble(seed));
         else {
@@ -174,7 +174,7 @@ public
      *
      * @param seed the initial seed
      */
-    public synchronized void setSeed(@GuardSatisfied Random this, long seed) {
+    public synchronized void setSeed(@GuardSatisfied @PolyDet Random this, @PolyDet("use") long seed) {
         this.seed.set(initialScramble(seed));
         haveNextNextGaussian = false;
     }
@@ -233,7 +233,7 @@ public
      * @throws NullPointerException if the byte array is null
      * @since  1.1
      */
-    public void nextBytes(@PolySigned byte[] bytes) {
+    public void nextBytes(@PolyDet("use") @PolySigned Random this, @PolyDet byte @PolyDet [] bytes) {
         for (int i = 0, len = bytes.length; i < len; )
             for (int rnd = nextInt(),
                      n = Math.min(len - i, Integer.SIZE/Byte.SIZE);
@@ -334,7 +334,7 @@ public
      * @return the next pseudorandom, uniformly distributed {@code int}
      *         value from this random number generator's sequence
      */
-    public int nextInt() {
+    public @PolyDet int nextInt(@PolyDet Random this) {
         return next(32);
     }
 
@@ -392,7 +392,7 @@ public
      * @throws IllegalArgumentException if bound is not positive
      * @since 1.2
      */
-    public @NonNegative int nextInt(@Positive int bound) {
+    public @PolyDet @NonNegative int nextInt(@PolyDet Random this, @PolyDet @Positive int bound) {
         if (bound <= 0)
             throw new IllegalArgumentException(BadBound);
 
@@ -428,7 +428,7 @@ public
      * @return the next pseudorandom, uniformly distributed {@code long}
      *         value from this random number generator's sequence
      */
-    public long nextLong() {
+    public @PolyDet long nextLong(@PolyDet Random this) {
         // it's okay that the bottom word remains signed.
         return ((long)(next(32)) << 32) + next(32);
     }
@@ -453,7 +453,7 @@ public
      *         sequence
      * @since 1.2
      */
-    public boolean nextBoolean() {
+    public @PolyDet boolean nextBoolean(@PolyDet Random this) {
         return next(1) != 0;
     }
 
@@ -494,7 +494,7 @@ public
      *         value between {@code 0.0} and {@code 1.0} from this
      *         random number generator's sequence
      */
-    public float nextFloat() {
+    public @PolyDet float nextFloat(@PolyDet Random this) {
         return next(24) / ((float)(1 << 24));
     }
 
@@ -537,7 +537,7 @@ public
      *         random number generator's sequence
      * @see Math#random
      */
-    public double nextDouble() {
+    public @PolyDet double nextDouble(@PolyDet Random this) {
         return (((long)(next(26)) << 27) + next(27)) * DOUBLE_UNIT;
     }
 
@@ -589,7 +589,7 @@ public
      *         standard deviation {@code 1.0} from this random number
      *         generator's sequence
      */
-    public synchronized double nextGaussian() {
+    public synchronized @PolyDet double nextGaussian(@PolyDet Random this) {
         // See Knuth, ACP, Section 3.4.1 Algorithm C.
         if (haveNextNextGaussian) {
             haveNextNextGaussian = false;
@@ -624,7 +624,7 @@ public
      *         less than zero
      * @since 1.8
      */
-    public IntStream ints(long streamSize) {
+    public @PolyDet IntStream ints(@PolyDet Random this, @PolyDet long streamSize) {
         if (streamSize < 0L)
             throw new IllegalArgumentException(BadSize);
         return StreamSupport.intStream
@@ -646,7 +646,7 @@ public
      * @return a stream of pseudorandom {@code int} values
      * @since 1.8
      */
-    public IntStream ints() {
+    public @PolyDet IntStream ints(@PolyDet Random this) {
         return StreamSupport.intStream
                 (new RandomIntsSpliterator
                          (this, 0L, Long.MAX_VALUE, Integer.MAX_VALUE, 0),
@@ -685,8 +685,8 @@ public
      *         is greater than or equal to {@code randomNumberBound}
      * @since 1.8
      */
-    public IntStream ints(long streamSize, int randomNumberOrigin,
-                          int randomNumberBound) {
+    public @PolyDet IntStream ints(@PolyDet Random this, @PolyDet long streamSize, @PolyDet int randomNumberOrigin,
+                          @PolyDet int randomNumberBound) {
         if (streamSize < 0L)
             throw new IllegalArgumentException(BadSize);
         if (randomNumberOrigin >= randomNumberBound)
@@ -730,7 +730,7 @@ public
      *         is greater than or equal to {@code randomNumberBound}
      * @since 1.8
      */
-    public IntStream ints(int randomNumberOrigin, int randomNumberBound) {
+    public @PolyDet IntStream ints(@PolyDet Random this, @PolyDet int randomNumberOrigin, @PolyDet int randomNumberBound) {
         if (randomNumberOrigin >= randomNumberBound)
             throw new IllegalArgumentException(BadRange);
         return StreamSupport.intStream
@@ -752,7 +752,7 @@ public
      *         less than zero
      * @since 1.8
      */
-    public LongStream longs(long streamSize) {
+    public @PolyDet LongStream longs(@PolyDet Random this, @PolyDet long streamSize) {
         if (streamSize < 0L)
             throw new IllegalArgumentException(BadSize);
         return StreamSupport.longStream
@@ -774,7 +774,7 @@ public
      * @return a stream of pseudorandom {@code long} values
      * @since 1.8
      */
-    public LongStream longs() {
+    public @PolyDet LongStream longs(@PolyDet Random this) {
         return StreamSupport.longStream
                 (new RandomLongsSpliterator
                          (this, 0L, Long.MAX_VALUE, Long.MAX_VALUE, 0L),
@@ -818,8 +818,8 @@ public
      *         is greater than or equal to {@code randomNumberBound}
      * @since 1.8
      */
-    public LongStream longs(long streamSize, long randomNumberOrigin,
-                            long randomNumberBound) {
+    public @PolyDet LongStream longs(@PolyDet Random this, @PolyDet long streamSize, @PolyDet long randomNumberOrigin,
+                            @PolyDet long randomNumberBound) {
         if (streamSize < 0L)
             throw new IllegalArgumentException(BadSize);
         if (randomNumberOrigin >= randomNumberBound)
@@ -868,7 +868,7 @@ public
      *         is greater than or equal to {@code randomNumberBound}
      * @since 1.8
      */
-    public LongStream longs(long randomNumberOrigin, long randomNumberBound) {
+    public @PolyDet LongStream longs(@PolyDet Random this, @PolyDet long randomNumberOrigin, @PolyDet long randomNumberBound) {
         if (randomNumberOrigin >= randomNumberBound)
             throw new IllegalArgumentException(BadRange);
         return StreamSupport.longStream
@@ -891,7 +891,7 @@ public
      *         less than zero
      * @since 1.8
      */
-    public DoubleStream doubles(long streamSize) {
+    public @PolyDet DoubleStream doubles(@PolyDet Random this, @PolyDet long streamSize) {
         if (streamSize < 0L)
             throw new IllegalArgumentException(BadSize);
         return StreamSupport.doubleStream
@@ -914,7 +914,7 @@ public
      * @return a stream of pseudorandom {@code double} values
      * @since 1.8
      */
-    public DoubleStream doubles() {
+    public @PolyDet DoubleStream doubles(@PolyDet Random this) {
         return StreamSupport.doubleStream
                 (new RandomDoublesSpliterator
                          (this, 0L, Long.MAX_VALUE, Double.MAX_VALUE, 0.0),
@@ -948,8 +948,8 @@ public
      *         is greater than or equal to {@code randomNumberBound}
      * @since 1.8
      */
-    public DoubleStream doubles(long streamSize, double randomNumberOrigin,
-                                double randomNumberBound) {
+    public @PolyDet DoubleStream doubles(@PolyDet Random this, @PolyDet long streamSize, @PolyDet double randomNumberOrigin,
+                                        @PolyDet double randomNumberBound) {
         if (streamSize < 0L)
             throw new IllegalArgumentException(BadSize);
         if (!(randomNumberOrigin < randomNumberBound))
@@ -987,7 +987,7 @@ public
      *         is greater than or equal to {@code randomNumberBound}
      * @since 1.8
      */
-    public DoubleStream doubles(double randomNumberOrigin, double randomNumberBound) {
+    public @PolyDet DoubleStream doubles(@PolyDet Random this, @PolyDet double randomNumberOrigin, @PolyDet double randomNumberBound) {
         if (!(randomNumberOrigin < randomNumberBound))
             throw new IllegalArgumentException(BadRange);
         return StreamSupport.doubleStream
@@ -1127,7 +1127,7 @@ public
             this.origin = origin; this.bound = bound;
         }
 
-        public RandomDoublesSpliterator trySplit() {
+        public RandomDoublesSpliterator trySplit(@PolyDet RandomDoublesSpliterator this) {
             long i = index, m = (i + fence) >>> 1;
             return (m <= i) ? null :
                    new RandomDoublesSpliterator(rng, i, index = m, origin, bound);

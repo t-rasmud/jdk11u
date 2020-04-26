@@ -125,7 +125,7 @@ public interface SortedSet<E> extends Set<E> {
      *         of its elements
      */
     @Pure
-    @Nullable Comparator<? super E> comparator(@GuardSatisfied SortedSet<E> this);
+    @PolyDet @Nullable Comparator<? super E> comparator(@GuardSatisfied @PolyDet SortedSet<E> this);
 
     /**
      * Returns a view of the portion of this set whose elements range
@@ -159,7 +159,7 @@ public interface SortedSet<E> extends Set<E> {
      *         {@code toElement} lies outside the bounds of the range
      */
     @SideEffectFree
-    SortedSet<E> subSet(@GuardSatisfied SortedSet<E> this, @GuardSatisfied E fromElement, @GuardSatisfied E toElement);
+    @PolyDet SortedSet<E> subSet(@GuardSatisfied @PolyDet SortedSet<E> this, @GuardSatisfied E fromElement, @GuardSatisfied E toElement);
 
     /**
      * Returns a view of the portion of this set whose elements are
@@ -187,7 +187,7 @@ public interface SortedSet<E> extends Set<E> {
      *         bounds of the range
      */
     @SideEffectFree
-    SortedSet<E> headSet(@GuardSatisfied SortedSet<E> this, E toElement);
+    @PolyDet SortedSet<E> headSet(@GuardSatisfied @PolyDet SortedSet<E> this, E toElement);
 
     /**
      * Returns a view of the portion of this set whose elements are
@@ -215,7 +215,7 @@ public interface SortedSet<E> extends Set<E> {
      *         bounds of the range
      */
     @SideEffectFree
-    SortedSet<E> tailSet(@GuardSatisfied SortedSet<E> this, E fromElement);
+    @PolyDet SortedSet<E> tailSet(@GuardSatisfied @PolyDet SortedSet<E> this, E fromElement);
 
     /**
      * Returns the first (lowest) element currently in this set.
@@ -224,7 +224,7 @@ public interface SortedSet<E> extends Set<E> {
      * @throws NoSuchElementException if this set is empty
      */
     @SideEffectFree
-    E first(@GuardSatisfied SortedSet<E> this);
+    @PolyDet("down") E first(@GuardSatisfied @PolyDet SortedSet<E> this);
 
     /**
      * Returns the last (highest) element currently in this set.
@@ -233,7 +233,7 @@ public interface SortedSet<E> extends Set<E> {
      * @throws NoSuchElementException if this set is empty
      */
     @SideEffectFree
-    E last(@GuardSatisfied SortedSet<E> this);
+    @PolyDet("down") E last(@GuardSatisfied @PolyDet SortedSet<E> this);
 
     /**
      * Creates a {@code Spliterator} over the elements in this sorted set.
@@ -267,7 +267,7 @@ public interface SortedSet<E> extends Set<E> {
      * @since 1.8
      */
     @Override
-    default Spliterator<E> spliterator() {
+    default @PolyDet Spliterator<E> spliterator(@GuardSatisfied @PolyDet SortedSet<E> this) {
         return new Spliterators.IteratorSpliterator<E>(
                 this, Spliterator.DISTINCT | Spliterator.SORTED | Spliterator.ORDERED) {
             @Override

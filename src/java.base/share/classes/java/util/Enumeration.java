@@ -74,7 +74,7 @@ public interface Enumeration<E> {
      *          {@code false} otherwise.
      */
     @Pure
-    boolean hasMoreElements();
+    @PolyDet("down") boolean hasMoreElements(@PolyDet Enumeration<E> this);
 
     /**
      * Returns the next element of this enumeration if this enumeration
@@ -83,7 +83,7 @@ public interface Enumeration<E> {
      * @return     the next element of this enumeration.
      * @exception  NoSuchElementException  if no more elements exist.
      */
-    E nextElement();
+    @PolyDet("up") E nextElement(@PolyDet Enumeration<E> this);
 
     /**
      * Returns an {@link Iterator} that traverses the remaining elements

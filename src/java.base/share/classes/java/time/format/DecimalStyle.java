@@ -125,7 +125,7 @@ public final class DecimalStyle {
      *
      * @return a Set of Locales for which localization is supported
      */
-    public static Set<Locale> getAvailableLocales() {
+    public static @NonDet Set<@NonDet Locale> getAvailableLocales() {
         Locale[] l = DecimalFormatSymbols.getAvailableLocales();
         Set<Locale> locales = new HashSet<>(l.length);
         Collections.addAll(locales, l);

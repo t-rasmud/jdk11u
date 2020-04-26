@@ -157,7 +157,7 @@ public class TreeMap<K,V>
      * {@code put(Object key, Object value)} call will throw a
      * {@code ClassCastException}.
      */
-    public TreeMap() {
+    public @Det TreeMap() {
         comparator = null;
     }
 
@@ -175,7 +175,7 @@ public class TreeMap<K,V>
      *        If {@code null}, the {@linkplain Comparable natural
      *        ordering} of the keys will be used.
      */
-    public TreeMap(@Nullable Comparator<? super K> comparator) {
+    public @PolyDet TreeMap(@PolyDet @Nullable Comparator<? super K> comparator) {
         this.comparator = comparator;
     }
 
@@ -193,7 +193,7 @@ public class TreeMap<K,V>
      *         or are not mutually comparable
      * @throws NullPointerException if the specified map is null
      */
-    public TreeMap(Map<? extends K, ? extends V> m) {
+    public @PolyDet("down") TreeMap(@PolyDet Map<? extends K, ? extends V> m) {
         comparator = null;
         putAll(m);
     }
@@ -207,7 +207,7 @@ public class TreeMap<K,V>
      *         and whose comparator is to be used to sort this map
      * @throws NullPointerException if the specified map is null
      */
-    public TreeMap(SortedMap<K, ? extends V> m) {
+    public @PolyDet("down") TreeMap(@PolyDet SortedMap<K, ? extends V> m) {
         comparator = m.comparator();
         try {
             buildFromSorted(m.size(), m.entrySet().iterator(), null, null);
@@ -224,7 +224,7 @@ public class TreeMap<K,V>
      * @return the number of key-value mappings in this map
      */
     @Pure
-    public @NonNegative int size(@GuardSatisfied TreeMap<K, V> this) {
+    public @PolyDet("down") @NonNegative int size(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
         return size;
     }
 
@@ -243,7 +243,7 @@ public class TreeMap<K,V>
      */
     @Pure
     @EnsuresKeyForIf(expression={"#1"}, result=true, map={"this"})
-    public boolean containsKey(@GuardSatisfied TreeMap<K, V> this, @GuardSatisfied Object key) {
+    public @PolyDet("down") boolean containsKey(@GuardSatisfied @PolyDet TreeMap<K, V> this, @GuardSatisfied @PolyDet Object key) {
         return getEntry(key) != null;
     }
 
@@ -261,7 +261,7 @@ public class TreeMap<K,V>
      * @since 1.2
      */
     @Pure
-    public boolean containsValue(@GuardSatisfied TreeMap<K, V> this, @GuardSatisfied Object value) {
+    public @PolyDet("down") boolean containsValue(@GuardSatisfied @PolyDet TreeMap<K, V> this, @GuardSatisfied @PolyDet Object value) {
         for (Entry<K,V> e = getFirstEntry(); e != null; e = successor(e))
             if (valEquals(value, e.value))
                 return true;
@@ -290,27 +290,27 @@ public class TreeMap<K,V>
      *         and this map uses natural ordering, or its comparator
      *         does not permit null keys
      */
-    public @Nullable V get(@GuardSatisfied TreeMap<K, V> this, @GuardSatisfied Object key) {
+    public @PolyDet @Nullable V get(@GuardSatisfied @PolyDet TreeMap<K, V> this, @GuardSatisfied @PolyDet Object key) {
         Entry<K,V> p = getEntry(key);
         return (p==null ? null : p.value);
     }
 
     @Pure
-    public @Nullable Comparator<? super K> comparator(@GuardSatisfied TreeMap<K, V> this) {
+    public @PolyDet @Nullable Comparator<? super K> comparator(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
         return comparator;
     }
 
     /**
      * @throws NoSuchElementException {@inheritDoc}
      */
-    public @KeyFor("this") K firstKey() {
+    public @KeyFor("this") K firstKey(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
         return key(getFirstEntry());
     }
 
     /**
      * @throws NoSuchElementException {@inheritDoc}
      */
-    public @KeyFor("this") K lastKey() {
+    public @KeyFor("this") K lastKey(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
         return key(getLastEntry());
     }
 
@@ -326,7 +326,7 @@ public class TreeMap<K,V>
      *         the specified map contains a null key and this map does not
      *         permit null keys
      */
-    public void putAll(@GuardSatisfied TreeMap<K, V> this, Map<? extends K, ? extends V> map) {
+    public void putAll(@GuardSatisfied @PolyDet TreeMap<K, V> this, @PolyDet("use") Map<? extends K, ? extends V> map) {
         int mapSize = map.size();
         if (size==0 && mapSize!=0 && map instanceof SortedMap) {
             Comparator<?> c = ((SortedMap<?,?>)map).comparator();
@@ -549,7 +549,7 @@ public class TreeMap<K,V>
      *         does not permit null keys
      */
     @EnsuresKeyFor(value={"#1"}, map={"this"})
-    public @Nullable V put(@GuardSatisfied TreeMap<K, V> this, K key, V value) {
+    public @Nullable V put(@GuardSatisfied @PolyDet TreeMap<K, V> this, K key, V value) {
         Entry<K,V> t = root;
         if (t == null) {
             compare(key, key); // type (and possibly null) check
@@ -616,7 +616,7 @@ public class TreeMap<K,V>
      *         and this map uses natural ordering, or its comparator
      *         does not permit null keys
      */
-    public @Nullable V remove(@GuardSatisfied TreeMap<K, V> this, Object key) {
+    public @Nullable V remove(@GuardSatisfied @PolyDet TreeMap<K, V> this, @PolyDet("use") Object key) {
         Entry<K,V> p = getEntry(key);
         if (p == null)
             return null;
@@ -630,7 +630,7 @@ public class TreeMap<K,V>
      * Removes all of the mappings from this map.
      * The map will be empty after this call returns.
      */
-    public void clear(@GuardSatisfied TreeMap<K, V> this) {
+    public void clear(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
         modCount++;
         size = 0;
         root = null;
@@ -642,7 +642,7 @@ public class TreeMap<K,V>
      *
      * @return a shallow copy of this map
      */
-    public Object clone(@GuardSatisfied TreeMap<K, V> this) {
+    public @PolyDet Object clone(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
         TreeMap<?,?> clone;
         try {
             clone = (TreeMap<?,?>) super.clone();
@@ -672,21 +672,21 @@ public class TreeMap<K,V>
     /**
      * @since 1.6
      */
-    public Map.@Nullable Entry<K,V> firstEntry() {
+    public Map.@PolyDet("down") @Nullable Entry<K,V> firstEntry(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
         return exportEntry(getFirstEntry());
     }
 
     /**
      * @since 1.6
      */
-    public Map.@Nullable Entry<K,V> lastEntry() {
+    public Map.@PolyDet("down") @Nullable Entry<K,V> lastEntry(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
         return exportEntry(getLastEntry());
     }
 
     /**
      * @since 1.6
      */
-    public Map.@Nullable Entry<K,V> pollFirstEntry(@GuardSatisfied TreeMap<K, V> this) {
+    public Map.@PolyDet("down") @Nullable Entry<K,V> pollFirstEntry(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
         Entry<K,V> p = getFirstEntry();
         Map.Entry<K,V> result = exportEntry(p);
         if (p != null)
@@ -697,7 +697,7 @@ public class TreeMap<K,V>
     /**
      * @since 1.6
      */
-    public Map.@Nullable Entry<K,V> pollLastEntry(@GuardSatisfied TreeMap<K, V> this) {
+    public Map.@PolyDet("down") @Nullable Entry<K,V> pollLastEntry(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
         Entry<K,V> p = getLastEntry();
         Map.Entry<K,V> result = exportEntry(p);
         if (p != null)
@@ -712,7 +712,7 @@ public class TreeMap<K,V>
      *         does not permit null keys
      * @since 1.6
      */
-    public Map.@Nullable Entry<K,V> lowerEntry(K key) {
+    public Map.@PolyDet("down") @Nullable Entry<K,V> lowerEntry(@GuardSatisfied @PolyDet TreeMap<K, V> this, K key) {
         return exportEntry(getLowerEntry(key));
     }
 
@@ -723,7 +723,7 @@ public class TreeMap<K,V>
      *         does not permit null keys
      * @since 1.6
      */
-    public @Nullable K lowerKey(K key) {
+    public @Nullable K lowerKey(@GuardSatisfied @PolyDet TreeMap<K, V> this, K key) {
         return keyOrNull(getLowerEntry(key));
     }
 
@@ -734,7 +734,7 @@ public class TreeMap<K,V>
      *         does not permit null keys
      * @since 1.6
      */
-    public Map.@Nullable Entry<K,V> floorEntry(K key) {
+    public Map.@PolyDet("down") @Nullable Entry<K,V> floorEntry(@GuardSatisfied @PolyDet TreeMap<K, V> this, K key) {
         return exportEntry(getFloorEntry(key));
     }
 
@@ -745,7 +745,7 @@ public class TreeMap<K,V>
      *         does not permit null keys
      * @since 1.6
      */
-    public @Nullable K floorKey(K key) {
+    public @Nullable K floorKey(@GuardSatisfied @PolyDet TreeMap<K, V> this, K key) {
         return keyOrNull(getFloorEntry(key));
     }
 
@@ -756,7 +756,7 @@ public class TreeMap<K,V>
      *         does not permit null keys
      * @since 1.6
      */
-    public Map.@Nullable Entry<K,V> ceilingEntry(K key) {
+    public Map.@PolyDet("down") @Nullable  Entry<K,V> ceilingEntry(@GuardSatisfied @PolyDet TreeMap<K, V> this, K key) {
         return exportEntry(getCeilingEntry(key));
     }
 
@@ -767,7 +767,7 @@ public class TreeMap<K,V>
      *         does not permit null keys
      * @since 1.6
      */
-    public @Nullable K ceilingKey(K key) {
+    public @Nullable K ceilingKey(@GuardSatisfied @PolyDet TreeMap<K, V> this, K key) {
         return keyOrNull(getCeilingEntry(key));
     }
 
@@ -778,7 +778,7 @@ public class TreeMap<K,V>
      *         does not permit null keys
      * @since 1.6
      */
-    public Map.@Nullable Entry<K,V> higherEntry(K key) {
+    public Map.@PolyDet("down") @Nullable Entry<K,V> higherEntry(@GuardSatisfied @PolyDet TreeMap<K, V> this, K key) {
         return exportEntry(getHigherEntry(key));
     }
 
@@ -789,7 +789,7 @@ public class TreeMap<K,V>
      *         does not permit null keys
      * @since 1.6
      */
-    public @Nullable K higherKey(K key) {
+    public @Nullable K higherKey(@GuardSatisfied @PolyDet TreeMap<K, V> this, K key) {
         return keyOrNull(getHigherEntry(key));
     }
 
@@ -829,7 +829,7 @@ public class TreeMap<K,V>
      * operations.  It does not support the {@code add} or {@code addAll}
      * operations.
      */
-    public Set<@KeyFor({"this"}) K> keySet(@GuardSatisfied TreeMap<K, V> this) {
+    public @PolyDet Set<@KeyFor({"this"}) K> keySet(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
         return navigableKeySet();
     }
 
@@ -837,7 +837,7 @@ public class TreeMap<K,V>
      * @since 1.6
      */
     @SideEffectFree
-    public NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@GuardSatisfied TreeMap<K, V> this) {
+    public @PolyDet("down") NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
         KeySet<K> nks = navigableKeySet;
         return (nks != null) ? nks : (navigableKeySet = new KeySet<>(this));
     }
@@ -846,7 +846,7 @@ public class TreeMap<K,V>
      * @since 1.6
      */
     @SideEffectFree
-    public NavigableSet<@KeyFor({"this"}) K> descendingKeySet(@GuardSatisfied TreeMap<K, V> this) {
+    public @PolyDet("down") NavigableSet<@KeyFor({"this"}) K> descendingKeySet(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
         return descendingMap().navigableKeySet();
     }
 
@@ -871,7 +871,7 @@ public class TreeMap<K,V>
      * {@code retainAll} and {@code clear} operations.  It does not
      * support the {@code add} or {@code addAll} operations.
      */
-    public Collection<V> values(@GuardSatisfied TreeMap<K, V> this) {
+    public @PolyDet Collection<V> values(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
         Collection<V> vs = values;
         if (vs == null) {
             vs = new Values();
@@ -903,7 +903,7 @@ public class TreeMap<K,V>
      * {@code add} or {@code addAll} operations.
      */
     @SideEffectFree
-    public Set<Map.Entry<@KeyFor({"this"}) K,V>> entrySet(@GuardSatisfied TreeMap<K, V> this) {
+    public @PolyDet Set<Map.@PolyDet("down") Entry<@KeyFor({"this"}) K,V>> entrySet(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
         EntrySet es = entrySet;
         return (es != null) ? es : (entrySet = new EntrySet());
     }
@@ -912,7 +912,7 @@ public class TreeMap<K,V>
      * @since 1.6
      */
     @SideEffectFree
-    public NavigableMap<K, V> descendingMap(@GuardSatisfied TreeMap<K, V> this) {
+    public @PolyDet NavigableMap<K, V> descendingMap(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
         NavigableMap<K, V> km = descendingMap;
         return (km != null) ? km :
             (descendingMap = new DescendingSubMap<>(this,
@@ -929,7 +929,7 @@ public class TreeMap<K,V>
      * @since 1.6
      */
     @SideEffectFree
-    public NavigableMap<K,V> subMap(@GuardSatisfied TreeMap<K, V> this, @GuardSatisfied K fromKey, boolean fromInclusive,
+    public @PolyDet NavigableMap<K,V> subMap(@GuardSatisfied @PolyDet TreeMap<K, V> this, @GuardSatisfied K fromKey, boolean fromInclusive,
                                     @GuardSatisfied K toKey,   boolean toInclusive) {
         return new AscendingSubMap<>(this,
                                      false, fromKey, fromInclusive,
@@ -945,7 +945,7 @@ public class TreeMap<K,V>
      * @since 1.6
      */
     @SideEffectFree
-    public NavigableMap<K,V> headMap(@GuardSatisfied TreeMap<K, V> this, @GuardSatisfied K toKey, boolean inclusive) {
+    public @PolyDet NavigableMap<K,V> headMap(@GuardSatisfied @PolyDet TreeMap<K, V> this, @GuardSatisfied K toKey, @PolyDet("use") boolean inclusive) {
         return new AscendingSubMap<>(this,
                                      true,  null,  true,
                                      false, toKey, inclusive);
@@ -960,7 +960,7 @@ public class TreeMap<K,V>
      * @since 1.6
      */
     @SideEffectFree
-    public NavigableMap<K,V> tailMap(@GuardSatisfied TreeMap<K, V> this, @GuardSatisfied K fromKey, boolean inclusive) {
+    public @PolyDet NavigableMap<K,V> tailMap(@GuardSatisfied @PolyDet TreeMap<K, V> this, @GuardSatisfied K fromKey, @PolyDet("use") boolean inclusive) {
         return new AscendingSubMap<>(this,
                                      false, fromKey, inclusive,
                                      true,  null,    true);
@@ -974,7 +974,7 @@ public class TreeMap<K,V>
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @SideEffectFree
-    public SortedMap<K,V> subMap(@GuardSatisfied TreeMap<K, V> this, @GuardSatisfied K fromKey, @GuardSatisfied K toKey) {
+    public @PolyDet SortedMap<K,V> subMap(@GuardSatisfied @PolyDet TreeMap<K, V> this, @GuardSatisfied K fromKey, @GuardSatisfied K toKey) {
         return subMap(fromKey, true, toKey, false);
     }
 
@@ -986,7 +986,7 @@ public class TreeMap<K,V>
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @SideEffectFree
-    public SortedMap<K,V> headMap(@GuardSatisfied TreeMap<K, V> this, K toKey) {
+    public @PolyDet SortedMap<K,V> headMap(@GuardSatisfied @PolyDet TreeMap<K, V> this, @GuardSatisfied K toKey) {
         return headMap(toKey, false);
     }
 
@@ -998,12 +998,12 @@ public class TreeMap<K,V>
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @SideEffectFree
-    public SortedMap<K,V> tailMap(@GuardSatisfied TreeMap<K, V> this, K fromKey) {
+    public @PolyDet SortedMap<K,V> tailMap(@GuardSatisfied @PolyDet TreeMap<K, V> this, @GuardSatisfied K fromKey) {
         return tailMap(fromKey, true);
     }
 
     @Override
-    public boolean replace(K key, V oldValue, V newValue) {
+    public @PolyDet("down") boolean replace(@GuardSatisfied @PolyDet TreeMap<K, V> this, K key, V oldValue, V newValue) {
         Entry<K,V> p = getEntry(key);
         if (p!=null && Objects.equals(oldValue, p.value)) {
             p.value = newValue;
@@ -1013,7 +1013,7 @@ public class TreeMap<K,V>
     }
 
     @Override
-    public V replace(K key, V value) {
+    public V replace(@GuardSatisfied @PolyDet TreeMap<K, V> this, K key, V value) {
         Entry<K,V> p = getEntry(key);
         if (p!=null) {
             V oldValue = p.value;
@@ -1024,7 +1024,7 @@ public class TreeMap<K,V>
     }
 
     @Override
-    public void forEach(BiConsumer<? super K, ? super V> action) {
+    public void forEach(@GuardSatisfied @PolyDet TreeMap<K, V> this, @PolyDet("use") BiConsumer<? super @PolyDet("up") K, ? super @PolyDet("up") V> action) {
         Objects.requireNonNull(action);
         int expectedModCount = modCount;
         for (Entry<K, V> e = getFirstEntry(); e != null; e = successor(e)) {
@@ -1037,7 +1037,7 @@ public class TreeMap<K,V>
     }
 
     @Override
-    public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+    public void replaceAll(@GuardSatisfied @PolyDet TreeMap<K, V> this, @PolyDet("use") BiFunction<? super K, ? super V, ? extends V> function) {
         Objects.requireNonNull(function);
         int expectedModCount = modCount;
 

@@ -92,7 +92,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
     @Pure
-    public E get(@GuardSatisfied AbstractSequentialList<E> this, int index) {
+    public @PolyDet("up") E get(@GuardSatisfied @PolyDet AbstractSequentialList<E> this, @PolyDet int index) {
         try {
             return listIterator(index).next();
         } catch (NoSuchElementException exc) {
@@ -119,7 +119,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
      */
-    public E set(@GuardSatisfied AbstractSequentialList<E> this, int index, E element) {
+    public @PolyDet("up") E set(@GuardSatisfied @PolyDet("noOrderNonDet") AbstractSequentialList<E> this, @PolyDet("use") int index, E element) {
         try {
             ListIterator<E> e = listIterator(index);
             E oldVal = e.next();
@@ -150,7 +150,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
      */
-    public void add(@GuardSatisfied AbstractSequentialList<E> this, int index, E element) {
+    public void add(@GuardSatisfied @PolyDet AbstractSequentialList<E> this, @PolyDet("use") int index, E element) {
         try {
             listIterator(index).add(element);
         } catch (NoSuchElementException exc) {
@@ -175,7 +175,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * @throws UnsupportedOperationException {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
      */
-    public E remove(@GuardSatisfied AbstractSequentialList<E> this, int index) {
+    public @PolyDet("up") E remove(@GuardSatisfied @PolyDet("noOrderNonDet") AbstractSequentialList<E> this, @PolyDet("use") int index) {
         try {
             ListIterator<E> e = listIterator(index);
             E outCast = e.next();
@@ -218,7 +218,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
      */
-    public boolean addAll(@GuardSatisfied AbstractSequentialList<E> this, int index, Collection<? extends E> c) {
+    public @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet AbstractSequentialList<E> this, @PolyDet("use") int index, @PolyDet("down") Collection<? extends E> c) {
         try {
             boolean modified = false;
             ListIterator<E> e1 = listIterator(index);
@@ -244,7 +244,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * @return an iterator over the elements in this list (in proper sequence)
      */
     @SideEffectFree
-    public Iterator<E> iterator() {
+    public @PolyDet Iterator<E> iterator(@PolyDet AbstractSequentialList<E> this) {
         return listIterator();
     }
 
@@ -258,5 +258,5 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      *         sequence)
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    public abstract ListIterator<E> listIterator(int index);
+    public abstract @PolyDet ListIterator<E> listIterator(@PolyDet AbstractSequentialList<E> this, @PolyDet int index);
 }

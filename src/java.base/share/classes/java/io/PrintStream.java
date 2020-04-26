@@ -141,7 +141,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @see java.io.PrintWriter#PrintWriter(java.io.OutputStream)
      */
-    public PrintStream(OutputStream out) {
+    public @PolyDet PrintStream(@PolyDet OutputStream out) {
         this(out, false);
     }
 
@@ -157,7 +157,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @see java.io.PrintWriter#PrintWriter(java.io.OutputStream, boolean)
      */
-    public PrintStream(OutputStream out, boolean autoFlush) {
+    public @PolyDet PrintStream(@PolyDet OutputStream out, @PolyDet boolean autoFlush) {
         this(autoFlush, requireNonNull(out, "Null output stream"));
     }
 
@@ -179,7 +179,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @since  1.4
      */
-    public PrintStream(OutputStream out, boolean autoFlush, String encoding)
+    public @PolyDet PrintStream(@PolyDet OutputStream out, @PolyDet boolean autoFlush, @PolyDet String encoding)
         throws UnsupportedEncodingException
     {
         this(requireNonNull(out, "Null output stream"), autoFlush, toCharset(encoding));
@@ -235,7 +235,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @since  1.5
      */
-    public PrintStream(String fileName) throws FileNotFoundException {
+    public @PolyDet PrintStream(@PolyDet String fileName) throws FileNotFoundException {
         this(false, new FileOutputStream(fileName));
     }
 
@@ -272,7 +272,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @since  1.5
      */
-    public PrintStream(String fileName, String csn)
+    public @PolyDet PrintStream(@PolyDet String fileName, @PolyDet String csn)
         throws FileNotFoundException, UnsupportedEncodingException
     {
         // ensure charset is checked before the file is opened
@@ -336,7 +336,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @since  1.5
      */
-    public PrintStream(File file) throws FileNotFoundException {
+    public @PolyDet PrintStream(@PolyDet File file) throws FileNotFoundException {
         this(false, new FileOutputStream(file));
     }
 
@@ -373,7 +373,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @since  1.5
      */
-    public PrintStream(File file, String csn)
+    public @PolyDet PrintStream(@PolyDet File file, @PolyDet String csn)
         throws FileNotFoundException, UnsupportedEncodingException
     {
         // ensure charset is checked before the file is opened
@@ -423,7 +423,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @see        java.io.OutputStream#flush()
      */
-    public void flush(@GuardSatisfied PrintStream this) {
+    public void flush(@GuardSatisfied @PolyDet PrintStream this) {
         synchronized (this) {
             try {
                 ensureOpen();
@@ -443,7 +443,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @see        java.io.OutputStream#close()
      */
-    public void close(@GuardSatisfied PrintStream this) {
+    public void close(@GuardSatisfied @PolyDet PrintStream this) {
         synchronized (this) {
             if (! closing) {
                 closing = true;
@@ -479,7 +479,7 @@ public class PrintStream extends FilterOutputStream
      *         {@code InterruptedIOException}, or the
      *         {@code setError} method has been invoked
      */
-    public boolean checkError(@GuardSatisfied PrintStream this) {
+    public @PolyDet boolean checkError(@GuardSatisfied @PolyDet PrintStream this) {
         if (out != null)
             flush();
         if (out instanceof java.io.PrintStream) {
@@ -498,7 +498,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @since 1.1
      */
-    protected void setError() {
+    protected void setError(@PolyDet PrintStream this) {
         trouble = true;
     }
 
@@ -511,7 +511,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @since 1.6
      */
-    protected void clearError() {
+    protected void clearError(@PolyDet PrintStream this) {
         trouble = false;
     }
 
@@ -534,7 +534,7 @@ public class PrintStream extends FilterOutputStream
      * @see #print(char)
      * @see #println(char)
      */
-    public void write(@GuardSatisfied PrintStream this, int b) {
+    public void write(@GuardSatisfied @Det PrintStream this, @Det int b) {
         try {
             synchronized (this) {
                 ensureOpen();
@@ -565,7 +565,7 @@ public class PrintStream extends FilterOutputStream
      * @param  off   Offset from which to start taking bytes
      * @param  len   Number of bytes to write
      */
-    public void write(@GuardSatisfied PrintStream this, @PolySigned byte buf[], @IndexOrHigh({"#1"}) int off, @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int len) {
+    public void write(@GuardSatisfied @Det PrintStream this, @PolySigned @Det byte buf @Det [], @IndexOrHigh({"#1"}) @Det int off, @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative @Det int len) {
         try {
             synchronized (this) {
                 ensureOpen();
@@ -659,7 +659,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @param      b   The {@code boolean} to be printed
      */
-    public void print(@GuardSatisfied PrintStream this, boolean b) {
+    public void print(@GuardSatisfied @Det PrintStream this, @Det boolean b) {
         write(String.valueOf(b));
     }
 
@@ -671,7 +671,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @param      c   The {@code char} to be printed
      */
-    public void print(@GuardSatisfied PrintStream this, char c) {
+    public void print(@GuardSatisfied @Det PrintStream this, @Det char c) {
         write(String.valueOf(c));
     }
 
@@ -685,7 +685,7 @@ public class PrintStream extends FilterOutputStream
      * @param      i   The {@code int} to be printed
      * @see        java.lang.Integer#toString(int)
      */
-    public void print(@GuardSatisfied PrintStream this, int i) {
+    public void print(@GuardSatisfied @Det PrintStream this, @Det int i) {
         write(String.valueOf(i));
     }
 
@@ -699,7 +699,7 @@ public class PrintStream extends FilterOutputStream
      * @param      l   The {@code long} to be printed
      * @see        java.lang.Long#toString(long)
      */
-    public void print(@GuardSatisfied PrintStream this, long l) {
+    public void print(@GuardSatisfied @Det PrintStream this, @Det long l) {
         write(String.valueOf(l));
     }
 
@@ -713,7 +713,7 @@ public class PrintStream extends FilterOutputStream
      * @param      f   The {@code float} to be printed
      * @see        java.lang.Float#toString(float)
      */
-    public void print(@GuardSatisfied PrintStream this, float f) {
+    public void print(@GuardSatisfied @Det PrintStream this, @Det float f) {
         write(String.valueOf(f));
     }
 
@@ -727,7 +727,7 @@ public class PrintStream extends FilterOutputStream
      * @param      d   The {@code double} to be printed
      * @see        java.lang.Double#toString(double)
      */
-    public void print(@GuardSatisfied PrintStream this, double d) {
+    public void print(@GuardSatisfied @Det PrintStream this, @Det double d) {
         write(String.valueOf(d));
     }
 
@@ -741,7 +741,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @throws  NullPointerException  If {@code s} is {@code null}
      */
-    public void print(@GuardSatisfied PrintStream this, @PolySigned char s[]) {
+    public void print(@GuardSatisfied @Det PrintStream this, @PolySigned @Det char s @Det []) {
         write(s);
     }
 
@@ -754,7 +754,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @param      s   The {@code String} to be printed
      */
-    public void print(@GuardSatisfied PrintStream this, @Nullable String s) {
+    public void print(@GuardSatisfied @Det PrintStream this, @Nullable @Det String s) {
         write(String.valueOf(s));
     }
 
@@ -768,7 +768,8 @@ public class PrintStream extends FilterOutputStream
      * @param      obj   The {@code Object} to be printed
      * @see        java.lang.Object#toString()
      */
-    public void print(@GuardSatisfied PrintStream this, @Nullable Object obj) {
+    @RequiresDetToString
+    public void print(@GuardSatisfied @Det PrintStream this, @Nullable @Det Object obj) {
         write(String.valueOf(obj));
     }
 
@@ -781,7 +782,7 @@ public class PrintStream extends FilterOutputStream
      * {@code line.separator}, and is not necessarily a single newline
      * character ({@code '\n'}).
      */
-    public void println(@GuardSatisfied PrintStream this) {
+    public void println(@GuardSatisfied @Det PrintStream this) {
         newLine();
     }
 
@@ -792,7 +793,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @param x  The {@code boolean} to be printed
      */
-    public void println(@GuardSatisfied PrintStream this, boolean x) {
+    public void println(@GuardSatisfied @Det PrintStream this, @Det boolean x) {
         synchronized (this) {
             print(x);
             newLine();
@@ -806,7 +807,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @param x  The {@code char} to be printed.
      */
-    public void println(@GuardSatisfied PrintStream this, char x) {
+    public void println(@GuardSatisfied @Det PrintStream this, @Det char x) {
         synchronized (this) {
             print(x);
             newLine();
@@ -820,7 +821,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @param x  The {@code int} to be printed.
      */
-    public void println(@GuardSatisfied PrintStream this, int x) {
+    public void println(@GuardSatisfied @Det PrintStream this, @Det int x) {
         synchronized (this) {
             print(x);
             newLine();
@@ -834,7 +835,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @param x  a The {@code long} to be printed.
      */
-    public void println(@GuardSatisfied PrintStream this, long x) {
+    public void println(@GuardSatisfied @Det PrintStream this, @Det long x) {
         synchronized (this) {
             print(x);
             newLine();
@@ -848,7 +849,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @param x  The {@code float} to be printed.
      */
-    public void println(@GuardSatisfied PrintStream this, float x) {
+    public void println(@GuardSatisfied @Det PrintStream this, @Det float x) {
         synchronized (this) {
             print(x);
             newLine();
@@ -862,7 +863,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @param x  The {@code double} to be printed.
      */
-    public void println(@GuardSatisfied PrintStream this, double x) {
+    public void println(@GuardSatisfied @Det PrintStream this, @Det double x) {
         synchronized (this) {
             print(x);
             newLine();
@@ -876,7 +877,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @param x  an array of chars to print.
      */
-    public void println(@GuardSatisfied PrintStream this, char x[]) {
+    public void println(@GuardSatisfied @Det PrintStream this, @Det char x @Det []) {
         synchronized (this) {
             print(x);
             newLine();
@@ -890,7 +891,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @param x  The {@code String} to be printed.
      */
-    public void println(@GuardSatisfied PrintStream this, @Nullable @Localized String x) {
+    public void println(@GuardSatisfied @Det PrintStream this, @Nullable @Localized @Det String x) {
         synchronized (this) {
             print(x);
             newLine();
@@ -906,7 +907,8 @@ public class PrintStream extends FilterOutputStream
      *
      * @param x  The {@code Object} to be printed.
      */
-    public void println(@GuardSatisfied PrintStream this, @Nullable Object x) {
+    @RequiresDetToString
+    public void println(@GuardSatisfied @Det PrintStream this, @Nullable @Det Object x) {
         String s = String.valueOf(x);
         synchronized (this) {
             print(s);
@@ -959,8 +961,9 @@ public class PrintStream extends FilterOutputStream
      * @since  1.5
      */
     @CFComment({"lock/nullness: The vararg arrays can actually be null, but let's not annotate them because passing null is bad style; see whether this annotation is useful."})
+    @RequiresDetToString
     @FormatMethod
-    public PrintStream printf(@GuardSatisfied PrintStream this, String format, @Nullable Object ... args) {
+    public @Det PrintStream printf(@GuardSatisfied @Det PrintStream this, @Det String format, @Nullable @Det Object @Det ... args) {
         return format(format, args);
     }
 
@@ -1012,8 +1015,9 @@ public class PrintStream extends FilterOutputStream
      *
      * @since  1.5
      */
+    @RequiresDetToString
     @FormatMethod
-    public PrintStream printf(@GuardSatisfied PrintStream this, @Nullable Locale l, String format, @Nullable Object ... args) {
+    public @Det PrintStream printf(@GuardSatisfied @Det PrintStream this, @Nullable @Det Locale l, @Det String format, @Nullable @Det Object @Det ... args) {
         return format(l, format, args);
     }
 
@@ -1058,8 +1062,9 @@ public class PrintStream extends FilterOutputStream
      *
      * @since  1.5
      */
+    @RequiresDetToString
     @FormatMethod
-    public PrintStream format(@GuardSatisfied PrintStream this, String format, @Nullable Object ... args) {
+    public @Det PrintStream format(@GuardSatisfied @Det PrintStream this, @Det String format, @Nullable @Det Object @Det ... args) {
         try {
             synchronized (this) {
                 ensureOpen();
@@ -1118,8 +1123,9 @@ public class PrintStream extends FilterOutputStream
      *
      * @since  1.5
      */
+    @RequiresDetToString
     @FormatMethod
-    public PrintStream format(@GuardSatisfied PrintStream this, @Nullable Locale l, String format, @Nullable Object ... args) {
+    public @Det PrintStream format(@GuardSatisfied @Det PrintStream this, @Nullable @Det Locale l, @Det String format, @Nullable @Det Object @Det ... args) {
         try {
             synchronized (this) {
                 ensureOpen();
@@ -1161,7 +1167,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @since  1.5
      */
-    public PrintStream append(@Nullable CharSequence csq) {
+    public @Det PrintStream append(@Det PrintStream this, @Nullable @Det CharSequence csq) {
         print(String.valueOf(csq));
         return this;
     }
@@ -1201,7 +1207,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @since  1.5
      */
-    public PrintStream append(@Nullable CharSequence csq, @IndexOrHigh({"#1"}) int start, @IndexOrHigh({"#1"}) int end) {
+    public @Det PrintStream append(@Det PrintStream this, @Nullable @Det CharSequence csq, @IndexOrHigh({"#1"}) @Det int start, @IndexOrHigh({"#1"}) @Det int end) {
         if (csq == null) csq = "null";
         return append(csq.subSequence(start, end));
     }
@@ -1223,7 +1229,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @since  1.5
      */
-    public PrintStream append(char c) {
+    public @Det PrintStream append(@Det PrintStream this, @Det char c) {
         print(c);
         return this;
     }

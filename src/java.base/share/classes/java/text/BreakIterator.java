@@ -597,7 +597,7 @@ public abstract class BreakIterator implements Cloneable
      * @return An array of locales for which localized
      *         <code>BreakIterator</code> instances are available.
      */
-    public static synchronized Locale[] getAvailableLocales()
+    public static synchronized @NonDet Locale @NonDet [] getAvailableLocales()
     {
         LocaleServiceProviderPool pool =
             LocaleServiceProviderPool.getPool(BreakIteratorProvider.class);

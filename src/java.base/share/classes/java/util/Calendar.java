@@ -1754,7 +1754,7 @@ public abstract class Calendar implements Serializable, Cloneable, Comparable<Ca
      * @return An array of locales for which localized
      *         <code>Calendar</code> instances are available.
      */
-    public static synchronized Locale[] getAvailableLocales()
+    public static synchronized @NonDet Locale @NonDet [] getAvailableLocales()
     {
         return DateFormat.getAvailableLocales();
     }

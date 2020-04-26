@@ -171,6 +171,7 @@ import java.io.Serializable;
  */
 @CFComment({"lock/nullness: Subclasses of this interface/class may opt to prohibit null elements"})
 @AnnotatedFor({"lock", "nullness", "index"})
+@CollectionType
 @Covariant({0})
 public interface Map<K, V> {
     // Query Operations
@@ -183,7 +184,7 @@ public interface Map<K, V> {
      * @return the number of key-value mappings in this map
      */
     @Pure
-    @NonNegative int size(@GuardSatisfied Map<K, V> this);
+    @PolyDet("down") @NonNegative int size(@GuardSatisfied @PolyDet Map<K,V> this);
 
     /**
      * Returns {@code true} if this map contains no key-value mappings.
@@ -191,7 +192,7 @@ public interface Map<K, V> {
      * @return {@code true} if this map contains no key-value mappings
      */
     @Pure
-    boolean isEmpty(@GuardSatisfied Map<K, V> this);
+    @PolyDet("down") boolean isEmpty(@GuardSatisfied @PolyDet Map<K,V> this);
 
     /**
      * Returns {@code true} if this map contains a mapping for the specified
@@ -212,7 +213,7 @@ public interface Map<K, V> {
      */
     @EnsuresKeyForIf(expression={"#1"}, result=true, map={"this"})
     @Pure
-    boolean containsKey(@GuardSatisfied Map<K, V> this, @GuardSatisfied Object key);
+    @PolyDet("down") boolean containsKey(@GuardSatisfied @PolyDet Map<K,V> this, @GuardSatisfied @PolyDet Object key);
 
     /**
      * Returns {@code true} if this map maps one or more keys to the
@@ -233,7 +234,7 @@ public interface Map<K, V> {
      * (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
      */
     @Pure
-    boolean containsValue(@GuardSatisfied Map<K, V> this, @GuardSatisfied Object value);
+    @PolyDet("down") boolean containsValue(@GuardSatisfied @PolyDet Map<K,V> this, @GuardSatisfied @PolyDet Object value);
 
     /**
      * Returns the value to which the specified key is mapped,
@@ -262,7 +263,7 @@ public interface Map<K, V> {
      * (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
      */
     @Pure
-    @Nullable V get(@GuardSatisfied Map<K, V> this, @GuardSatisfied Object key);
+    @PolyDet @Nullable V get(@GuardSatisfied @PolyDet Map<K,V> this, @GuardSatisfied @PolyDet Object key);
 
     // Modification Operations
 
@@ -292,7 +293,7 @@ public interface Map<K, V> {
      */
     @ReleasesNoLocks
     @EnsuresKeyFor(value={"#1"}, map={"this"})
-    @Nullable V put(@GuardSatisfied Map<K, V> this, K key, V value);
+    @Nullable V put(@GuardSatisfied @PolyDet Map<K, V> this, K key, V value);
 
     /**
      * Removes the mapping for a key from this map if it is present
@@ -324,7 +325,7 @@ public interface Map<K, V> {
      *         map does not permit null keys
      * (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
      */
-    @Nullable V remove(@GuardSatisfied Map<K, V> this, Object key);
+    @Nullable V remove(@GuardSatisfied @PolyDet Map<K, V> this, @PolyDet("use") Object key);
 
 
     // Bulk Operations
@@ -348,7 +349,7 @@ public interface Map<K, V> {
      * @throws IllegalArgumentException if some property of a key or value in
      *         the specified map prevents it from being stored in this map
      */
-    void putAll(@GuardSatisfied Map<K, V> this, Map<? extends K, ? extends V> m);
+    void putAll(@GuardSatisfied @PolyDet Map<K, V> this, @PolyDet("use") Map<? extends K, ? extends V> m);
 
     /**
      * Removes all of the mappings from this map (optional operation).
@@ -357,7 +358,7 @@ public interface Map<K, V> {
      * @throws UnsupportedOperationException if the {@code clear} operation
      *         is not supported by this map
      */
-    void clear(@GuardSatisfied Map<K, V> this);
+    void clear(@GuardSatisfied @PolyDet Map<K,V> this);
 
 
     // Views
@@ -378,7 +379,7 @@ public interface Map<K, V> {
      * @return a set view of the keys contained in this map
      */
     @SideEffectFree
-    Set<@KeyFor({"this"}) K> keySet(@GuardSatisfied Map<K, V> this);
+    @PolyDet Set<@KeyFor({"this"}) K> keySet(@GuardSatisfied @PolyDet Map<K, V> this);
 
     /**
      * Returns a {@link Collection} view of the values contained in this map.
@@ -396,7 +397,7 @@ public interface Map<K, V> {
      * @return a collection view of the values contained in this map
      */
     @SideEffectFree
-    Collection<V> values(@GuardSatisfied Map<K, V> this);
+    @PolyDet Collection<V> values(@GuardSatisfied @PolyDet Map<K, V> this);
 
     /**
      * Returns a {@link Set} view of the mappings contained in this map.
@@ -415,7 +416,7 @@ public interface Map<K, V> {
      * @return a set view of the mappings contained in this map
      */
     @SideEffectFree
-    Set<Map.Entry<@KeyFor({"this"}) K, V>> entrySet(@GuardSatisfied Map<K, V> this);
+    @PolyDet Set<Map.@PolyDet("down") Entry<@KeyFor({"this"}) K, V>> entrySet(@GuardSatisfied @PolyDet Map<K,V> this);
 
     /**
      * A map entry (key-value pair).  The {@code Map.entrySet} method returns
@@ -441,7 +442,7 @@ public interface Map<K, V> {
          *         removed from the backing map.
          */
         @Pure
-        K getKey(Map.@GuardSatisfied Entry<K, V> this);
+        @PolyDet K getKey(Map. @GuardSatisfied @PolyDet Entry<K,V> this);
 
         /**
          * Returns the value corresponding to this entry.  If the mapping
@@ -454,7 +455,7 @@ public interface Map<K, V> {
          *         removed from the backing map.
          */
         @Pure
-        V getValue(Map.@GuardSatisfied Entry<K, V> this);
+        @PolyDet V getValue(Map.@GuardSatisfied @PolyDet Entry<K, V> this);
 
         /**
          * Replaces the value corresponding to this entry with the specified
@@ -476,7 +477,7 @@ public interface Map<K, V> {
          *         required to, throw this exception if the entry has been
          *         removed from the backing map.
          */
-        V setValue(Map.@GuardSatisfied Entry<K, V> this, V value);
+        @PolyDet V setValue(Map.@GuardSatisfied @PolyDet Entry<K, V> this, V value);
 
         /**
          * Compares the specified object with this entry for equality.
@@ -497,7 +498,7 @@ public interface Map<K, V> {
          *         entry
          */
         @Pure
-        boolean equals(Map.@GuardSatisfied Entry<K, V> this, @GuardSatisfied @Nullable Object o);
+        @PolyDet("up") boolean equals(Map.@GuardSatisfied @PolyDet Entry<K, V> this, @GuardSatisfied @PolyDet @Nullable Object o);
 
         /**
          * Returns the hash code value for this map entry.  The hash code
@@ -516,7 +517,7 @@ public interface Map<K, V> {
          * @see #equals(Object)
          */
         @Pure
-        int hashCode(Map.@GuardSatisfied Entry<K, V> this);
+        @NonDet int hashCode(Map.@GuardSatisfied @PolyDet Entry<K, V> this);
 
         /**
          * Returns a comparator that compares {@link Map.Entry} in natural order on key.
@@ -530,7 +531,7 @@ public interface Map<K, V> {
          * @see Comparable
          * @since 1.8
          */
-        public static <K extends Comparable<? super K>, V> Comparator<Map.Entry<K, V>> comparingByKey() {
+        public static <K extends @NonDet Comparable<? super K>, V> @Det Comparator<Map.Entry<K, V>> comparingByKey() {
             return (Comparator<Map.Entry<K, V>> & Serializable)
                 (c1, c2) -> c1.getKey().compareTo(c2.getKey());
         }
@@ -547,7 +548,7 @@ public interface Map<K, V> {
          * @see Comparable
          * @since 1.8
          */
-        public static <K, V extends Comparable<? super V>> Comparator<Map.Entry<K, V>> comparingByValue() {
+        public static <K, V extends @NonDet Comparable<? super V>> @Det Comparator<Map.Entry<K,V>> comparingByValue() {
             return (Comparator<Map.Entry<K, V>> & Serializable)
                 (c1, c2) -> c1.getValue().compareTo(c2.getValue());
         }
@@ -565,7 +566,7 @@ public interface Map<K, V> {
          * @return a comparator that compares {@link Map.Entry} by the key.
          * @since 1.8
          */
-        public static <K, V> Comparator<Map.Entry<K, V>> comparingByKey(Comparator<? super K> cmp) {
+        public static <K, V> @PolyDet Comparator<Map.Entry<K, V>> comparingByKey(@PolyDet Comparator<? super K> cmp) {
             Objects.requireNonNull(cmp);
             return (Comparator<Map.Entry<K, V>> & Serializable)
                 (c1, c2) -> cmp.compare(c1.getKey(), c2.getKey());
@@ -584,7 +585,7 @@ public interface Map<K, V> {
          * @return a comparator that compares {@link Map.Entry} by the value.
          * @since 1.8
          */
-        public static <K, V> Comparator<Map.Entry<K, V>> comparingByValue(Comparator<? super V> cmp) {
+        public static <K, V> @PolyDet Comparator<Map.Entry<K, V>> comparingByValue(@PolyDet Comparator<? super V> cmp) {
             Objects.requireNonNull(cmp);
             return (Comparator<Map.Entry<K, V>> & Serializable)
                 (c1, c2) -> cmp.compare(c1.getValue(), c2.getValue());
@@ -605,7 +606,7 @@ public interface Map<K, V> {
      * @param o object to be compared for equality with this map
      * @return {@code true} if the specified object is equal to this map
      */
-    boolean equals(@GuardSatisfied Map<K, V> this, @GuardSatisfied Object o);
+    @PolyDet("up") boolean equals(@GuardSatisfied @PolyDet Map<K,V> this, @GuardSatisfied @PolyDet Object o);
 
     /**
      * Returns the hash code value for this map.  The hash code of a map is
@@ -620,7 +621,7 @@ public interface Map<K, V> {
      * @see Object#equals(Object)
      * @see #equals(Object)
      */
-    int hashCode(@GuardSatisfied Map<K, V> this);
+    @NonDet int hashCode(@GuardSatisfied @PolyDet Map<K,V> this);
 
     // Defaultable methods
 
@@ -646,7 +647,7 @@ public interface Map<K, V> {
      * (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
      * @since 1.8
      */
-    default V getOrDefault(Object key, V defaultValue) {
+    default @PolyDet V getOrDefault(@GuardSatisfied @PolyDet Map<K,V> this, @PolyDet Object key, V defaultValue) {
         V v;
         return (((v = get(key)) != null) || containsKey(key))
             ? v
@@ -678,7 +679,7 @@ public interface Map<K, V> {
      * removed during iteration
      * @since 1.8
      */
-    default void forEach(BiConsumer<? super K, ? super V> action) {
+    default void forEach(@GuardSatisfied @PolyDet Map<K,V> this, @PolyDet("use") BiConsumer<? super @PolyDet("up") K, ? super @PolyDet("up") V> action) {
         Objects.requireNonNull(action);
         for (Map.Entry<K, V> entry : entrySet()) {
             K k;
@@ -733,7 +734,7 @@ public interface Map<K, V> {
      * removed during iteration
      * @since 1.8
      */
-    default void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+    default void replaceAll(@GuardSatisfied @PolyDet Map<K,V> this, @PolyDet("use") BiFunction<? super K, ? super V, ? extends V> function) {
         Objects.requireNonNull(function);
         for (Map.Entry<K, V> entry : entrySet()) {
             K k;
@@ -802,7 +803,7 @@ public interface Map<K, V> {
      * @since 1.8
      */
     @EnsuresKeyFor(value={"#1"}, map={"this"})
-    default @Nullable V putIfAbsent(K key, V value) {
+    default @Nullable V putIfAbsent(@GuardSatisfied @PolyDet Map<K,V> this, K key, V value) {
         V v = get(key);
         if (v == null) {
             v = put(key, value);
@@ -845,7 +846,7 @@ public interface Map<K, V> {
      *         (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
      * @since 1.8
      */
-    default boolean remove(Object key, Object value) {
+    default @PolyDet("down") boolean remove(@GuardSatisfied @PolyDet Map<K,V> this, @PolyDet Object key, @PolyDet Object value) {
         Object curValue = get(key);
         if (!Objects.equals(curValue, value) ||
             (curValue == null && !containsKey(key))) {
@@ -897,7 +898,7 @@ public interface Map<K, V> {
      *         or value prevents it from being stored in this map
      * @since 1.8
      */
-    default boolean replace(K key, V oldValue, V newValue) {
+    default @PolyDet("down") boolean replace(@GuardSatisfied @PolyDet Map<K,V> this, K key, V oldValue, V newValue) {
         Object curValue = get(key);
         if (!Objects.equals(curValue, oldValue) ||
             (curValue == null && !containsKey(key))) {
@@ -945,7 +946,7 @@ public interface Map<K, V> {
      *         or value prevents it from being stored in this map
      * @since 1.8
      */
-    default @Nullable V replace(K key, V value) {
+    default @Nullable V replace(@GuardSatisfied @PolyDet Map<K,V> this, K key, V value) {
         V curValue;
         if (((curValue = get(key)) != null) || containsKey(key)) {
             curValue = put(key, value);
@@ -1027,8 +1028,8 @@ public interface Map<K, V> {
      *         (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
      * @since 1.8
      */
-    default V computeIfAbsent(K key,
-            Function<? super K, ? extends @Nullable V> mappingFunction) {
+    default V computeIfAbsent(@GuardSatisfied @PolyDet Map<K,V> this, K key,
+            @PolyDet("use") Function<? super K, ? extends @Nullable V> mappingFunction) {
         Objects.requireNonNull(mappingFunction);
         V v;
         if ((v = get(key)) == null) {
@@ -1104,8 +1105,8 @@ public interface Map<K, V> {
      *         (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
      * @since 1.8
      */
-    default V computeIfPresent(K key,
-            BiFunction<? super K, ? super V, ? extends @Nullable V> remappingFunction) {
+    default V computeIfPresent(@GuardSatisfied @PolyDet Map<K,V> this, K key,
+            @PolyDet("use") BiFunction<? super K, ? super V, ? extends @Nullable V> remappingFunction) {
         Objects.requireNonNull(remappingFunction);
         V oldValue;
         if ((oldValue = get(key)) != null) {
@@ -1196,8 +1197,8 @@ public interface Map<K, V> {
      *         (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
      * @since 1.8
      */
-    default V compute(K key,
-            BiFunction<? super K, ? super @Nullable V, ? extends @Nullable V> remappingFunction) {
+    default V compute(@GuardSatisfied @PolyDet Map<K,V> this, K key,
+            @PolyDet("use") BiFunction<? super K, ? super @Nullable V, ? extends @Nullable V> remappingFunction) {
         Objects.requireNonNull(remappingFunction);
         V oldValue = get(key);
 
@@ -1295,10 +1296,10 @@ public interface Map<K, V> {
      * @since 1.8
      */
     // It would be more flexible to make the return type of remappingFunction be `@Nullable V`.  A
-    // remappingFunction that returns null is is probably rare, and these annotations accommodate
+    // remappingFunction that returns null is probably rare, and these annotations accommodate
     // the majority of uses that don't return null.
-    default V merge(K key, V value,
-            BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+    default V merge(@GuardSatisfied @PolyDet Map<K,V> this, K key, V value,
+                             @PolyDet("use") BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
         Objects.requireNonNull(remappingFunction);
         Objects.requireNonNull(value);
         V oldValue = get(key);

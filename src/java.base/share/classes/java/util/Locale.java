@@ -1092,7 +1092,7 @@ public final class Locale implements Cloneable, Serializable {
      *
      * @return An array of installed locales.
      */
-    public static Locale[] getAvailableLocales() {
+    public static @NonDet Locale @NonDet [] getAvailableLocales() {
         return LocaleServiceProviderPool.getAllAvailableLocales();
     }
 

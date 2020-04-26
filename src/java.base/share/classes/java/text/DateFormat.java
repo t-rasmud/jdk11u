@@ -644,7 +644,7 @@ public abstract class DateFormat extends Format {
      * @return An array of locales for which localized
      *         <code>DateFormat</code> instances are available.
      */
-    public static Locale[] getAvailableLocales()
+    public static @Det Locale @OrderNonDet [] getAvailableLocales()
     {
         LocaleServiceProviderPool pool =
             LocaleServiceProviderPool.getPool(DateFormatProvider.class);

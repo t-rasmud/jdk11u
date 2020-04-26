@@ -133,7 +133,7 @@ public class DecimalFormatSymbols implements Cloneable, Serializable {
      *         <code>DecimalFormatSymbols</code> instances are available.
      * @since 1.6
      */
-    public static Locale[] getAvailableLocales() {
+    public static @Det Locale @OrderNonDet [] getAvailableLocales() {
         LocaleServiceProviderPool pool =
             LocaleServiceProviderPool.getPool(DecimalFormatSymbolsProvider.class);
         return pool.getAvailableLocales();
