@@ -1778,7 +1778,7 @@ public final class String
      * @param   tgtStr    the characters being searched for.
      * @param   fromIndex the index to begin searching from.
      */
-    static @PolyDet int indexOf(@PolyDet String this, @PolyDet byte[] src, @PolyDet byte srcCoder, @PolyDet int srcCount,
+    static @PolyDet int indexOf(@PolyDet byte[] src, @PolyDet byte srcCoder, @PolyDet int srcCount,
                        @PolyDet String tgtStr, @PolyDet int fromIndex) {
         byte[] tgt    = tgtStr.value;
         byte tgtCoder = tgtStr.coder();
