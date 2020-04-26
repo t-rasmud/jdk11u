@@ -25,6 +25,7 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
 

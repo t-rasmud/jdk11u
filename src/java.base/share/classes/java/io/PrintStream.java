@@ -25,6 +25,9 @@
 
 package java.io;
 
+import org.checkerframework.checker.determinism.qual.Det;
+import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.RequiresDetToString;
 import org.checkerframework.checker.formatter.qual.FormatMethod;
 import org.checkerframework.checker.i18n.qual.Localized;
 import org.checkerframework.checker.index.qual.IndexOrHigh;

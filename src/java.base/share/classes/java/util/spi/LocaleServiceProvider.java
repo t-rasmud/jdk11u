@@ -25,6 +25,7 @@
 
 package java.util.spi;
 
+import org.checkerframework.checker.determinism.qual.NonDet;
 import org.checkerframework.checker.interning.qual.UsesObjectEquals;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
