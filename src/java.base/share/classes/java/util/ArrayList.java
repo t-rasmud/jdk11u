@@ -25,6 +25,7 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.NonDet;
 import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -634,14 +635,14 @@ public class ArrayList<E> extends AbstractList<E>
     /**
      * {@inheritDoc}
      */
-    public int hashCode() {
+    public @NonDet int hashCode() {
         int expectedModCount = modCount;
         int hash = hashCodeRange(0, size);
         checkForComodification(expectedModCount);
         return hash;
     }
 
-    int hashCodeRange(int from, int to) {
+    @NonDet int hashCodeRange(int from, int to) {
         final Object[] es = elementData;
         if (to > es.length) {
             throw new ConcurrentModificationException();
