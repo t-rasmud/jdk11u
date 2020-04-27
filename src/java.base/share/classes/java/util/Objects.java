@@ -25,6 +25,8 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.interning.qual.UsesObjectEquals;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
@@ -86,7 +88,7 @@ public final @UsesObjectEquals class Objects {
      * @see Object#equals(Object)
      */
     @Pure
-    public static boolean equals(@GuardSatisfied @Nullable Object a, @GuardSatisfied @Nullable Object b) {
+    public static @PolyDet("up") boolean equals(@GuardSatisfied @PolyDet @Nullable Object a, @GuardSatisfied @PolyDet @Nullable Object b) {
         return (a == b) || (a != null && a.equals(b));
     }
 
@@ -108,7 +110,7 @@ public final @UsesObjectEquals class Objects {
     * @see Objects#equals(Object, Object)
     */
     @Pure
-    public static boolean deepEquals(@GuardSatisfied @Nullable Object a, @GuardSatisfied @Nullable Object b) {
+    public static @PolyDet("up") boolean deepEquals(@GuardSatisfied @PolyDet @Nullable Object a, @GuardSatisfied @PolyDet @Nullable Object b) {
         if (a == b)
             return true;
         else if (a == null || b == null)
@@ -127,7 +129,7 @@ public final @UsesObjectEquals class Objects {
      * @see Object#hashCode
      */
     @Pure
-    public static int hashCode(@GuardSatisfied @Nullable Object o) {
+    public static @NonDet int hashCode(@GuardSatisfied @PolyDet @Nullable Object o) {
         return o != null ? o.hashCode() : 0;
     }
 
@@ -158,7 +160,7 @@ public final @UsesObjectEquals class Objects {
     * @see List#hashCode
     */
     @Pure
-    public static int hash(@GuardSatisfied @Nullable Object... values) {
+    public static @NonDet int hash(@GuardSatisfied @PolyDet @Nullable Object... values) {
         return Arrays.hashCode(values);
     }
 
@@ -173,7 +175,7 @@ public final @UsesObjectEquals class Objects {
      * @see String#valueOf(Object)
      */
     @SideEffectFree
-    public static String toString(@GuardSatisfied @Nullable Object o) {
+    public static @NonDet String toString(@GuardSatisfied @PolyDet @Nullable Object o) {
         return String.valueOf(o);
     }
 
@@ -191,7 +193,7 @@ public final @UsesObjectEquals class Objects {
      * @see Objects#toString(Object)
      */
     @SideEffectFree
-    public static String toString(@GuardSatisfied @Nullable Object o, String nullDefault) {
+    public static @PolyDet("up") String toString(@GuardSatisfied @PolyDet @Nullable Object o, @PolyDet String nullDefault) {
         return (o != null) ? o.toString() : nullDefault;
     }
 
@@ -216,7 +218,7 @@ public final @UsesObjectEquals class Objects {
      * @see Comparator
      */
     @Pure
-    public static <T> int compare(@GuardSatisfied @Nullable T a, @GuardSatisfied @Nullable T b, @GuardSatisfied Comparator<? super T> c) {
+    public static <T> @PolyDet("up") int compare(@GuardSatisfied @PolyDet @Nullable T a, @GuardSatisfied @PolyDet @Nullable T b, @GuardSatisfied @PolyDet Comparator<? super T> c) {
         return (a == b) ? 0 :  c.compare(a, b);
     }
 
@@ -237,7 +239,7 @@ public final @UsesObjectEquals class Objects {
      */
     @CFComment({"lock: TODO: treat like other nullness assertion methods in the Checker Framework."})
     @EnsuresNonNull("#1")
-    public static <T> @NonNull T requireNonNull(@NonNull T obj) {
+    public static <T> @NonNull T requireNonNull(@PolyDet @NonNull T obj) {
         if (obj == null)
             throw new NullPointerException();
         return obj;
@@ -264,7 +266,7 @@ public final @UsesObjectEquals class Objects {
      */
     @EnsuresNonNull("#1")
     @SideEffectFree
-    public static <T> @NonNull T requireNonNull(@GuardSatisfied @NonNull T obj, @Nullable String message) {
+    public static <T> @NonNull T requireNonNull(@GuardSatisfied @PolyDet @NonNull T obj, @PolyDet @Nullable String message) {
         if (obj == null)
             throw new NullPointerException(message);
         return obj;
@@ -286,7 +288,7 @@ public final @UsesObjectEquals class Objects {
      */
     @EnsuresNonNullIf(expression={"#1"}, result=false)
     @Pure
-    public static boolean isNull(@GuardSatisfied @Nullable Object obj) {
+    public static @PolyDet("down") boolean isNull(@GuardSatisfied @PolyDet @Nullable Object obj) {
         return obj == null;
     }
 
@@ -306,7 +308,7 @@ public final @UsesObjectEquals class Objects {
      */
     @EnsuresNonNullIf(expression={"#1"}, result=true)
     @Pure
-    public static boolean nonNull(@GuardSatisfied @Nullable Object obj) {
+    public static @PolyDet("down") boolean nonNull(@GuardSatisfied @PolyDet @Nullable Object obj) {
         return obj != null;
     }
 
@@ -370,7 +372,7 @@ public final @UsesObjectEquals class Objects {
      */
     @EnsuresNonNull("#1")
     @Pure
-    public static <T> @NonNull T requireNonNull(@GuardSatisfied @NonNull T obj, @GuardSatisfied Supplier<String> messageSupplier) {
+    public static <T> @NonNull T requireNonNull(@GuardSatisfied @PolyDet @NonNull T obj, @GuardSatisfied @PolyDet Supplier<@PolyDet String> messageSupplier) {
         if (obj == null)
             throw new NullPointerException(messageSupplier == null ?
                                            null : messageSupplier.get());

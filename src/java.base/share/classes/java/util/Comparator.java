@@ -25,6 +25,7 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.NonDet;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -157,7 +158,7 @@ public interface Comparator<T> {
      * @throws ClassCastException if the arguments' types prevent them from
      *         being compared by this comparator.
      */
-    int compare(T o1, T o2);
+    @NonDet int compare(T o1, T o2);
 
     /**
      * Indicates whether some other object is &quot;equal to&quot; this

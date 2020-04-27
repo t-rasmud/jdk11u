@@ -25,6 +25,8 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.Det;
+import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
@@ -154,7 +156,7 @@ public class Collections {
      * @see List#sort(Comparator)
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Comparable<? super T>> void sort(List<T> list) {
+    public static <T extends Comparable<? super T>> void sort(@PolyDet List<T> list) {
         list.sort(null);
     }
 
@@ -188,7 +190,7 @@ public class Collections {
      * @see List#sort(Comparator)
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static <T> void sort(List<T> list, @Nullable Comparator<? super T> c) {
+    public static <T> void sort(@PolyDet List<T> list, @PolyDet("use") @Nullable Comparator<? super T> c) {
         list.sort(c);
     }
 
@@ -225,7 +227,7 @@ public class Collections {
      *         with the elements of the list.
      */
     public static <T>
-    int binarySearch(List<? extends Comparable<? super T>> list, T key) {
+    @PolyDet("down") int binarySearch(@PolyDet List<? extends Comparable<? super T>> list, T key) {
         if (list instanceof RandomAccess || list.size()<BINARYSEARCH_THRESHOLD)
             return Collections.indexedBinarySearch(list, key);
         else
@@ -329,7 +331,7 @@ public class Collections {
      *         elements of the list using this comparator.
      */
     @SuppressWarnings("unchecked")
-    public static <T> int binarySearch(List<? extends T> list, T key, @Nullable Comparator<? super T> c) {
+    public static <T> @PolyDet("up") int binarySearch(@PolyDet List<? extends T> list, T key, @PolyDet @Nullable Comparator<? super T> c) {
         if (c==null)
             return binarySearch((List<? extends Comparable<? super T>>) list, key);
 
@@ -388,7 +390,7 @@ public class Collections {
      *         its list-iterator does not support the {@code set} operation.
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void reverse(@GuardSatisfied List<?> list) {
+    public static void reverse(@GuardSatisfied @PolyDet List<?> list) {
         int size = list.size();
         if (size < REVERSE_THRESHOLD || list instanceof RandomAccess) {
             for (int i=0, mid=size>>1, j=size-1; i<mid; i++, j--)
@@ -435,7 +437,7 @@ public class Collections {
      * @throws UnsupportedOperationException if the specified list or
      *         its list-iterator does not support the {@code set} operation.
      */
-    public static void shuffle(@GuardSatisfied List<?> list) {
+    public static void shuffle(@GuardSatisfied @PolyDet List<?> list) {
         Random rnd = r;
         if (rnd == null)
             r = rnd = new Random(); // harmless race.
@@ -468,7 +470,7 @@ public class Collections {
      *         list-iterator does not support the {@code set} operation.
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void shuffle(@GuardSatisfied List<?> list, Random rnd) {
+    public static void shuffle(@GuardSatisfied @PolyDet List<?> list, @PolyDet Random rnd) {
         int size = list.size();
         if (size < SHUFFLE_THRESHOLD || list instanceof RandomAccess) {
             for (int i=size; i>1; i--)
@@ -506,7 +508,7 @@ public class Collections {
      * @since 1.4
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void swap(@GuardSatisfied List<?> list, int i, int j) {
+    public static void swap(@GuardSatisfied @PolyDet List<?> list, @PolyDet("use") int i, @PolyDet("use") int j) {
         // instead of using a raw type here, it's possible to capture
         // the wildcard but it will require a call to a supplementary
         // private method
@@ -535,7 +537,7 @@ public class Collections {
      * @throws UnsupportedOperationException if the specified list or its
      *         list-iterator does not support the {@code set} operation.
      */
-    public static <T> void fill(@GuardSatisfied List<? super T> list, T obj) {
+    public static <T> void fill(@GuardSatisfied @PolyDet List<? super T> list, T obj) {
         int size = list.size();
 
         if (size < FILL_THRESHOLD || list instanceof RandomAccess) {
@@ -568,7 +570,7 @@ public class Collections {
      * @throws UnsupportedOperationException if the destination list's
      *         list-iterator does not support the {@code set} operation.
      */
-    public static <T> void copy(List<? super T> dest, List<? extends T> src) {
+    public static <T> void copy(@PolyDet List<? super T> dest, @PolyDet("use") List<? extends T> src) {
         int srcSize = src.size();
         if (srcSize > dest.size())
             throw new IndexOutOfBoundsException("Source does not fit in dest");
@@ -609,7 +611,7 @@ public class Collections {
      * @throws NoSuchElementException if the collection is empty.
      * @see Comparable
      */
-    public static <T extends Object & Comparable<? super T>> T min(Collection<? extends T> coll) {
+    public static <T extends Object & Comparable<? super T>> @PolyDet("down") T min(@PolyDet Collection<? extends T> coll) {
         Iterator<? extends T> i = coll.iterator();
         T candidate = i.next();
 
@@ -645,7 +647,7 @@ public class Collections {
      * @see Comparable
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static <T> T min(Collection<? extends T> coll, @Nullable Comparator<? super T> comp) {
+    public static <T> @PolyDet("down") T min(@PolyDet Collection<? extends T> coll, @PolyDet @Nullable Comparator<? super T> comp) {
         if (comp==null)
             return (T)min((Collection) coll);
 
@@ -682,7 +684,7 @@ public class Collections {
      * @throws NoSuchElementException if the collection is empty.
      * @see Comparable
      */
-    public static <T extends Object & Comparable<? super T>> T max(Collection<? extends T> coll) {
+    public static <T extends Object & Comparable<? super T>> @PolyDet("down") T max(@PolyDet Collection<? extends T> coll) {
         Iterator<? extends T> i = coll.iterator();
         T candidate = i.next();
 
@@ -718,7 +720,7 @@ public class Collections {
      * @see Comparable
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static <T> T max(Collection<? extends T> coll, @Nullable Comparator<? super T> comp) {
+    public static <T> @PolyDet("down") T max(@PolyDet Collection<? extends T> coll, @PolyDet @Nullable Comparator<? super T> comp) {
         if (comp==null)
             return (T)max((Collection) coll);
 
@@ -788,7 +790,7 @@ public class Collections {
      *         its list-iterator does not support the {@code set} operation.
      * @since 1.4
      */
-    public static void rotate(@GuardSatisfied List<?> list, int distance) {
+    public static void rotate(@GuardSatisfied @PolyDet List<?> list, @PolyDet("use") int distance) {
         if (list instanceof RandomAccess || list.size() < ROTATE_THRESHOLD)
             rotate1(list, distance);
         else
@@ -852,7 +854,7 @@ public class Collections {
      *         its list-iterator does not support the {@code set} operation.
      * @since  1.4
      */
-    public static <T> boolean replaceAll(List<T> list, @Nullable T oldVal, T newVal) {
+    public static <T> boolean replaceAll(@PolyDet List<T> list, @Nullable T oldVal, T newVal) {
         boolean result = false;
         int size = list.size();
         if (size < REPLACEALL_THRESHOLD || list instanceof RandomAccess) {
@@ -913,7 +915,7 @@ public class Collections {
      * @since  1.4
      */
     @Pure
-    public static @GTENegativeOne int indexOfSubList(@GuardSatisfied List<?> source, @GuardSatisfied List<?> target) {
+    public static @PolyDet("up") @GTENegativeOne int indexOfSubList(@GuardSatisfied @PolyDet List<?> source, @GuardSatisfied @PolyDet List<?> target) {
         int sourceSize = source.size();
         int targetSize = target.size();
         int maxCandidate = sourceSize - targetSize;
@@ -967,7 +969,7 @@ public class Collections {
      * @since  1.4
      */
     @Pure
-    public static @GTENegativeOne int lastIndexOfSubList(@GuardSatisfied List<?> source, @GuardSatisfied List<?> target) {
+    public static @PolyDet("up") @GTENegativeOne int lastIndexOfSubList(@PolyDet @GuardSatisfied List<?> source, @PolyDet @GuardSatisfied List<?> target) {
         int sourceSize = source.size();
         int targetSize = target.size();
         int maxCandidate = sourceSize - targetSize;
@@ -1028,7 +1030,7 @@ public class Collections {
      *         returned.
      * @return an unmodifiable view of the specified collection.
      */
-    public static <T> Collection<T> unmodifiableCollection(Collection<? extends T> c) {
+    public static <T> @PolyDet Collection<T> unmodifiableCollection(@PolyDet Collection<? extends T> c) {
         return new UnmodifiableCollection<>(c);
     }
 
@@ -1139,7 +1141,7 @@ public class Collections {
      * @param  s the set for which an unmodifiable view is to be returned.
      * @return an unmodifiable view of the specified set.
      */
-    public static <T> Set<T> unmodifiableSet(Set<? extends T> s) {
+    public static <T> @PolyDet Set<T> unmodifiableSet(@PolyDet Set<? extends T> s) {
         return new UnmodifiableSet<>(s);
     }
 
@@ -1171,7 +1173,7 @@ public class Collections {
      *        returned.
      * @return an unmodifiable view of the specified sorted set.
      */
-    public static <T> SortedSet<T> unmodifiableSortedSet(SortedSet<T> s) {
+    public static <T> @PolyDet SortedSet<T> unmodifiableSortedSet(@PolyDet SortedSet<T> s) {
         return new UnmodifiableSortedSet<>(s);
     }
 
@@ -1219,7 +1221,7 @@ public class Collections {
      * @return an unmodifiable view of the specified navigable set
      * @since 1.8
      */
-    public static <T> NavigableSet<T> unmodifiableNavigableSet(NavigableSet<T> s) {
+    public static <T> @PolyDet NavigableSet<T> unmodifiableNavigableSet(@PolyDet NavigableSet<T> s) {
         return new UnmodifiableNavigableSet<>(s);
     }
 
@@ -1305,7 +1307,7 @@ public class Collections {
      * @param  list the list for which an unmodifiable view is to be returned.
      * @return an unmodifiable view of the specified list.
      */
-    public static <T> List<T> unmodifiableList(List<? extends T> list) {
+    public static <T> @PolyDet List<T> unmodifiableList(@PolyDet List<? extends T> list) {
         return (list instanceof RandomAccess ?
                 new UnmodifiableRandomAccessList<>(list) :
                 new UnmodifiableList<>(list));
@@ -1450,7 +1452,7 @@ public class Collections {
      * @param  m the map for which an unmodifiable view is to be returned.
      * @return an unmodifiable view of the specified map.
      */
-    public static <K,V> Map<K,V> unmodifiableMap(Map<? extends K, ? extends V> m) {
+    public static <K,V> @PolyDet Map<K,V> unmodifiableMap(@PolyDet Map<? extends K, ? extends V> m) {
         return new UnmodifiableMap<>(m);
     }
 
@@ -1813,7 +1815,7 @@ public class Collections {
      *        returned.
      * @return an unmodifiable view of the specified sorted map.
      */
-    public static <K,V> SortedMap<K,V> unmodifiableSortedMap(SortedMap<K, ? extends V> m) {
+    public static <K,V> @PolyDet SortedMap<K,V> unmodifiableSortedMap(@PolyDet SortedMap<K, ? extends V> m) {
         return new UnmodifiableSortedMap<>(m);
     }
 
@@ -1860,7 +1862,7 @@ public class Collections {
      * @return an unmodifiable view of the specified navigable map
      * @since 1.8
      */
-    public static <K,V> NavigableMap<K,V> unmodifiableNavigableMap(NavigableMap<K, ? extends V> m) {
+    public static <K,V> @PolyDet NavigableMap<K,V> unmodifiableNavigableMap(@PolyDet NavigableMap<K, ? extends V> m) {
         return new UnmodifiableNavigableMap<>(m);
     }
 
@@ -2025,7 +2027,7 @@ public class Collections {
      * @param  c the collection to be "wrapped" in a synchronized collection.
      * @return a synchronized view of the specified collection.
      */
-    public static <T> Collection<T> synchronizedCollection(Collection<T> c) {
+    public static <T> @PolyDet Collection<T> synchronizedCollection(@PolyDet Collection<T> c) {
         return new SynchronizedCollection<>(c);
     }
 
@@ -2159,7 +2161,7 @@ public class Collections {
      * @param  s the set to be "wrapped" in a synchronized set.
      * @return a synchronized view of the specified set.
      */
-    public static <T> Set<T> synchronizedSet(Set<T> s) {
+    public static <T> @PolyDet Set<T> synchronizedSet(@PolyDet Set<T> s) {
         return new SynchronizedSet<>(s);
     }
 
@@ -2231,7 +2233,7 @@ public class Collections {
      * @param  s the sorted set to be "wrapped" in a synchronized sorted set.
      * @return a synchronized view of the specified sorted set.
      */
-    public static <T> SortedSet<T> synchronizedSortedSet(SortedSet<T> s) {
+    public static <T> @PolyDet SortedSet<T> synchronizedSortedSet(@PolyDet SortedSet<T> s) {
         return new SynchronizedSortedSet<>(s);
     }
 
@@ -2325,7 +2327,7 @@ public class Collections {
      * @return a synchronized view of the specified navigable set
      * @since 1.8
      */
-    public static <T> NavigableSet<T> synchronizedNavigableSet(NavigableSet<T> s) {
+    public static <T> @PolyDet NavigableSet<T> synchronizedNavigableSet(@PolyDet NavigableSet<T> s) {
         return new SynchronizedNavigableSet<>(s);
     }
 
@@ -2427,7 +2429,7 @@ public class Collections {
      * @param  list the list to be "wrapped" in a synchronized list.
      * @return a synchronized view of the specified list.
      */
-    public static <T> List<T> synchronizedList(List<T> list) {
+    public static <T> @PolyDet List<T> synchronizedList(@PolyDet List<T> list) {
         return (list instanceof RandomAccess ?
                 new SynchronizedRandomAccessList<>(list) :
                 new SynchronizedList<>(list));
@@ -2599,7 +2601,7 @@ public class Collections {
      * @param  m the map to be "wrapped" in a synchronized map.
      * @return a synchronized view of the specified map.
      */
-    public static <K,V> Map<K,V> synchronizedMap(Map<K,V> m) {
+    public static <K,V> @PolyDet Map<K,V> synchronizedMap(@PolyDet Map<K,V> m) {
         return new SynchronizedMap<>(m);
     }
 
@@ -2800,7 +2802,7 @@ public class Collections {
      * @param  m the sorted map to be "wrapped" in a synchronized sorted map.
      * @return a synchronized view of the specified sorted map.
      */
-    public static <K,V> SortedMap<K,V> synchronizedSortedMap(SortedMap<K,V> m) {
+    public static <K,V> @PolyDet SortedMap<K,V> synchronizedSortedMap(@PolyDet SortedMap<K,V> m) {
         return new SynchronizedSortedMap<>(m);
     }
 
@@ -2903,7 +2905,7 @@ public class Collections {
      * @return a synchronized view of the specified navigable map.
      * @since 1.8
      */
-    public static <K,V> NavigableMap<K,V> synchronizedNavigableMap(NavigableMap<K,V> m) {
+    public static <K,V> @PolyDet NavigableMap<K,V> synchronizedNavigableMap(@PolyDet NavigableMap<K,V> m) {
         return new SynchronizedNavigableMap<>(m);
     }
 
@@ -3089,8 +3091,8 @@ public class Collections {
      * @return a dynamically typesafe view of the specified collection
      * @since 1.5
      */
-    public static <E> Collection<E> checkedCollection(Collection<E> c,
-                                                      Class<E> type) {
+    public static <E> @PolyDet Collection<E> checkedCollection(@PolyDet Collection<E> c,
+                                                      @PolyDet Class<E> type) {
         return new CheckedCollection<>(c, type);
     }
 
@@ -3247,7 +3249,7 @@ public class Collections {
      * @return a dynamically typesafe view of the specified queue
      * @since 1.8
      */
-    public static <E> Queue<E> checkedQueue(Queue<E> queue, Class<E> type) {
+    public static <E> @PolyDet Queue<E> checkedQueue(@PolyDet Queue<E> queue, @PolyDet Class<E> type) {
         return new CheckedQueue<>(queue, type);
     }
 
@@ -3302,7 +3304,7 @@ public class Collections {
      * @return a dynamically typesafe view of the specified set
      * @since 1.5
      */
-    public static <E> Set<E> checkedSet(Set<E> s, Class<E> type) {
+    public static <E> @PolyDet Set<E> checkedSet(@PolyDet Set<E> s, @PolyDet Class<E> type) {
         return new CheckedSet<>(s, type);
     }
 
@@ -3348,8 +3350,8 @@ public class Collections {
      * @return a dynamically typesafe view of the specified sorted set
      * @since 1.5
      */
-    public static <E> SortedSet<E> checkedSortedSet(SortedSet<E> s,
-                                                    Class<E> type) {
+    public static <E> @PolyDet SortedSet<E> checkedSortedSet(@PolyDet SortedSet<E> s,
+                                                             @PolyDet Class<E> type) {
         return new CheckedSortedSet<>(s, type);
     }
 
@@ -3411,8 +3413,8 @@ public class Collections {
      * @return a dynamically typesafe view of the specified navigable set
      * @since 1.8
      */
-    public static <E> NavigableSet<E> checkedNavigableSet(NavigableSet<E> s,
-                                                    Class<E> type) {
+    public static <E> @PolyDet NavigableSet<E> checkedNavigableSet(@PolyDet NavigableSet<E> s,
+                                                                   @PolyDet Class<E> type) {
         return new CheckedNavigableSet<>(s, type);
     }
 
@@ -3492,7 +3494,7 @@ public class Collections {
      * @return a dynamically typesafe view of the specified list
      * @since 1.5
      */
-    public static <E> List<E> checkedList(List<E> list, Class<E> type) {
+    public static <E> @PolyDet List<E> checkedList(@PolyDet List<E> list, @PolyDet Class<E> type) {
         return (list instanceof RandomAccess ?
                 new CheckedRandomAccessList<>(list, type) :
                 new CheckedList<>(list, type));
@@ -3638,9 +3640,9 @@ public class Collections {
      * @return a dynamically typesafe view of the specified map
      * @since 1.5
      */
-    public static <K, V> Map<K, V> checkedMap(Map<K, V> m,
-                                              Class<K> keyType,
-                                              Class<V> valueType) {
+    public static <K, V> @PolyDet Map<K, V> checkedMap(@PolyDet Map<K, V> m,
+                                                       @PolyDet Class<K> keyType,
+                                                       @PolyDet Class<V> valueType) {
         return new CheckedMap<>(m, keyType, valueType);
     }
 
@@ -4048,9 +4050,9 @@ public class Collections {
      * @return a dynamically typesafe view of the specified map
      * @since 1.5
      */
-    public static <K,V> SortedMap<K,V> checkedSortedMap(SortedMap<K, V> m,
-                                                        Class<K> keyType,
-                                                        Class<V> valueType) {
+    public static <K,V> @PolyDet SortedMap<K,V> checkedSortedMap(@PolyDet SortedMap<K, V> m,
+                                                                 @PolyDet Class<K> keyType,
+                                                                 @PolyDet Class<V> valueType) {
         return new CheckedSortedMap<>(m, keyType, valueType);
     }
 
@@ -4125,9 +4127,9 @@ public class Collections {
      * @return a dynamically typesafe view of the specified map
      * @since 1.8
      */
-    public static <K,V> NavigableMap<K,V> checkedNavigableMap(NavigableMap<K, V> m,
-                                                        Class<K> keyType,
-                                                        Class<V> valueType) {
+    public static <K,V> @PolyDet NavigableMap<K,V> checkedNavigableMap(@PolyDet NavigableMap<K, V> m,
+                                                                       @PolyDet Class<K> keyType,
+                                                                       @PolyDet Class<V> valueType) {
         return new CheckedNavigableMap<>(m, keyType, valueType);
     }
 
@@ -4291,7 +4293,7 @@ public class Collections {
      * @since 1.7
      */
     @SuppressWarnings("unchecked")
-    public static <T> Iterator<T> emptyIterator() {
+    public static <T> @Det Iterator<T> emptyIterator() {
         return (Iterator<T>) EmptyIterator.EMPTY_ITERATOR;
     }
 
@@ -4335,7 +4337,7 @@ public class Collections {
      * @since 1.7
      */
     @SuppressWarnings("unchecked")
-    public static <T> ListIterator<T> emptyListIterator() {
+    public static <T> @Det ListIterator<T> emptyListIterator() {
         return (ListIterator<T>) EmptyListIterator.EMPTY_ITERATOR;
     }
 
@@ -4372,7 +4374,7 @@ public class Collections {
      * @since 1.7
      */
     @SuppressWarnings("unchecked")
-    public static <T> Enumeration<T> emptyEnumeration() {
+    public static <T> @Det Enumeration<T> emptyEnumeration() {
         return (Enumeration<T>) EmptyEnumeration.EMPTY_ENUMERATION;
     }
 
@@ -4413,7 +4415,7 @@ public class Collections {
      * @since 1.5
      */
     @SuppressWarnings("unchecked")
-    public static final <T> Set<T> emptySet() {
+    public static final <T> @Det Set<T> emptySet() {
         return (Set<T>) EMPTY_SET;
     }
 
@@ -4490,7 +4492,7 @@ public class Collections {
      * @since 1.8
      */
     @SuppressWarnings("unchecked")
-    public static <E> SortedSet<E> emptySortedSet() {
+    public static <E> @Det SortedSet<E> emptySortedSet() {
         return (SortedSet<E>) UnmodifiableNavigableSet.EMPTY_NAVIGABLE_SET;
     }
 
@@ -4511,7 +4513,7 @@ public class Collections {
      * @since 1.8
      */
     @SuppressWarnings("unchecked")
-    public static <E> NavigableSet<E> emptyNavigableSet() {
+    public static <E> @Det NavigableSet<E> emptyNavigableSet() {
         return (NavigableSet<E>) UnmodifiableNavigableSet.EMPTY_NAVIGABLE_SET;
     }
 
@@ -4544,7 +4546,7 @@ public class Collections {
      * @since 1.5
      */
     @SuppressWarnings("unchecked")
-    public static final <T> List<T> emptyList() {
+    public static final <T> @Det List<T> emptyList() {
         return (List<T>) EMPTY_LIST;
     }
 
@@ -4650,7 +4652,7 @@ public class Collections {
      * @since 1.5
      */
     @SuppressWarnings("unchecked")
-    public static final <K,V> Map<K,V> emptyMap() {
+    public static final <K,V> @Det Map<K,V> emptyMap() {
         return (Map<K,V>) EMPTY_MAP;
     }
 
@@ -4671,7 +4673,7 @@ public class Collections {
      * @since 1.8
      */
     @SuppressWarnings("unchecked")
-    public static final <K,V> SortedMap<K,V> emptySortedMap() {
+    public static final <K,V> @Det SortedMap<K,V> emptySortedMap() {
         return (SortedMap<K,V>) UnmodifiableNavigableMap.EMPTY_NAVIGABLE_MAP;
     }
 
@@ -4692,7 +4694,7 @@ public class Collections {
      * @since 1.8
      */
     @SuppressWarnings("unchecked")
-    public static final <K,V> NavigableMap<K,V> emptyNavigableMap() {
+    public static final <K,V> @Det NavigableMap<K,V> emptyNavigableMap() {
         return (NavigableMap<K,V>) UnmodifiableNavigableMap.EMPTY_NAVIGABLE_MAP;
     }
 
@@ -4805,7 +4807,7 @@ public class Collections {
      * @param o the sole object to be stored in the returned set.
      * @return an immutable set containing only the specified object.
      */
-    public static <T> Set<T> singleton(T o) {
+    public static <T> @PolyDet Set<T> singleton(@PolyDet T o) {
         return new SingletonSet<>(o);
     }
 
@@ -4934,7 +4936,7 @@ public class Collections {
      * @return an immutable list containing only the specified object.
      * @since 1.3
      */
-    public static <T> @ArrayLen(1) List<T> singletonList(T o) {
+    public static <T> @PolyDet @ArrayLen(1) List<T> singletonList(@PolyDet T o) {
         return new SingletonList<>(o);
     }
 
@@ -5008,7 +5010,7 @@ public class Collections {
      *         mapping.
      * @since 1.3
      */
-    public static <K,V> Map<K,V> singletonMap(K key, V value) {
+    public static <K,V> @PolyDet Map<K,V> singletonMap(@PolyDet K key, @PolyDet V value) {
         return new SingletonMap<>(key, value);
     }
 
@@ -5149,7 +5151,7 @@ public class Collections {
      * @see    List#addAll(Collection)
      * @see    List#addAll(int, Collection)
      */
-    public static <T> List<T> nCopies(@NonNegative int n, T o) {
+    public static <T> @PolyDet List<T> nCopies(@PolyDet @NonNegative int n, @PolyDet T o) {
         if (n < 0)
             throw new IllegalArgumentException("List length = " + n);
         return new CopiesList<>(n, o);
@@ -5272,7 +5274,7 @@ public class Collections {
      * @see Comparable
      */
     @SuppressWarnings("unchecked")
-    public static <T> Comparator<T> reverseOrder() {
+    public static <T> @Det Comparator<T> reverseOrder() {
         return (Comparator<T>) ReverseComparator.REVERSE_ORDER;
     }
 
@@ -5317,7 +5319,7 @@ public class Collections {
      * @since 1.5
      */
     @SuppressWarnings("unchecked")
-    public static <T> Comparator<T> reverseOrder(@Nullable Comparator<T> cmp) {
+    public static <T> @PolyDet Comparator<T> reverseOrder(@PolyDet @Nullable Comparator<T> cmp) {
         if (cmp == null) {
             return (Comparator<T>) ReverseComparator.REVERSE_ORDER;
         } else if (cmp == ReverseComparator.REVERSE_ORDER) {
@@ -5388,7 +5390,7 @@ public class Collections {
      * @return an enumeration over the specified collection.
      * @see Enumeration
      */
-    public static <T> Enumeration<T> enumeration(final Collection<T> c) {
+    public static <T> @PolyDet Enumeration<T> enumeration(final @PolyDet Collection<T> c) {
         return new Enumeration<T>() {
             private final Iterator<T> i = c.iterator();
 
@@ -5418,7 +5420,7 @@ public class Collections {
      * @see Enumeration
      * @see ArrayList
      */
-    public static <T> ArrayList<T> list(Enumeration<T> e) {
+    public static <T> @PolyDet ArrayList<T> list(@PolyDet Enumeration<T> e) {
         ArrayList<T> l = new ArrayList<>();
         while (e.hasMoreElements())
             l.add(e.nextElement());
@@ -5447,7 +5449,7 @@ public class Collections {
      * @throws NullPointerException if {@code c} is null
      * @since 1.5
      */
-    public static @NonNegative int frequency(Collection<?> c, @Nullable Object o) {
+    public static @PolyDet("down") @NonNegative int frequency(@PolyDet Collection<?> c, @PolyDet @Nullable Object o) {
         int result = 0;
         if (o == null) {
             for (Object e : c)
@@ -5499,7 +5501,7 @@ public class Collections {
      * (<a href="Collection.html#optional-restrictions">optional</a>)
      * @since 1.5
      */
-    public static boolean disjoint(Collection<?> c1, Collection<?> c2) {
+    public static @PolyDet("down") boolean disjoint(@PolyDet Collection<?> c1, @PolyDet Collection<?> c2) {
         // The collection to be used for contains(). Preference is given to
         // the collection who's contains() has lower O() complexity.
         Collection<?> contains = c2;
@@ -5579,7 +5581,7 @@ public class Collections {
      * @since 1.5
      */
     @SafeVarargs
-    public static <T> boolean addAll(@GuardSatisfied Collection<? super T> c, T... elements) {
+    public static <T> @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet Collection<? super T> c, T... elements) {
         boolean result = false;
         for (T element : elements)
             result |= c.add(element);
@@ -5617,7 +5619,7 @@ public class Collections {
      * @throws IllegalArgumentException if {@code map} is not empty
      * @since 1.6
      */
-    public static <E> Set<E> newSetFromMap(Map<E, Boolean> map) {
+    public static <E> @PolyDet Set<E> newSetFromMap(@PolyDet Map<E, Boolean> map) {
         return new SetFromMap<>(map);
     }
 
@@ -5705,7 +5707,7 @@ public class Collections {
      * @return the queue
      * @since  1.6
      */
-    public static <T> Queue<T> asLifoQueue(Deque<T> deque) {
+    public static <T> @PolyDet Queue<T> asLifoQueue(@PolyDet Deque<T> deque) {
         return new AsLIFOQueue<>(Objects.requireNonNull(deque));
     }
 

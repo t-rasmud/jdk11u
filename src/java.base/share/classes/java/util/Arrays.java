@@ -25,6 +25,8 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.SearchIndexFor;
@@ -156,7 +158,7 @@ public class Arrays {
      *
      * @param a the array to be sorted
      */
-    public static void sort(int[] a) {
+    public static void sort(@PolyDet int @PolyDet[] a) {
         DualPivotQuicksort.sort(a, 0, a.length - 1, null, 0, 0);
     }
 
@@ -180,7 +182,7 @@ public class Arrays {
      * @throws ArrayIndexOutOfBoundsException
      *     if {@code fromIndex < 0} or {@code toIndex > a.length}
      */
-    public static void sort(int[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex) {
+    public static void sort(@PolyDet int @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
         DualPivotQuicksort.sort(a, fromIndex, toIndex - 1, null, 0, 0);
     }
@@ -196,7 +198,7 @@ public class Arrays {
      *
      * @param a the array to be sorted
      */
-    public static void sort(long[] a) {
+    public static void sort(@PolyDet long @PolyDet[] a) {
         DualPivotQuicksort.sort(a, 0, a.length - 1, null, 0, 0);
     }
 
@@ -220,7 +222,7 @@ public class Arrays {
      * @throws ArrayIndexOutOfBoundsException
      *     if {@code fromIndex < 0} or {@code toIndex > a.length}
      */
-    public static void sort(long[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex) {
+    public static void sort(@PolyDet long @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
         DualPivotQuicksort.sort(a, fromIndex, toIndex - 1, null, 0, 0);
     }
@@ -236,7 +238,7 @@ public class Arrays {
      *
      * @param a the array to be sorted
      */
-    public static void sort(short[] a) {
+    public static void sort(@PolyDet short @PolyDet[] a) {
         DualPivotQuicksort.sort(a, 0, a.length - 1, null, 0, 0);
     }
 
@@ -260,7 +262,7 @@ public class Arrays {
      * @throws ArrayIndexOutOfBoundsException
      *     if {@code fromIndex < 0} or {@code toIndex > a.length}
      */
-    public static void sort(short[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex) {
+    public static void sort(@PolyDet short @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
         DualPivotQuicksort.sort(a, fromIndex, toIndex - 1, null, 0, 0);
     }
@@ -276,7 +278,7 @@ public class Arrays {
      *
      * @param a the array to be sorted
      */
-    public static void sort(char[] a) {
+    public static void sort(@PolyDet char @PolyDet[] a) {
         DualPivotQuicksort.sort(a, 0, a.length - 1, null, 0, 0);
     }
 
@@ -300,7 +302,7 @@ public class Arrays {
      * @throws ArrayIndexOutOfBoundsException
      *     if {@code fromIndex < 0} or {@code toIndex > a.length}
      */
-    public static void sort(char[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex) {
+    public static void sort(@PolyDet char @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
         DualPivotQuicksort.sort(a, fromIndex, toIndex - 1, null, 0, 0);
     }
@@ -316,7 +318,7 @@ public class Arrays {
      *
      * @param a the array to be sorted
      */
-    public static void sort(byte[] a) {
+    public static void sort(@PolyDet byte @PolyDet[] a) {
         DualPivotQuicksort.sort(a, 0, a.length - 1);
     }
 
@@ -340,7 +342,7 @@ public class Arrays {
      * @throws ArrayIndexOutOfBoundsException
      *     if {@code fromIndex < 0} or {@code toIndex > a.length}
      */
-    public static void sort(byte[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex) {
+    public static void sort(@PolyDet byte @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
         DualPivotQuicksort.sort(a, fromIndex, toIndex - 1);
     }
@@ -364,7 +366,7 @@ public class Arrays {
      *
      * @param a the array to be sorted
      */
-    public static void sort(float[] a) {
+    public static void sort(@PolyDet float @PolyDet[] a) {
         DualPivotQuicksort.sort(a, 0, a.length - 1, null, 0, 0);
     }
 
@@ -396,7 +398,7 @@ public class Arrays {
      * @throws ArrayIndexOutOfBoundsException
      *     if {@code fromIndex < 0} or {@code toIndex > a.length}
      */
-    public static void sort(float[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex) {
+    public static void sort(@PolyDet float @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
         DualPivotQuicksort.sort(a, fromIndex, toIndex - 1, null, 0, 0);
     }
@@ -420,7 +422,7 @@ public class Arrays {
      *
      * @param a the array to be sorted
      */
-    public static void sort(double[] a) {
+    public static void sort(@PolyDet double @PolyDet[] a) {
         DualPivotQuicksort.sort(a, 0, a.length - 1, null, 0, 0);
     }
 
@@ -452,7 +454,7 @@ public class Arrays {
      * @throws ArrayIndexOutOfBoundsException
      *     if {@code fromIndex < 0} or {@code toIndex > a.length}
      */
-    public static void sort(double[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex) {
+    public static void sort(@PolyDet double @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
         DualPivotQuicksort.sort(a, fromIndex, toIndex - 1, null, 0, 0);
     }
@@ -475,7 +477,7 @@ public class Arrays {
      *
      * @since 1.8
      */
-    public static void parallelSort(byte[] a) {
+    public static void parallelSort(@PolyDet byte @PolyDet[] a) {
         int n = a.length, p, g;
         if (n <= MIN_ARRAY_SORT_GRAN ||
             (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
@@ -514,7 +516,7 @@ public class Arrays {
      *
      * @since 1.8
      */
-    public static void parallelSort(byte[] a, int fromIndex, int toIndex) {
+    public static void parallelSort(@PolyDet byte @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
         int n = toIndex - fromIndex, p, g;
         if (n <= MIN_ARRAY_SORT_GRAN ||
@@ -545,7 +547,7 @@ public class Arrays {
      *
      * @since 1.8
      */
-    public static void parallelSort(char[] a) {
+    public static void parallelSort(@PolyDet char @PolyDet[] a) {
         int n = a.length, p, g;
         if (n <= MIN_ARRAY_SORT_GRAN ||
             (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
@@ -584,7 +586,7 @@ public class Arrays {
      *
      * @since 1.8
      */
-    public static void parallelSort(char[] a, int fromIndex, int toIndex) {
+    public static void parallelSort(@PolyDet char @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
         int n = toIndex - fromIndex, p, g;
         if (n <= MIN_ARRAY_SORT_GRAN ||
@@ -615,7 +617,7 @@ public class Arrays {
      *
      * @since 1.8
      */
-    public static void parallelSort(short[] a) {
+    public static void parallelSort(@PolyDet short @PolyDet[] a) {
         int n = a.length, p, g;
         if (n <= MIN_ARRAY_SORT_GRAN ||
             (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
@@ -654,7 +656,7 @@ public class Arrays {
      *
      * @since 1.8
      */
-    public static void parallelSort(short[] a, int fromIndex, int toIndex) {
+    public static void parallelSort(@PolyDet short @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
         int n = toIndex - fromIndex, p, g;
         if (n <= MIN_ARRAY_SORT_GRAN ||
@@ -685,7 +687,7 @@ public class Arrays {
      *
      * @since 1.8
      */
-    public static void parallelSort(int[] a) {
+    public static void parallelSort(@PolyDet int @PolyDet[] a) {
         int n = a.length, p, g;
         if (n <= MIN_ARRAY_SORT_GRAN ||
             (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
@@ -724,7 +726,7 @@ public class Arrays {
      *
      * @since 1.8
      */
-    public static void parallelSort(int[] a, int fromIndex, int toIndex) {
+    public static void parallelSort(@PolyDet int @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
         int n = toIndex - fromIndex, p, g;
         if (n <= MIN_ARRAY_SORT_GRAN ||
@@ -755,7 +757,7 @@ public class Arrays {
      *
      * @since 1.8
      */
-    public static void parallelSort(long[] a) {
+    public static void parallelSort(@PolyDet long @PolyDet[] a) {
         int n = a.length, p, g;
         if (n <= MIN_ARRAY_SORT_GRAN ||
             (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
@@ -794,7 +796,7 @@ public class Arrays {
      *
      * @since 1.8
      */
-    public static void parallelSort(long[] a, int fromIndex, int toIndex) {
+    public static void parallelSort(@PolyDet long @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
         int n = toIndex - fromIndex, p, g;
         if (n <= MIN_ARRAY_SORT_GRAN ||
@@ -833,7 +835,7 @@ public class Arrays {
      *
      * @since 1.8
      */
-    public static void parallelSort(float[] a) {
+    public static void parallelSort(@PolyDet float @PolyDet[] a) {
         int n = a.length, p, g;
         if (n <= MIN_ARRAY_SORT_GRAN ||
             (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
@@ -880,7 +882,7 @@ public class Arrays {
      *
      * @since 1.8
      */
-    public static void parallelSort(float[] a, int fromIndex, int toIndex) {
+    public static void parallelSort(@PolyDet float @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
         int n = toIndex - fromIndex, p, g;
         if (n <= MIN_ARRAY_SORT_GRAN ||
@@ -919,7 +921,7 @@ public class Arrays {
      *
      * @since 1.8
      */
-    public static void parallelSort(double[] a) {
+    public static void parallelSort(@PolyDet double @PolyDet[] a) {
         int n = a.length, p, g;
         if (n <= MIN_ARRAY_SORT_GRAN ||
             (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
@@ -966,7 +968,7 @@ public class Arrays {
      *
      * @since 1.8
      */
-    public static void parallelSort(double[] a, int fromIndex, int toIndex) {
+    public static void parallelSort(@PolyDet double @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
         int n = toIndex - fromIndex, p, g;
         if (n <= MIN_ARRAY_SORT_GRAN ||
@@ -1014,7 +1016,7 @@ public class Arrays {
      * @since 1.8
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Comparable<? super T>> void parallelSort(T[] a) {
+    public static <@PolyDet T extends Comparable<? super T>> void parallelSort(T @PolyDet[] a) {
         int n = a.length, p, g;
         if (n <= MIN_ARRAY_SORT_GRAN ||
             (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
@@ -1071,8 +1073,8 @@ public class Arrays {
      * @since 1.8
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Comparable<? super T>>
-    void parallelSort(T[] a, int fromIndex, int toIndex) {
+    public static <@PolyDet T extends Comparable<? super T>>
+    void parallelSort(T @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
         int n = toIndex - fromIndex, p, g;
         if (n <= MIN_ARRAY_SORT_GRAN ||
@@ -1120,7 +1122,7 @@ public class Arrays {
      * @since 1.8
      */
     @SuppressWarnings("unchecked")
-    public static <T> void parallelSort(T[] a, @Nullable Comparator<? super T> cmp) {
+    public static <T> void parallelSort(T @PolyDet[] a, @PolyDet("use") @Nullable Comparator<? super T> cmp) {
         if (cmp == null)
             cmp = NaturalOrder.INSTANCE;
         int n = a.length, p, g;
@@ -1179,8 +1181,8 @@ public class Arrays {
      * @since 1.8
      */
     @SuppressWarnings("unchecked")
-    public static <T> void parallelSort(T[] a, int fromIndex, int toIndex,
-                                        Comparator<? super T> cmp) {
+    public static <T> void parallelSort(T @PolyDet [] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex,
+                                                 @PolyDet("use") Comparator<? super T> cmp) {
         rangeCheck(a.length, fromIndex, toIndex);
         if (cmp == null)
             cmp = NaturalOrder.INSTANCE;
@@ -1255,7 +1257,7 @@ public class Arrays {
      *         ordering of the array elements is found to violate the
      *         {@link Comparable} contract
      */
-    public static void sort(@PolyInterned Object[] a) {
+    public static void sort(@PolyDet @PolyInterned Object @PolyDet[] a) {
         if (LegacyMergeSort.userRequested)
             legacyMergeSort(a);
         else
@@ -1320,7 +1322,7 @@ public class Arrays {
      *         not <i>mutually comparable</i> (for example, strings and
      *         integers).
      */
-    public static void sort(@PolyInterned Object[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex) {
+    public static void sort(@PolyDet @PolyInterned Object @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
         if (LegacyMergeSort.userRequested)
             legacyMergeSort(a, fromIndex, toIndex);
@@ -1444,7 +1446,7 @@ public class Arrays {
      * @throws IllegalArgumentException (optional) if the comparator is
      *         found to violate the {@link Comparator} contract
      */
-    public static <T> void sort(T[] a, @Nullable Comparator<? super T> c) {
+    public static <T> void sort(T @PolyDet[] a, @PolyDet("use") @Nullable Comparator<? super T> c) {
         if (c == null) {
             sort(a);
         } else {
@@ -1516,8 +1518,8 @@ public class Arrays {
      * @throws ArrayIndexOutOfBoundsException if {@code fromIndex < 0} or
      *         {@code toIndex > a.length}
      */
-    public static <T> void sort(T[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
-                                Comparator<? super T> c) {
+    public static <T> void sort(T @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex,
+                                         @PolyDet("use") @Nullable Comparator<? super T> c) {
         if (c == null) {
             sort(a, fromIndex, toIndex);
         } else {
@@ -1604,7 +1606,7 @@ public class Arrays {
      * @throws NullPointerException if the specified array or function is null
      * @since 1.8
      */
-    public static <T> void parallelPrefix(T[] array, BinaryOperator<T> op) {
+    public static <T> void parallelPrefix(T @PolyDet[] array, @PolyDet("use") BinaryOperator<T> op) {
         Objects.requireNonNull(op);
         if (array.length > 0)
             new ArrayPrefixHelpers.CumulateTask<>
@@ -1627,8 +1629,8 @@ public class Arrays {
      * @throws NullPointerException if the specified array or function is null
      * @since 1.8
      */
-    public static <T> void parallelPrefix(T[] array, int fromIndex,
-                                          int toIndex, BinaryOperator<T> op) {
+    public static <T> void parallelPrefix(T @PolyDet[] array, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex,
+                                                   @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex, @PolyDet("use") BinaryOperator<T> op) {
         Objects.requireNonNull(op);
         rangeCheck(array.length, fromIndex, toIndex);
         if (fromIndex < toIndex)
@@ -1650,7 +1652,7 @@ public class Arrays {
      * @throws NullPointerException if the specified array or function is null
      * @since 1.8
      */
-    public static void parallelPrefix(long[] array, LongBinaryOperator op) {
+    public static void parallelPrefix(@PolyDet long @PolyDet[] array, @PolyDet("use") LongBinaryOperator op) {
         Objects.requireNonNull(op);
         if (array.length > 0)
             new ArrayPrefixHelpers.LongCumulateTask
@@ -1672,8 +1674,8 @@ public class Arrays {
      * @throws NullPointerException if the specified array or function is null
      * @since 1.8
      */
-    public static void parallelPrefix(long[] array, int fromIndex,
-                                      int toIndex, LongBinaryOperator op) {
+    public static void parallelPrefix(@PolyDet long @PolyDet[] array, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex,
+                                      @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex, @PolyDet("use") LongBinaryOperator op) {
         Objects.requireNonNull(op);
         rangeCheck(array.length, fromIndex, toIndex);
         if (fromIndex < toIndex)
@@ -1698,7 +1700,7 @@ public class Arrays {
      * @throws NullPointerException if the specified array or function is null
      * @since 1.8
      */
-    public static void parallelPrefix(double[] array, DoubleBinaryOperator op) {
+    public static void parallelPrefix(@PolyDet double @PolyDet[] array, @PolyDet("use") DoubleBinaryOperator op) {
         Objects.requireNonNull(op);
         if (array.length > 0)
             new ArrayPrefixHelpers.DoubleCumulateTask
@@ -1720,8 +1722,8 @@ public class Arrays {
      * @throws NullPointerException if the specified array or function is null
      * @since 1.8
      */
-    public static void parallelPrefix(double[] array, int fromIndex,
-                                      int toIndex, DoubleBinaryOperator op) {
+    public static void parallelPrefix(@PolyDet double @PolyDet[] array, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex,
+                                      @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex, @PolyDet("use") DoubleBinaryOperator op) {
         Objects.requireNonNull(op);
         rangeCheck(array.length, fromIndex, toIndex);
         if (fromIndex < toIndex)
@@ -1743,7 +1745,7 @@ public class Arrays {
      * @throws NullPointerException if the specified array or function is null
      * @since 1.8
      */
-    public static void parallelPrefix(int[] array, IntBinaryOperator op) {
+    public static void parallelPrefix(@PolyDet int @PolyDet[] array, @PolyDet("use") IntBinaryOperator op) {
         Objects.requireNonNull(op);
         if (array.length > 0)
             new ArrayPrefixHelpers.IntCumulateTask
@@ -1765,8 +1767,8 @@ public class Arrays {
      * @throws NullPointerException if the specified array or function is null
      * @since 1.8
      */
-    public static void parallelPrefix(int[] array, int fromIndex,
-                                      int toIndex, IntBinaryOperator op) {
+    public static void parallelPrefix(@PolyDet int @PolyDet[] array, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex,
+                                      @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex, @PolyDet("use") IntBinaryOperator op) {
         Objects.requireNonNull(op);
         rangeCheck(array.length, fromIndex, toIndex);
         if (fromIndex < toIndex)
@@ -1795,7 +1797,7 @@ public class Arrays {
      *         that this guarantees that the return value will be &gt;= 0 if
      *         and only if the key is found.
      */
-    public static @SearchIndexFor({"#1"}) int binarySearch(long[] a, long key) {
+    public static @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(@PolyDet long @PolyDet[] a, @PolyDet long key) {
         return binarySearch0(a, 0, a.length, key);
     }
 
@@ -1831,14 +1833,14 @@ public class Arrays {
      *         if {@code fromIndex < 0 or toIndex > a.length}
      * @since 1.6
      */
-    public static @SearchIndexFor({"#1"}) int binarySearch(long[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
-                                   long key) {
+    public static @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(@PolyDet long @PolyDet[] a, @PolyDet @IndexOrHigh({"#1"}) int fromIndex, @PolyDet @IndexOrHigh({"#1"}) int toIndex,
+                                   @PolyDet long key) {
         rangeCheck(a.length, fromIndex, toIndex);
         return binarySearch0(a, fromIndex, toIndex, key);
     }
 
     // Like public version, but without range checks.
-    private static int binarySearch0(long[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
+    private static @SearchIndexFor({"#1"}) int binarySearch0(long[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
                                      long key) {
         int low = fromIndex;
         int high = toIndex - 1;
@@ -1876,7 +1878,7 @@ public class Arrays {
      *         that this guarantees that the return value will be &gt;= 0 if
      *         and only if the key is found.
      */
-    public static @SearchIndexFor({"#1"}) int binarySearch(int[] a, int key) {
+    public static @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(@PolyDet int @PolyDet[] a, @PolyDet int key) {
         return binarySearch0(a, 0, a.length, key);
     }
 
@@ -1912,8 +1914,8 @@ public class Arrays {
      *         if {@code fromIndex < 0 or toIndex > a.length}
      * @since 1.6
      */
-    public static @SearchIndexFor({"#1"}) int binarySearch(int[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
-                                   int key) {
+    public static @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(@PolyDet int @PolyDet[] a, @PolyDet @IndexOrHigh({"#1"}) int fromIndex, @PolyDet @IndexOrHigh({"#1"}) int toIndex,
+                                            @PolyDet int key) {
         rangeCheck(a.length, fromIndex, toIndex);
         return binarySearch0(a, fromIndex, toIndex, key);
     }
@@ -1957,7 +1959,7 @@ public class Arrays {
      *         that this guarantees that the return value will be &gt;= 0 if
      *         and only if the key is found.
      */
-    public static @SearchIndexFor({"#1"}) int binarySearch(short[] a, short key) {
+    public static @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(@PolyDet short @PolyDet[] a, @PolyDet short key) {
         return binarySearch0(a, 0, a.length, key);
     }
 
@@ -1993,14 +1995,14 @@ public class Arrays {
      *         if {@code fromIndex < 0 or toIndex > a.length}
      * @since 1.6
      */
-    public static @SearchIndexFor({"#1"}) int binarySearch(short[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
-                                   short key) {
+    public static @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(@PolyDet short @PolyDet[] a, @PolyDet @IndexOrHigh({"#1"}) int fromIndex, @PolyDet @IndexOrHigh({"#1"}) int toIndex,
+                                   @PolyDet short key) {
         rangeCheck(a.length, fromIndex, toIndex);
         return binarySearch0(a, fromIndex, toIndex, key);
     }
 
     // Like public version, but without range checks.
-    private static int binarySearch0(short[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
+    private static @SearchIndexFor({"#1"}) int binarySearch0(short[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
                                      short key) {
         int low = fromIndex;
         int high = toIndex - 1;
@@ -2038,7 +2040,7 @@ public class Arrays {
      *         that this guarantees that the return value will be &gt;= 0 if
      *         and only if the key is found.
      */
-    public static @SearchIndexFor({"#1"}) int binarySearch(char[] a, char key) {
+    public static @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(@PolyDet char @PolyDet[] a, @PolyDet char key) {
         return binarySearch0(a, 0, a.length, key);
     }
 
@@ -2074,14 +2076,14 @@ public class Arrays {
      *         if {@code fromIndex < 0 or toIndex > a.length}
      * @since 1.6
      */
-    public static @SearchIndexFor({"#1"}) int binarySearch(char[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
-                                   char key) {
+    public static @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(@PolyDet char @PolyDet[] a, @PolyDet @IndexOrHigh({"#1"}) int fromIndex, @PolyDet @IndexOrHigh({"#1"}) int toIndex,
+                                            @PolyDet char key) {
         rangeCheck(a.length, fromIndex, toIndex);
         return binarySearch0(a, fromIndex, toIndex, key);
     }
 
     // Like public version, but without range checks.
-    private static int binarySearch0(char[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
+    private static @SearchIndexFor({"#1"}) int binarySearch0(char[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
                                      char key) {
         int low = fromIndex;
         int high = toIndex - 1;
@@ -2119,7 +2121,7 @@ public class Arrays {
      *         that this guarantees that the return value will be &gt;= 0 if
      *         and only if the key is found.
      */
-    public static @SearchIndexFor({"#1"}) int binarySearch(byte[] a, byte key) {
+    public static @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(@PolyDet byte @PolyDet[] a, @PolyDet byte key) {
         return binarySearch0(a, 0, a.length, key);
     }
 
@@ -2155,14 +2157,14 @@ public class Arrays {
      *         if {@code fromIndex < 0 or toIndex > a.length}
      * @since 1.6
      */
-    public static @SearchIndexFor({"#1"}) int binarySearch(byte[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
-                                   byte key) {
+    public static @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(@PolyDet byte @PolyDet[] a, @PolyDet @IndexOrHigh({"#1"}) int fromIndex, @PolyDet @IndexOrHigh({"#1"}) int toIndex,
+                                            @PolyDet byte key) {
         rangeCheck(a.length, fromIndex, toIndex);
         return binarySearch0(a, fromIndex, toIndex, key);
     }
 
     // Like public version, but without range checks.
-    private static int binarySearch0(byte[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
+    private static @SearchIndexFor({"#1"}) int binarySearch0(byte[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
                                      byte key) {
         int low = fromIndex;
         int high = toIndex - 1;
@@ -2201,7 +2203,7 @@ public class Arrays {
      *         that this guarantees that the return value will be &gt;= 0 if
      *         and only if the key is found.
      */
-    public static @SearchIndexFor({"#1"}) int binarySearch(double[] a, double key) {
+    public static @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(@PolyDet double @PolyDet[] a, @PolyDet double key) {
         return binarySearch0(a, 0, a.length, key);
     }
 
@@ -2238,14 +2240,14 @@ public class Arrays {
      *         if {@code fromIndex < 0 or toIndex > a.length}
      * @since 1.6
      */
-    public static @SearchIndexFor({"#1"}) int binarySearch(double[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
-                                   double key) {
+    public static @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(@PolyDet double @PolyDet[] a, @PolyDet @IndexOrHigh({"#1"}) int fromIndex, @PolyDet @IndexOrHigh({"#1"}) int toIndex,
+                                            @PolyDet double key) {
         rangeCheck(a.length, fromIndex, toIndex);
         return binarySearch0(a, fromIndex, toIndex, key);
     }
 
     // Like public version, but without range checks.
-    private static int binarySearch0(double[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
+    private static @SearchIndexFor({"#1"}) int binarySearch0(double[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
                                      double key) {
         int low = fromIndex;
         int high = toIndex - 1;
@@ -2292,7 +2294,7 @@ public class Arrays {
      *         that this guarantees that the return value will be &gt;= 0 if
      *         and only if the key is found.
      */
-    public static @SearchIndexFor({"#1"}) int binarySearch(float[] a, float key) {
+    public static @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(@PolyDet float @PolyDet[] a, @PolyDet float key) {
         return binarySearch0(a, 0, a.length, key);
     }
 
@@ -2329,14 +2331,14 @@ public class Arrays {
      *         if {@code fromIndex < 0 or toIndex > a.length}
      * @since 1.6
      */
-    public static @SearchIndexFor({"#1"}) int binarySearch(float[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
+    public static @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(@PolyDet float @PolyDet[] a, @PolyDet @IndexOrHigh({"#1"}) int fromIndex, @PolyDet @IndexOrHigh({"#1"}) int toIndex,
                                    float key) {
         rangeCheck(a.length, fromIndex, toIndex);
         return binarySearch0(a, fromIndex, toIndex, key);
     }
 
     // Like public version, but without range checks.
-    private static int binarySearch0(float[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
+    private static @SearchIndexFor({"#1"}) int binarySearch0(float[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
                                      float key) {
         int low = fromIndex;
         int high = toIndex - 1;
@@ -2391,7 +2393,7 @@ public class Arrays {
      * @throws ClassCastException if the search key is not comparable to the
      *         elements of the array.
      */
-    public static @SearchIndexFor({"#1"}) int binarySearch(@Nullable @PolyInterned Object[] a, @Nullable @PolyInterned Object key) {
+    public static @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(@PolyDet @Nullable @PolyInterned Object @PolyDet[] a, @PolyDet @Nullable @PolyInterned Object key) {
         return binarySearch0(a, 0, a.length, key);
     }
 
@@ -2435,14 +2437,14 @@ public class Arrays {
      *         if {@code fromIndex < 0 or toIndex > a.length}
      * @since 1.6
      */
-    public static @SearchIndexFor({"#1"}) int binarySearch(@Nullable @PolyInterned Object[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
-                                   @Nullable @PolyInterned Object key) {
+    public static @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(@PolyDet @Nullable @PolyInterned Object @PolyDet[] a, @PolyDet @IndexOrHigh({"#1"}) int fromIndex, @PolyDet @IndexOrHigh({"#1"}) int toIndex,
+                                   @PolyDet @Nullable @PolyInterned Object key) {
         rangeCheck(a.length, fromIndex, toIndex);
         return binarySearch0(a, fromIndex, toIndex, key);
     }
 
     // Like public version, but without range checks.
-    private static int binarySearch0(Object[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
+    private static @SearchIndexFor({"#1"}) int binarySearch0(Object[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
                                      Object key) {
         int low = fromIndex;
         int high = toIndex - 1;
@@ -2494,7 +2496,7 @@ public class Arrays {
      *         or the search key is not comparable to the
      *         elements of the array using this comparator.
      */
-    public static <T> @SearchIndexFor({"#1"}) int binarySearch(T[] a, T key, @Nullable Comparator<? super T> c) {
+    public static <T> @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(T @PolyDet[] a, T key, @PolyDet @Nullable Comparator<? super T> c) {
         return binarySearch0(a, 0, a.length, key, c);
     }
 
@@ -2540,14 +2542,14 @@ public class Arrays {
      *         if {@code fromIndex < 0 or toIndex > a.length}
      * @since 1.6
      */
-    public static <T> @SearchIndexFor({"#1"}) int binarySearch(T[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
-                                       T key, @Nullable Comparator<? super T> c) {
+    public static <T> @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch(T @PolyDet[] a, @PolyDet @IndexOrHigh({"#1"}) int fromIndex, @PolyDet @IndexOrHigh({"#1"}) int toIndex,
+                                       T key, @PolyDet @Nullable Comparator<? super T> c) {
         rangeCheck(a.length, fromIndex, toIndex);
         return binarySearch0(a, fromIndex, toIndex, key, c);
     }
 
     // Like public version, but without range checks.
-    private static <T> int binarySearch0(T[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
+    private static <T> @PolyDet("down") @SearchIndexFor({"#1"}) int binarySearch0(T[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
                                          T key, @Nullable Comparator<? super T> c) {
         if (c == null) {
             return binarySearch0(a, fromIndex, toIndex, key);
@@ -2584,7 +2586,7 @@ public class Arrays {
      * @return {@code true} if the two arrays are equal
      */
     @Pure
-    public static boolean equals(@PolySigned long @Nullable [] a, @PolySigned long @Nullable [] a2) {
+    public static @PolyDet("up") boolean equals(@PolyDet @PolySigned long @PolyDet @Nullable [] a, @PolyDet @PolySigned long @PolyDet @Nullable [] a2) {
         if (a==a2)
             return true;
         if (a==null || a2==null)
@@ -2657,7 +2659,7 @@ public class Arrays {
      * @return {@code true} if the two arrays are equal
      */
     @Pure
-    public static boolean equals(@PolySigned int @Nullable [] a, @PolySigned int @Nullable [] a2) {
+    public static @PolyDet("up") boolean equals(@PolyDet @PolySigned int @PolyDet @Nullable [] a, @PolyDet @PolySigned int @PolyDet @Nullable [] a2) {
         if (a==a2)
             return true;
         if (a==null || a2==null)
@@ -2730,7 +2732,7 @@ public class Arrays {
      * @return {@code true} if the two arrays are equal
      */
     @Pure
-    public static boolean equals(@PolySigned short @Nullable [] a, @PolySigned short a2 @Nullable []) {
+    public static @PolyDet("up") boolean equals(@PolyDet @PolySigned short @PolyDet @Nullable [] a, @PolyDet @PolySigned short a2 @PolyDet @Nullable []) {
         if (a==a2)
             return true;
         if (a==null || a2==null)
@@ -2804,7 +2806,7 @@ public class Arrays {
      */
     @Pure
     @HotSpotIntrinsicCandidate
-    public static boolean equals(@PolySigned char @Nullable [] a, @PolySigned char @Nullable [] a2) {
+    public static @PolyDet("up") boolean equals(@PolyDet @PolySigned char @PolyDet @Nullable [] a, @PolyDet @PolySigned char @PolyDet @Nullable [] a2) {
         if (a==a2)
             return true;
         if (a==null || a2==null)
@@ -2878,7 +2880,7 @@ public class Arrays {
      */
     @Pure
     @HotSpotIntrinsicCandidate
-    public static boolean equals(@PolySigned byte @Nullable [] a, @PolySigned byte @Nullable [] a2) {
+    public static @PolyDet("up") boolean equals(@PolyDet @PolySigned byte @PolyDet @Nullable [] a, @PolyDet @PolySigned byte @PolyDet @Nullable [] a2) {
         if (a==a2)
             return true;
         if (a==null || a2==null)
@@ -2951,7 +2953,8 @@ public class Arrays {
      * @return {@code true} if the two arrays are equal
      */
     @Pure
-    public static boolean equals(boolean @Nullable [] a, boolean @Nullable [] a2) {
+    @HotSpotIntrinsicCandidate
+    public static @PolyDet("up") boolean equals(@PolyDet boolean @PolyDet @Nullable [] a, @PolyDet boolean @PolyDet @Nullable [] a2) {
         if (a==a2)
             return true;
         if (a==null || a2==null)
@@ -3030,7 +3033,7 @@ public class Arrays {
      * @see Double#equals(Object)
      */
     @Pure
-    public static boolean equals(double @Nullable [] a, double @Nullable [] a2) {
+    public static @PolyDet("up") boolean equals(@PolyDet double @PolyDet @Nullable [] a, @PolyDet double @PolyDet @Nullable [] a2) {
         if (a==a2)
             return true;
         if (a==null || a2==null)
@@ -3114,7 +3117,7 @@ public class Arrays {
      * @see Float#equals(Object)
      */
     @Pure
-    public static boolean equals(float @Nullable [] a, float @Nullable [] a2) {
+    public static @PolyDet("up") boolean equals(@PolyDet float @PolyDet @Nullable [] a, @PolyDet float @PolyDet @Nullable [] a2) {
         if (a==a2)
             return true;
         if (a==null || a2==null)
@@ -3195,7 +3198,7 @@ public class Arrays {
      * @return {@code true} if the two arrays are equal
      */
     @Pure
-    public static boolean equals(@PolyNull @PolyInterned Object @GuardSatisfied  @Nullable [] a, @PolyNull @PolyInterned Object @GuardSatisfied  @Nullable [] a2) {
+    public static @PolyDet("up") boolean equals(@PolyDet @PolyNull @PolyInterned Object @GuardSatisfied @PolyDet @Nullable [] a, @PolyDet @PolyNull @PolyInterned Object @GuardSatisfied @PolyDet @Nullable [] a2) {
         if (a==a2)
             return true;
         if (a==null || a2==null)
@@ -3372,7 +3375,7 @@ public class Arrays {
      * @param a the array to be filled
      * @param val the value to be stored in all elements of the array
      */
-    public static void fill(@PolySigned long[] a, @PolySigned long val) {
+    public static void fill(@PolyDet @PolySigned long @PolyDet[] a, @PolyDet("use") @PolySigned long val) {
         for (int i = 0, len = a.length; i < len; i++)
             a[i] = val;
     }
@@ -3394,7 +3397,7 @@ public class Arrays {
      * @throws ArrayIndexOutOfBoundsException if {@code fromIndex < 0} or
      *         {@code toIndex > a.length}
      */
-    public static void fill(@PolySigned long[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex, @PolySigned long val) {
+    public static void fill(@PolyDet @PolySigned long @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex, @PolyDet("use") @PolySigned long val) {
         rangeCheck(a.length, fromIndex, toIndex);
         for (int i = fromIndex; i < toIndex; i++)
             a[i] = val;
@@ -3407,7 +3410,7 @@ public class Arrays {
      * @param a the array to be filled
      * @param val the value to be stored in all elements of the array
      */
-    public static void fill(@PolySigned int[] a, @PolySigned int val) {
+    public static void fill(@PolyDet @PolySigned int @PolyDet[] a, @PolyDet("use") @PolySigned int val) {
         for (int i = 0, len = a.length; i < len; i++)
             a[i] = val;
     }
@@ -3429,7 +3432,7 @@ public class Arrays {
      * @throws ArrayIndexOutOfBoundsException if {@code fromIndex < 0} or
      *         {@code toIndex > a.length}
      */
-    public static void fill(@PolySigned int[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex, @PolySigned int val) {
+    public static void fill(@PolyDet @PolySigned int @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex, @PolyDet("use") @PolySigned int val) {
         rangeCheck(a.length, fromIndex, toIndex);
         for (int i = fromIndex; i < toIndex; i++)
             a[i] = val;
@@ -3442,7 +3445,7 @@ public class Arrays {
      * @param a the array to be filled
      * @param val the value to be stored in all elements of the array
      */
-    public static void fill(@PolySigned short[] a, @PolySigned short val) {
+    public static void fill(@PolyDet @PolySigned short @PolyDet[] a, @PolyDet("use") @PolySigned short val) {
         for (int i = 0, len = a.length; i < len; i++)
             a[i] = val;
     }
@@ -3464,7 +3467,7 @@ public class Arrays {
      * @throws ArrayIndexOutOfBoundsException if {@code fromIndex < 0} or
      *         {@code toIndex > a.length}
      */
-    public static void fill(@PolySigned short[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex, @PolySigned short val) {
+    public static void fill(@PolyDet @PolySigned short @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex, @PolyDet("use") @PolySigned short val) {
         rangeCheck(a.length, fromIndex, toIndex);
         for (int i = fromIndex; i < toIndex; i++)
             a[i] = val;
@@ -3477,7 +3480,7 @@ public class Arrays {
      * @param a the array to be filled
      * @param val the value to be stored in all elements of the array
      */
-    public static void fill(@PolySigned char[] a, @PolySigned char val) {
+    public static void fill(@PolyDet @PolySigned char @PolyDet[] a, @PolyDet("use") @PolySigned char val) {
         for (int i = 0, len = a.length; i < len; i++)
             a[i] = val;
     }
@@ -3499,7 +3502,7 @@ public class Arrays {
      * @throws ArrayIndexOutOfBoundsException if {@code fromIndex < 0} or
      *         {@code toIndex > a.length}
      */
-    public static void fill(@PolySigned char[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex, @PolySigned char val) {
+    public static void fill(@PolyDet @PolySigned char @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex, @PolyDet("use") @PolySigned char val) {
         rangeCheck(a.length, fromIndex, toIndex);
         for (int i = fromIndex; i < toIndex; i++)
             a[i] = val;
@@ -3512,7 +3515,7 @@ public class Arrays {
      * @param a the array to be filled
      * @param val the value to be stored in all elements of the array
      */
-    public static void fill(@PolySigned byte[] a, @PolySigned byte val) {
+    public static void fill(@PolyDet @PolySigned byte @PolyDet[] a, @PolyDet("use") @PolySigned byte val) {
         for (int i = 0, len = a.length; i < len; i++)
             a[i] = val;
     }
@@ -3534,7 +3537,7 @@ public class Arrays {
      * @throws ArrayIndexOutOfBoundsException if {@code fromIndex < 0} or
      *         {@code toIndex > a.length}
      */
-    public static void fill(@PolySigned byte[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex, @PolySigned byte val) {
+    public static void fill(@PolyDet @PolySigned byte @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex, @PolyDet("use") @PolySigned byte val) {
         rangeCheck(a.length, fromIndex, toIndex);
         for (int i = fromIndex; i < toIndex; i++)
             a[i] = val;
@@ -3547,7 +3550,7 @@ public class Arrays {
      * @param a the array to be filled
      * @param val the value to be stored in all elements of the array
      */
-    public static void fill(boolean[] a, boolean val) {
+    public static void fill(@PolyDet boolean @PolyDet[] a, @PolyDet("use") boolean val) {
         for (int i = 0, len = a.length; i < len; i++)
             a[i] = val;
     }
@@ -3569,8 +3572,8 @@ public class Arrays {
      * @throws ArrayIndexOutOfBoundsException if {@code fromIndex < 0} or
      *         {@code toIndex > a.length}
      */
-    public static void fill(boolean[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,
-                            boolean val) {
+    public static void fill(@PolyDet boolean @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex,
+                            @PolyDet("use") boolean val) {
         rangeCheck(a.length, fromIndex, toIndex);
         for (int i = fromIndex; i < toIndex; i++)
             a[i] = val;
@@ -3583,7 +3586,7 @@ public class Arrays {
      * @param a the array to be filled
      * @param val the value to be stored in all elements of the array
      */
-    public static void fill(double[] a, double val) {
+    public static void fill(@PolyDet double @PolyDet[] a, @PolyDet("use") double val) {
         for (int i = 0, len = a.length; i < len; i++)
             a[i] = val;
     }
@@ -3605,7 +3608,7 @@ public class Arrays {
      * @throws ArrayIndexOutOfBoundsException if {@code fromIndex < 0} or
      *         {@code toIndex > a.length}
      */
-    public static void fill(double[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex,double val){
+    public static void fill(@PolyDet double @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex, @PolyDet("use") double val){
         rangeCheck(a.length, fromIndex, toIndex);
         for (int i = fromIndex; i < toIndex; i++)
             a[i] = val;
@@ -3618,7 +3621,7 @@ public class Arrays {
      * @param a the array to be filled
      * @param val the value to be stored in all elements of the array
      */
-    public static void fill(float[] a, float val) {
+    public static void fill(@PolyDet float @PolyDet[] a, @PolyDet("use") float val) {
         for (int i = 0, len = a.length; i < len; i++)
             a[i] = val;
     }
@@ -3640,7 +3643,7 @@ public class Arrays {
      * @throws ArrayIndexOutOfBoundsException if {@code fromIndex < 0} or
      *         {@code toIndex > a.length}
      */
-    public static void fill(float[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex, float val) {
+    public static void fill(@PolyDet float @PolyDet[] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex, @PolyDet("use") float val) {
         rangeCheck(a.length, fromIndex, toIndex);
         for (int i = fromIndex; i < toIndex; i++)
             a[i] = val;
@@ -3655,7 +3658,7 @@ public class Arrays {
      * @throws ArrayStoreException if the specified value is not of a
      *         runtime type that can be stored in the specified array
      */
-    public static void fill(@PolyNull @PolyInterned Object[] a, @PolyNull @PolyInterned Object val) {
+    public static void fill(@PolyDet @PolyNull @PolyInterned Object @PolyDet [] a, @PolyDet("use") @PolyNull @PolyInterned Object val) {
         for (int i = 0, len = a.length; i < len; i++)
             a[i] = val;
     }
@@ -3679,7 +3682,7 @@ public class Arrays {
      * @throws ArrayStoreException if the specified value is not of a
      *         runtime type that can be stored in the specified array
      */
-    public static void fill(@PolyNull @PolyInterned Object[] a, @IndexOrHigh({"#1"}) int fromIndex, @IndexOrHigh({"#1"}) int toIndex, @PolyNull @PolyInterned Object val) {
+    public static void fill(@PolyDet @PolyNull @PolyInterned Object @PolyDet [] a, @PolyDet("use") @IndexOrHigh({"#1"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"#1"}) int toIndex, @PolyDet("use") @PolyNull @PolyInterned Object val) {
         rangeCheck(a.length, fromIndex, toIndex);
         for (int i = fromIndex; i < toIndex; i++)
             a[i] = val;
@@ -3707,7 +3710,7 @@ public class Arrays {
      * @since 1.6
      */
     @SuppressWarnings("unchecked")
-    public static <T> @Nullable T[] copyOf(T[] original, @NonNegative int newLength) {
+    public static <T> @Nullable T @PolyDet[] copyOf(T @PolyDet[] original, @PolyDet @NonNegative int newLength) {
         return (T[]) copyOf(original, newLength, original.getClass());
     }
 
@@ -3736,7 +3739,7 @@ public class Arrays {
      * @since 1.6
      */
     @HotSpotIntrinsicCandidate
-    public static <T,U> @Nullable T[] copyOf(U[] original, @NonNegative int newLength, Class<? extends T[]> newType) {
+    public static <@PolyDet T, @PolyDet U> T @PolyDet @Nullable [] copyOf(U @PolyDet[] original, @PolyDet @NonNegative int newLength, Class<? extends T @PolyDet[]> newType) {
         @SuppressWarnings("unchecked")
         T[] copy = ((Object)newType == (Object)Object[].class)
             ? (T[]) new Object[newLength]
@@ -3763,7 +3766,7 @@ public class Arrays {
      * @throws NullPointerException if {@code original} is null
      * @since 1.6
      */
-    public static @PolySigned byte[] copyOf(@PolySigned byte[] original, @NonNegative int newLength) {
+    public static @PolyDet("down") @PolySigned byte @PolyDet[] copyOf(@PolyDet @PolySigned byte @PolyDet[] original, @PolyDet @NonNegative int newLength) {
         byte[] copy = new byte[newLength];
         System.arraycopy(original, 0, copy, 0,
                          Math.min(original.length, newLength));
@@ -3787,7 +3790,7 @@ public class Arrays {
      * @throws NullPointerException if {@code original} is null
      * @since 1.6
      */
-    public static @PolySigned short[] copyOf(@PolySigned short[] original, @NonNegative int newLength) {
+    public static @PolyDet("down") @PolySigned short @PolyDet[] copyOf(@PolyDet @PolySigned short @PolyDet[] original, @PolyDet @NonNegative int newLength) {
         short[] copy = new short[newLength];
         System.arraycopy(original, 0, copy, 0,
                          Math.min(original.length, newLength));
@@ -3811,7 +3814,7 @@ public class Arrays {
      * @throws NullPointerException if {@code original} is null
      * @since 1.6
      */
-    public static @PolySigned int[] copyOf(@PolySigned int[] original, @NonNegative int newLength) {
+    public static @PolyDet("down") @PolySigned int @PolyDet[] copyOf(@PolyDet @PolySigned int @PolyDet[] original, @PolyDet @NonNegative int newLength) {
         int[] copy = new int[newLength];
         System.arraycopy(original, 0, copy, 0,
                          Math.min(original.length, newLength));
@@ -3835,7 +3838,7 @@ public class Arrays {
      * @throws NullPointerException if {@code original} is null
      * @since 1.6
      */
-    public static @PolySigned long[] copyOf(@PolySigned long[] original, @NonNegative int newLength) {
+    public static @PolyDet("down") @PolySigned long @PolyDet[] copyOf(@PolyDet @PolySigned long @PolyDet[] original, @PolyDet @NonNegative int newLength) {
         long[] copy = new long[newLength];
         System.arraycopy(original, 0, copy, 0,
                          Math.min(original.length, newLength));
@@ -3859,7 +3862,7 @@ public class Arrays {
      * @throws NullPointerException if {@code original} is null
      * @since 1.6
      */
-    public static @PolySigned char[] copyOf(@PolySigned char[] original, @NonNegative int newLength) {
+    public static @PolyDet("down") @PolySigned char @PolyDet[] copyOf(@PolyDet @PolySigned char @PolyDet[] original, @PolyDet @NonNegative int newLength) {
         char[] copy = new char[newLength];
         System.arraycopy(original, 0, copy, 0,
                          Math.min(original.length, newLength));
@@ -3883,7 +3886,7 @@ public class Arrays {
      * @throws NullPointerException if {@code original} is null
      * @since 1.6
      */
-    public static float[] copyOf(float[] original, @NonNegative int newLength) {
+    public static @PolyDet("down") float @PolyDet[] copyOf(@PolyDet float @PolyDet[] original, @PolyDet @NonNegative int newLength) {
         float[] copy = new float[newLength];
         System.arraycopy(original, 0, copy, 0,
                          Math.min(original.length, newLength));
@@ -3907,7 +3910,7 @@ public class Arrays {
      * @throws NullPointerException if {@code original} is null
      * @since 1.6
      */
-    public static double[] copyOf(double[] original, @NonNegative int newLength) {
+    public static @PolyDet("down") double @PolyDet[] copyOf(@PolyDet double @PolyDet [] original, @PolyDet @NonNegative int newLength) {
         double[] copy = new double[newLength];
         System.arraycopy(original, 0, copy, 0,
                          Math.min(original.length, newLength));
@@ -3931,7 +3934,7 @@ public class Arrays {
      * @throws NullPointerException if {@code original} is null
      * @since 1.6
      */
-    public static boolean[] copyOf(boolean[] original, @NonNegative int newLength) {
+    public static @PolyDet("down") boolean @PolyDet[] copyOf(@PolyDet boolean @PolyDet[] original, @PolyDet @NonNegative int newLength) {
         boolean[] copy = new boolean[newLength];
         System.arraycopy(original, 0, copy, 0,
                          Math.min(original.length, newLength));
@@ -3968,7 +3971,7 @@ public class Arrays {
      * @since 1.6
      */
     @SuppressWarnings("unchecked")
-    public static <T> @Nullable T[] copyOfRange(T[] original, @IndexOrHigh({"#1"}) int from, int to) {
+    public static <T> @Nullable T @PolyDet[] copyOfRange(T @PolyDet[] original, @PolyDet @IndexOrHigh({"#1"}) int from, @PolyDet int to) {
         return copyOfRange(original, from, to, (Class<? extends T[]>) original.getClass());
     }
 
@@ -4006,7 +4009,7 @@ public class Arrays {
      * @since 1.6
      */
     @HotSpotIntrinsicCandidate
-    public static <T,U> @Nullable T[] copyOfRange(U[] original, @IndexOrHigh({"#1"}) int from, int to, Class<? extends T[]> newType) {
+    public static <@PolyDet T, @PolyDet U> @Nullable T @PolyDet[] copyOfRange(U @PolyDet[] original, @PolyDet @IndexOrHigh({"#1"}) int from, @PolyDet int to, Class<? extends T @PolyDet[]> newType) {
         int newLength = to - from;
         if (newLength < 0)
             throw new IllegalArgumentException(from + " > " + to);
@@ -4045,8 +4048,8 @@ public class Arrays {
      * @throws NullPointerException if {@code original} is null
      * @since 1.6
      */
-    public static @PolySigned byte[] copyOfRange(@PolySigned byte[] original, @IndexOrHigh({"#1"}) int from, int to) {
-        int newLength = to - from;
+    public static @PolyDet("down") @PolySigned byte @PolyDet[] copyOfRange(@PolyDet @PolySigned byte @PolyDet[] original, @PolyDet @IndexOrHigh({"#1"}) int from, @PolyDet int to) {
+        @NonNegative int newLength = to - from;
         if (newLength < 0)
             throw new IllegalArgumentException(from + " > " + to);
         byte[] copy = new byte[newLength];
@@ -4081,8 +4084,8 @@ public class Arrays {
      * @throws NullPointerException if {@code original} is null
      * @since 1.6
      */
-    public static @PolySigned short[] copyOfRange(@PolySigned short[] original, @IndexOrHigh({"#1"}) int from, int to) {
-        int newLength = to - from;
+    public static @PolyDet("down") @PolySigned short @PolyDet[] copyOfRange(@PolyDet @PolySigned short @PolyDet[] original, @PolyDet @IndexOrHigh({"#1"}) int from, @PolyDet int to) {
+        @NonNegative int newLength = to - from;
         if (newLength < 0)
             throw new IllegalArgumentException(from + " > " + to);
         short[] copy = new short[newLength];
@@ -4117,8 +4120,8 @@ public class Arrays {
      * @throws NullPointerException if {@code original} is null
      * @since 1.6
      */
-    public static @PolySigned int[] copyOfRange(@PolySigned int[] original, @IndexOrHigh({"#1"}) int from, int to) {
-        int newLength = to - from;
+    public static @PolyDet("down") @PolySigned int @PolyDet[] copyOfRange(@PolyDet @PolySigned int @PolyDet[] original, @PolyDet @IndexOrHigh({"#1"}) int from, @PolyDet int to) {
+        @NonNegative int newLength = to - from;
         if (newLength < 0)
             throw new IllegalArgumentException(from + " > " + to);
         int[] copy = new int[newLength];
@@ -4153,8 +4156,8 @@ public class Arrays {
      * @throws NullPointerException if {@code original} is null
      * @since 1.6
      */
-    public static @PolySigned long[] copyOfRange(@PolySigned long[] original, @IndexOrHigh({"#1"}) int from, int to) {
-        int newLength = to - from;
+    public static @PolyDet("down") @PolySigned long @PolyDet[] copyOfRange(@PolyDet @PolySigned long @PolyDet[] original, @PolyDet @IndexOrHigh({"#1"}) int from, @PolyDet int to) {
+        @NonNegative int newLength = to - from;
         if (newLength < 0)
             throw new IllegalArgumentException(from + " > " + to);
         long[] copy = new long[newLength];
@@ -4189,7 +4192,7 @@ public class Arrays {
      * @throws NullPointerException if {@code original} is null
      * @since 1.6
      */
-    public static @PolySigned char[] copyOfRange(@PolySigned char[] original, @IndexOrHigh({"#1"}) int from, int to) {
+    public static @PolyDet("down") @PolySigned char @PolyDet[] copyOfRange(@PolyDet @PolySigned char @PolyDet[] original, @PolyDet @IndexOrHigh({"#1"}) int from, @PolyDet int to) {
         int newLength = to - from;
         if (newLength < 0)
             throw new IllegalArgumentException(from + " > " + to);
@@ -4225,7 +4228,7 @@ public class Arrays {
      * @throws NullPointerException if {@code original} is null
      * @since 1.6
      */
-    public static float[] copyOfRange(float[] original, @IndexOrHigh({"#1"}) int from, int to) {
+    public static @PolyDet("down") float @PolyDet[] copyOfRange(@PolyDet float @PolyDet[] original, @PolyDet @IndexOrHigh({"#1"}) int from, @PolyDet int to) {
         int newLength = to - from;
         if (newLength < 0)
             throw new IllegalArgumentException(from + " > " + to);
@@ -4261,7 +4264,7 @@ public class Arrays {
      * @throws NullPointerException if {@code original} is null
      * @since 1.6
      */
-    public static double[] copyOfRange(double[] original, @IndexOrHigh({"#1"}) int from, int to) {
+    public static @PolyDet("down") double @PolyDet[] copyOfRange(@PolyDet double @PolyDet[] original, @PolyDet @IndexOrHigh({"#1"}) int from, @PolyDet int to) {
         int newLength = to - from;
         if (newLength < 0)
             throw new IllegalArgumentException(from + " > " + to);
@@ -4297,7 +4300,7 @@ public class Arrays {
      * @throws NullPointerException if {@code original} is null
      * @since 1.6
      */
-    public static boolean[] copyOfRange(boolean[] original, @IndexOrHigh({"#1"}) int from, int to) {
+    public static @PolyDet("down") boolean @PolyDet[] copyOfRange(@PolyDet boolean @PolyDet[] original, @PolyDet @IndexOrHigh({"#1"}) int from, @PolyDet int to) {
         int newLength = to - from;
         if (newLength < 0)
             throw new IllegalArgumentException(from + " > " + to);
@@ -4328,7 +4331,7 @@ public class Arrays {
      */
     @SafeVarargs
     @SuppressWarnings("varargs")
-    public static <T> List<T> asList(T... a) {
+    public static <@PolyDet T> @PolyDet List<@PolyDet T> asList(@PolyDet T... a) {
         return new ArrayList<>(a);
     }
 
@@ -4478,7 +4481,7 @@ public class Arrays {
      * @since 1.5
      */
     @Pure
-    public static int hashCode(@PolySigned long a @Nullable []) {
+    public static @NonDet int hashCode(@PolyDet @PolySigned long a @PolyDet @Nullable []) {
         if (a == null)
             return 0;
 
@@ -4508,7 +4511,7 @@ public class Arrays {
      * @since 1.5
      */
     @Pure
-    public static int hashCode(@PolySigned int a @Nullable []) {
+    public static @NonDet int hashCode(@PolyDet @PolySigned int a @PolyDet @Nullable []) {
         if (a == null)
             return 0;
 
@@ -4536,7 +4539,7 @@ public class Arrays {
      * @since 1.5
      */
     @Pure
-    public static int hashCode(@PolySigned short a @Nullable []) {
+    public static @NonDet int hashCode(@PolyDet @PolySigned short a @PolyDet @Nullable []) {
         if (a == null)
             return 0;
 
@@ -4564,7 +4567,7 @@ public class Arrays {
      * @since 1.5
      */
     @Pure
-    public static int hashCode(@PolySigned char a @Nullable []) {
+    public static @NonDet int hashCode(@PolyDet @PolySigned char a @PolyDet @Nullable []) {
         if (a == null)
             return 0;
 
@@ -4592,7 +4595,7 @@ public class Arrays {
      * @since 1.5
      */
     @Pure
-    public static int hashCode(@PolySigned byte a @Nullable []) {
+    public static @NonDet int hashCode(@PolyDet @PolySigned byte a @PolyDet @Nullable []) {
         if (a == null)
             return 0;
 
@@ -4620,7 +4623,7 @@ public class Arrays {
      * @since 1.5
      */
     @Pure
-    public static int hashCode(boolean a @Nullable []) {
+    public static @NonDet int hashCode(@PolyDet boolean a @PolyDet @Nullable []) {
         if (a == null)
             return 0;
 
@@ -4648,7 +4651,7 @@ public class Arrays {
      * @since 1.5
      */
     @Pure
-    public static int hashCode(float a @Nullable []) {
+    public static @NonDet int hashCode(@PolyDet float a @PolyDet @Nullable []) {
         if (a == null)
             return 0;
 
@@ -4676,7 +4679,7 @@ public class Arrays {
      * @since 1.5
      */
     @Pure
-    public static int hashCode(double a @Nullable []) {
+    public static @NonDet int hashCode(@PolyDet double a @PolyDet @Nullable []) {
         if (a == null)
             return 0;
 
@@ -4710,7 +4713,7 @@ public class Arrays {
      * @since 1.5
      */
     @Pure
-    public static int hashCode(@PolyNull @PolyInterned Object a @GuardSatisfied  @Nullable []) {
+    public static @NonDet int hashCode(@PolyDet @PolyNull @PolyInterned Object a @GuardSatisfied @PolyDet @Nullable []) {
         if (a == null)
             return 0;
 
@@ -4752,7 +4755,7 @@ public class Arrays {
      * @since 1.5
      */
     @Pure
-    public static int deepHashCode(@PolyNull @PolyInterned Object a @GuardSatisfied  @Nullable []) {
+    public static @NonDet int deepHashCode(@PolyDet @PolyNull @PolyInterned Object a @PolyDet @GuardSatisfied @Nullable []) {
         if (a == null)
             return 0;
 
@@ -4826,7 +4829,7 @@ public class Arrays {
      * @since 1.5
      */
     @Pure
-    public static boolean deepEquals(@PolyNull @PolyInterned Object @GuardSatisfied  @Nullable [] a1, @PolyNull @PolyInterned Object @GuardSatisfied  @Nullable [] a2) {
+    public static @PolyDet("up") boolean deepEquals(@PolyDet @PolyNull @PolyInterned Object @GuardSatisfied @PolyDet @Nullable [] a1, @PolyDet @PolyNull @PolyInterned Object @GuardSatisfied @PolyDet @Nullable [] a2) {
         if (a1 == a2)
             return true;
         if (a1 == null || a2==null)
@@ -4893,7 +4896,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static String toString(long @Nullable [] a) {
+    public static @PolyDet("up") String toString(@PolyDet long @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
         int iMax = a.length - 1;
@@ -4924,7 +4927,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static String toString(int @Nullable [] a) {
+    public static @PolyDet("up") String toString(@PolyDet int @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
         int iMax = a.length - 1;
@@ -4955,7 +4958,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static String toString(short @Nullable [] a) {
+    public static @PolyDet("up") String toString(@PolyDet short @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
         int iMax = a.length - 1;
@@ -4986,7 +4989,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static String toString(char @Nullable [] a) {
+    public static @PolyDet("up") String toString(@PolyDet char @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
         int iMax = a.length - 1;
@@ -5017,7 +5020,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static String toString(byte @Nullable [] a) {
+    public static @PolyDet("up") String toString(@PolyDet @PolySigned byte @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
         int iMax = a.length - 1;
@@ -5048,7 +5051,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static String toString(boolean @Nullable [] a) {
+    public static @PolyDet("up") String toString(@PolyDet boolean @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
         int iMax = a.length - 1;
@@ -5079,7 +5082,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static String toString(float @Nullable [] a) {
+    public static @PolyDet("up") String toString(@PolyDet float @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
 
@@ -5111,7 +5114,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static String toString(double @Nullable [] a) {
+    public static @PolyDet("up") String toString(@PolyDet double @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
         int iMax = a.length - 1;
@@ -5145,7 +5148,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static String toString(@PolyNull @PolyInterned Object @Nullable [] a) {
+    public static @PolyDet("up") String toString(@PolyDet @PolyNull @PolyInterned Object @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
 
@@ -5197,7 +5200,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static String deepToString(@PolyNull @PolyInterned Object @Nullable [] a) {
+    public static @PolyDet("up") String deepToString(@PolyDet @PolyNull @PolyInterned Object @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
 
@@ -5209,6 +5212,7 @@ public class Arrays {
         return buf.toString();
     }
 
+    @SideEffectFree
     private static void deepToString(Object[] a, StringBuilder buf,
                                      Set<Object[]> dejaVu) {
         if (a == null) {

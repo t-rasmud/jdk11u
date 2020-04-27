@@ -25,6 +25,9 @@
 
 package java.lang.reflect;
 
+import org.checkerframework.checker.determinism.qual.Det;
+import org.checkerframework.checker.determinism.qual.OrderNonDet;
+import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.interning.qual.Interned;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
@@ -1198,7 +1201,7 @@ class Field extends AccessibleObject implements Member {
      * {@inheritDoc}
      */
     @SideEffectFree
-    public Annotation[] getDeclaredAnnotations(@GuardSatisfied Field this)  {
+    public @Det Annotation @OrderNonDet[] getDeclaredAnnotations(@PolyDet @GuardSatisfied Field this)  {
         return AnnotationParser.toArray(declaredAnnotations());
     }
 

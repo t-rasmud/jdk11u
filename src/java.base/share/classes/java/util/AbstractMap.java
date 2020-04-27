@@ -25,6 +25,8 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.lock.qual.ReleasesNoLocks;
@@ -97,7 +99,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * This implementation returns {@code entrySet().size()}.
      */
     @Pure
-    public @NonNegative int size(@GuardSatisfied AbstractMap<K, V> this) {
+    public @PolyDet("down") @NonNegative int size(@GuardSatisfied @PolyDet AbstractMap<K, V> this) {
         return entrySet().size();
     }
 
@@ -108,7 +110,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * This implementation returns {@code size() == 0}.
      */
     @Pure
-    public boolean isEmpty(@GuardSatisfied AbstractMap<K, V> this) {
+    public @PolyDet("down") boolean isEmpty(@GuardSatisfied @PolyDet AbstractMap<K, V> this) {
         return size() == 0;
     }
 
@@ -126,7 +128,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * @throws NullPointerException {@inheritDoc}
      */
     @Pure
-    public boolean containsValue(@GuardSatisfied AbstractMap<K, V> this, @GuardSatisfied Object value) {
+    public @PolyDet("down") boolean containsValue(@GuardSatisfied @PolyDet AbstractMap<K, V> this, @GuardSatisfied @PolyDet Object value) {
         Iterator<Entry<K,V>> i = entrySet().iterator();
         if (value==null) {
             while (i.hasNext()) {
@@ -160,7 +162,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      */
     @EnsuresKeyForIf(expression={"#1"}, result=true, map={"this"})
     @Pure
-    public boolean containsKey(@GuardSatisfied AbstractMap<K, V> this, @GuardSatisfied Object key) {
+    public @PolyDet("down") boolean containsKey(@GuardSatisfied @PolyDet AbstractMap<K, V> this, @GuardSatisfied @PolyDet Object key) {
         Iterator<Map.Entry<K,V>> i = entrySet().iterator();
         if (key==null) {
             while (i.hasNext()) {
@@ -193,7 +195,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * @throws NullPointerException          {@inheritDoc}
      */
     @Pure
-    public @Nullable V get(@GuardSatisfied AbstractMap<K, V> this, @GuardSatisfied Object key) {
+    public @PolyDet("down") @Nullable V get(@GuardSatisfied @PolyDet AbstractMap<K, V> this, @GuardSatisfied @PolyDet Object key) {
         Iterator<Entry<K,V>> i = entrySet().iterator();
         if (key==null) {
             while (i.hasNext()) {
@@ -228,7 +230,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      */
     @ReleasesNoLocks
     @EnsuresKeyFor(value={"#1"}, map={"this"})
-    public @Nullable V put(@GuardSatisfied AbstractMap<K, V> this, K key, V value) {
+    public @PolyDet("down") @Nullable V put(@GuardSatisfied @PolyDet AbstractMap<K, V> this, K key, V value) {
         throw new UnsupportedOperationException();
     }
 
@@ -254,7 +256,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * @throws ClassCastException            {@inheritDoc}
      * @throws NullPointerException          {@inheritDoc}
      */
-    public @Nullable V remove(@GuardSatisfied AbstractMap<K, V> this, Object key) {
+    public @PolyDet("down") @Nullable V remove(@GuardSatisfied @PolyDet AbstractMap<K, V> this, @PolyDet("use") Object key) {
         Iterator<Entry<K,V>> i = entrySet().iterator();
         Entry<K,V> correctEntry = null;
         if (key==null) {
@@ -299,7 +301,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * @throws NullPointerException          {@inheritDoc}
      * @throws IllegalArgumentException      {@inheritDoc}
      */
-    public void putAll(@GuardSatisfied AbstractMap<K, V> this, Map<? extends K, ? extends V> m) {
+    public void putAll(@GuardSatisfied @PolyDet AbstractMap<K, V> this, @PolyDet("use") Map<? extends K, ? extends V> m) {
         for (Map.Entry<? extends K, ? extends V> e : m.entrySet())
             put(e.getKey(), e.getValue());
     }
@@ -316,7 +318,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      *
      * @throws UnsupportedOperationException {@inheritDoc}
      */
-    public void clear(@GuardSatisfied AbstractMap<K, V> this) {
+    public void clear(@GuardSatisfied @PolyDet AbstractMap<K, V> this) {
         entrySet().clear();
     }
 
@@ -367,7 +369,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * method will not all return the same set.
      */
     @SideEffectFree
-    public Set<@KeyFor({"this"}) K> keySet(@GuardSatisfied AbstractMap<K, V> this) {
+    public @PolyDet Set<@KeyFor({"this"}) K> keySet(@GuardSatisfied @PolyDet AbstractMap<K, V> this) {
         Set<K> ks = keySet;
         if (ks == null) {
             ks = new AbstractSet<K>() {
@@ -429,7 +431,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * method will not all return the same collection.
      */
     @SideEffectFree
-    public Collection<V> values(@GuardSatisfied AbstractMap<K, V> this) {
+    public @PolyDet Collection<V> values(@GuardSatisfied @PolyDet AbstractMap<K, V> this) {
         Collection<V> vals = values;
         if (vals == null) {
             vals = new AbstractCollection<V>() {
@@ -475,7 +477,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
     }
 
     @SideEffectFree
-    public abstract Set<Entry<@KeyFor({"this"}) K,V>> entrySet(@GuardSatisfied AbstractMap<K, V> this);
+    public abstract @PolyDet Set<@PolyDet("down") Entry<@KeyFor({"this"}) K,V>> entrySet(@GuardSatisfied @PolyDet AbstractMap<K, V> this);
 
 
     // Comparison and hashing
@@ -503,7 +505,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * @return {@code true} if the specified object is equal to this map
      */
     @Pure
-    public boolean equals(@GuardSatisfied AbstractMap<K, V> this, @GuardSatisfied @Nullable Object o) {
+    public @PolyDet("down") boolean equals(@GuardSatisfied @PolyDet AbstractMap<K, V> this, @GuardSatisfied @PolyDet @Nullable Object o) {
         if (o == this)
             return true;
 
@@ -553,7 +555,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * @see Set#equals(Object)
      */
     @Pure
-    public int hashCode(@GuardSatisfied AbstractMap<K, V> this) {
+    public @NonDet int hashCode(@GuardSatisfied @PolyDet AbstractMap<K, V> this) {
         int h = 0;
         for (Entry<K, V> entry : entrySet())
             h += entry.hashCode();
@@ -573,7 +575,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * @return a string representation of this map
      */
     @SideEffectFree
-    public String toString(@GuardSatisfied AbstractMap<K, V> this) {
+    public @NonDet String toString(@GuardSatisfied @PolyDet AbstractMap<K, V> this) {
         Iterator<Entry<K,V>> i = entrySet().iterator();
         if (! i.hasNext())
             return "{}";
@@ -599,7 +601,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      *
      * @return a shallow copy of this map
      */
-    protected Object clone() throws CloneNotSupportedException {
+    protected @PolyDet("up") Object clone() throws CloneNotSupportedException {
         AbstractMap<?,?> result = (AbstractMap<?,?>)super.clone();
         result.keySet = null;
         result.values = null;
@@ -649,7 +651,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          * @param key the key represented by this entry
          * @param value the value represented by this entry
          */
-        public SimpleEntry(K key, V value) {
+        public @PolyDet("up") SimpleEntry(@PolyDet K key, @PolyDet V value) {
             this.key   = key;
             this.value = value;
         }
@@ -660,7 +662,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          *
          * @param entry the entry to copy
          */
-        public SimpleEntry(Entry<? extends K, ? extends V> entry) {
+        public @PolyDet SimpleEntry(@PolyDet Entry<? extends K, ? extends V> entry) {
             this.key   = entry.getKey();
             this.value = entry.getValue();
         }
@@ -671,7 +673,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          * @return the key corresponding to this entry
          */
         @Pure
-        public K getKey(AbstractMap.@GuardSatisfied SimpleEntry<K, V> this) {
+        public @PolyDet K getKey(AbstractMap. @GuardSatisfied @PolyDet SimpleEntry<K, V> this) {
             return key;
         }
 
@@ -681,7 +683,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          * @return the value corresponding to this entry
          */
         @Pure
-        public V getValue(AbstractMap.@GuardSatisfied SimpleEntry<K, V> this) {
+        public @PolyDet V getValue(AbstractMap. @GuardSatisfied @PolyDet SimpleEntry<K, V> this) {
             return value;
         }
 
@@ -692,7 +694,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          * @param value new value to be stored in this entry
          * @return the old value corresponding to the entry
          */
-        public V setValue(AbstractMap.@GuardSatisfied SimpleEntry<K, V> this, V value) {
+        public V setValue(AbstractMap. @GuardSatisfied @PolyDet SimpleEntry<K, V> this, V value) {
             V oldValue = this.value;
             this.value = value;
             return oldValue;
@@ -720,7 +722,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          * @see    #hashCode
          */
         @Pure
-        public boolean equals(AbstractMap.@GuardSatisfied SimpleEntry<K, V> this, @GuardSatisfied @Nullable Object o) {
+        public @PolyDet("up") boolean equals(AbstractMap. @GuardSatisfied @PolyDet SimpleEntry<K, V> this, @GuardSatisfied @PolyDet @Nullable Object o) {
             if (!(o instanceof Map.Entry))
                 return false;
             Map.Entry<?,?> e = (Map.Entry<?,?>)o;
@@ -741,7 +743,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          * @see    #equals
          */
         @Pure
-        public int hashCode(AbstractMap.@GuardSatisfied SimpleEntry<K, V> this) {
+        public @NonDet int hashCode(AbstractMap. @GuardSatisfied @PolyDet SimpleEntry<K, V> this) {
             return (key   == null ? 0 :   key.hashCode()) ^
                    (value == null ? 0 : value.hashCode());
         }
@@ -755,7 +757,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          * @return a String representation of this map entry
          */
         @SideEffectFree
-        public String toString(AbstractMap.@GuardSatisfied SimpleEntry<K, V> this) {
+        public @NonDet String toString(AbstractMap. @GuardSatisfied @PolyDet SimpleEntry<K, V> this) {
             return key + "=" + value;
         }
 
@@ -784,7 +786,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          * @param key the key represented by this entry
          * @param value the value represented by this entry
          */
-        public SimpleImmutableEntry(K key, V value) {
+        public @PolyDet("up") SimpleImmutableEntry(@PolyDet K key, @PolyDet V value) {
             this.key   = key;
             this.value = value;
         }
@@ -795,7 +797,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          *
          * @param entry the entry to copy
          */
-        public SimpleImmutableEntry(Entry<? extends K, ? extends V> entry) {
+        public @PolyDet SimpleImmutableEntry(@PolyDet Entry<? extends K, ? extends V> entry) {
             this.key   = entry.getKey();
             this.value = entry.getValue();
         }
@@ -806,7 +808,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          * @return the key corresponding to this entry
          */
         @Pure
-        public K getKey(AbstractMap.@GuardSatisfied SimpleImmutableEntry<K, V> this) {
+        public @PolyDet K getKey(AbstractMap. @GuardSatisfied @PolyDet SimpleImmutableEntry<K, V> this) {
             return key;
         }
 
@@ -816,7 +818,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          * @return the value corresponding to this entry
          */
         @Pure
-        public V getValue(AbstractMap.@GuardSatisfied SimpleImmutableEntry<K, V> this) {
+        public V getValue(AbstractMap. @GuardSatisfied @PolyDet SimpleImmutableEntry<K, V> this) {
             return value;
         }
 
@@ -830,7 +832,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          * @return (Does not return)
          * @throws UnsupportedOperationException always
          */
-        public V setValue(AbstractMap.@GuardSatisfied SimpleImmutableEntry<K, V> this, V value) {
+        public V setValue(AbstractMap.@GuardSatisfied @PolyDet SimpleImmutableEntry<K, V> this, V value) {
             throw new UnsupportedOperationException();
         }
 
@@ -856,7 +858,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          * @see    #hashCode
          */
         @Pure
-        public boolean equals(AbstractMap.@GuardSatisfied SimpleImmutableEntry<K, V> this, @GuardSatisfied @Nullable Object o) {
+        public @PolyDet("up") boolean equals(AbstractMap.@GuardSatisfied @PolyDet SimpleImmutableEntry<K, V> this, @GuardSatisfied @PolyDet @Nullable Object o) {
             if (!(o instanceof Map.Entry))
                 return false;
             Map.Entry<?,?> e = (Map.Entry<?,?>)o;
@@ -877,7 +879,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          * @see    #equals
          */
         @Pure
-        public int hashCode(AbstractMap.@GuardSatisfied SimpleImmutableEntry<K, V> this) {
+        public @NonDet int hashCode(AbstractMap.@GuardSatisfied @PolyDet SimpleImmutableEntry<K, V> this) {
             return (key   == null ? 0 :   key.hashCode()) ^
                    (value == null ? 0 : value.hashCode());
         }
@@ -891,7 +893,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          * @return a String representation of this map entry
          */
         @SideEffectFree
-        public String toString(AbstractMap.@GuardSatisfied SimpleImmutableEntry<K, V> this) {
+        public @NonDet String toString(AbstractMap.@GuardSatisfied @PolyDet SimpleImmutableEntry<K, V> this) {
             return key + "=" + value;
         }
 

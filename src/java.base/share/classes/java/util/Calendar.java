@@ -38,6 +38,7 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.NonDet;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -1754,7 +1755,7 @@ public abstract class Calendar implements Serializable, Cloneable, Comparable<Ca
      * @return An array of locales for which localized
      *         <code>Calendar</code> instances are available.
      */
-    public static synchronized Locale[] getAvailableLocales()
+    public static synchronized @NonDet Locale @NonDet [] getAvailableLocales()
     {
         return DateFormat.getAvailableLocales();
     }

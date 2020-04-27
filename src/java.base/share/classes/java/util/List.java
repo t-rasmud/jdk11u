@@ -25,6 +25,8 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
@@ -161,7 +163,7 @@ public interface List<E> extends Collection<E> {
      * @return the number of elements in this list
      */
     @Pure
-    @NonNegative int size(@GuardSatisfied List<E> this);
+    @PolyDet("down") @NonNegative int size(@GuardSatisfied @PolyDet List<E> this);
 
     /**
      * Returns {@code true} if this list contains no elements.
@@ -169,7 +171,7 @@ public interface List<E> extends Collection<E> {
      * @return {@code true} if this list contains no elements
      */
     @Pure
-    boolean isEmpty(@GuardSatisfied List<E> this);
+    @PolyDet("down") boolean isEmpty(@GuardSatisfied @PolyDet List<E> this);
 
     /**
      * Returns {@code true} if this list contains the specified element.
@@ -187,7 +189,7 @@ public interface List<E> extends Collection<E> {
      * (<a href="Collection.html#optional-restrictions">optional</a>)
      */
     @Pure
-    boolean contains(@GuardSatisfied List<E> this, Object o);
+    @PolyDet("down") boolean contains(@GuardSatisfied @PolyDet List<E> this, @PolyDet Object o);
 
     /**
      * Returns an iterator over the elements in this list in proper sequence.
@@ -195,7 +197,7 @@ public interface List<E> extends Collection<E> {
      * @return an iterator over the elements in this list in proper sequence
      */
     @SideEffectFree
-    Iterator<E> iterator();
+    @PolyDet Iterator<E> iterator(@PolyDet List<E> this);
 
     /**
      * Returns an array containing all of the elements in this list in proper
@@ -214,7 +216,7 @@ public interface List<E> extends Collection<E> {
      * @see Arrays#asList(Object[])
      */
     @SideEffectFree
-    @PolyNull Object[] toArray(List<@PolyNull E> this);
+    @PolyDet("down") @PolyNull Object @PolyDet [] toArray(@PolyDet List<@PolyNull E> this);
 
     /**
      * Returns an array containing all of the elements in this list in
@@ -256,7 +258,7 @@ public interface List<E> extends Collection<E> {
      * @throws NullPointerException if the specified array is null
      */
     @SideEffectFree
-    <T> @Nullable T @PolyNull [] toArray(T @PolyNull [] a);
+    <T> @PolyDet("down") @Nullable T @PolyDet @PolyNull [] toArray(@PolyDet List<E> this, T @PolyNull [] a);
 
 
     // Modification Operations
@@ -284,7 +286,7 @@ public interface List<E> extends Collection<E> {
      *         prevents it from being added to this list
      */
     @ReleasesNoLocks
-    boolean add(@GuardSatisfied List<E> this, E e);
+    @PolyDet("down") boolean add(@GuardSatisfied @PolyDet List<E>this, E e);
 
     /**
      * Removes the first occurrence of the specified element from this list,
@@ -307,7 +309,7 @@ public interface List<E> extends Collection<E> {
      * @throws UnsupportedOperationException if the {@code remove} operation
      *         is not supported by this list
      */
-    boolean remove(@GuardSatisfied List<E> this, Object o);
+    @PolyDet("down") boolean remove(@GuardSatisfied @PolyDet List<E> this, @PolyDet("use") Object o);
 
 
     // Bulk Modification Operations
@@ -331,7 +333,7 @@ public interface List<E> extends Collection<E> {
      * @see #contains(Object)
      */
     @Pure
-    boolean containsAll(@GuardSatisfied List<E> this, Collection<?> c);
+    @PolyDet("down") boolean containsAll(@GuardSatisfied @PolyDet List<E> this, @PolyDet Collection<?> c);
 
     /**
      * Appends all of the elements in the specified collection to the end of
@@ -354,7 +356,7 @@ public interface List<E> extends Collection<E> {
      *         specified collection prevents it from being added to this list
      * @see #add(Object)
      */
-    boolean addAll(@GuardSatisfied List<E> this, Collection<? extends E> c);
+    @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet List<E> this, @PolyDet("down") Collection<? extends E> c);
 
     /**
      * Inserts all of the elements in the specified collection into this
@@ -383,7 +385,7 @@ public interface List<E> extends Collection<E> {
      * @throws IndexOutOfBoundsException if the index is out of range
      *         ({@code index < 0 || index > size()})
      */
-    boolean addAll(@GuardSatisfied List<E> this, @IndexOrHigh({"this"}) int index, Collection<? extends E> c);
+    @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet List<E> this, @PolyDet("use") @IndexOrHigh({"this"}) int index, @PolyDet("down") Collection<? extends E> c);
 
     /**
      * Removes from this list all of its elements that are contained in the
@@ -403,7 +405,7 @@ public interface List<E> extends Collection<E> {
      * @see #remove(Object)
      * @see #contains(Object)
      */
-    boolean removeAll(@GuardSatisfied List<E> this, Collection<?> c);
+    @PolyDet("down") boolean removeAll(@GuardSatisfied @PolyDet List<E> this, @PolyDet("use") Collection<?> c);
 
     /**
      * Retains only the elements in this list that are contained in the
@@ -425,7 +427,7 @@ public interface List<E> extends Collection<E> {
      * @see #remove(Object)
      * @see #contains(Object)
      */
-    boolean retainAll(@GuardSatisfied List<E> this, Collection<?> c);
+    @PolyDet("down") boolean retainAll(@GuardSatisfied @PolyDet List<E> this, @PolyDet("use") Collection<?> c);
 
     /**
      * Replaces each element of this list with the result of applying the
@@ -456,7 +458,7 @@ public interface List<E> extends Collection<E> {
      *         (<a href="Collection.html#optional-restrictions">optional</a>)
      * @since 1.8
      */
-    default void replaceAll(UnaryOperator<E> operator) {
+    default void replaceAll(@GuardSatisfied @PolyDet List<E> this, @PolyDet("use") UnaryOperator<E> operator) {
         Objects.requireNonNull(operator);
         final ListIterator<E> li = this.listIterator();
         while (li.hasNext()) {
@@ -524,7 +526,7 @@ public interface List<E> extends Collection<E> {
      * @since 1.8
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    default void sort(Comparator<? super E> c) {
+    default void sort(@GuardSatisfied @PolyDet List<E> this, @PolyDet("use") Comparator<? super E> c) {
         Object[] a = this.toArray();
         Arrays.sort(a, (Comparator) c);
         ListIterator<E> i = this.listIterator();
@@ -541,7 +543,7 @@ public interface List<E> extends Collection<E> {
      * @throws UnsupportedOperationException if the {@code clear} operation
      *         is not supported by this list
      */
-    void clear(@GuardSatisfied List<E> this);
+    void clear(@GuardSatisfied @PolyDet List<E> this);
 
 
     // Comparison and hashing
@@ -561,7 +563,7 @@ public interface List<E> extends Collection<E> {
      * @return {@code true} if the specified object is equal to this list
      */
     @Pure
-    boolean equals(@GuardSatisfied List<E> this, @Nullable Object o);
+    @PolyDet("up") boolean equals(@GuardSatisfied @PolyDet List<E> this, @PolyDet @Nullable Object o);
 
     /**
      * Returns the hash code value for this list.  The hash code of a list
@@ -581,7 +583,7 @@ public interface List<E> extends Collection<E> {
      * @see #equals(Object)
      */
     @Pure
-    int hashCode(@GuardSatisfied List<E> this);
+    @NonDet int hashCode(@GuardSatisfied @PolyDet List<E> this);
 
 
     // Positional Access Operations
@@ -595,7 +597,7 @@ public interface List<E> extends Collection<E> {
      *         ({@code index < 0 || index >= size()})
      */
     @Pure
-    E get(@GuardSatisfied List<E> this, @IndexFor({"this"}) int index);
+    @PolyDet("up") E get(@GuardSatisfied @PolyDet List<E> this, @PolyDet @IndexFor({"this"}) int index);
 
     /**
      * Replaces the element at the specified position in this list with the
@@ -615,7 +617,7 @@ public interface List<E> extends Collection<E> {
      * @throws IndexOutOfBoundsException if the index is out of range
      *         ({@code index < 0 || index >= size()})
      */
-    E set(@GuardSatisfied List<E> this, @IndexFor({"this"}) int index, E element);
+    @PolyDet("up") E set(@GuardSatisfied @PolyDet("noOrderNonDet") List<E> this, @PolyDet("use") @IndexFor({"this"}) int index, E element);
 
     /**
      * Inserts the specified element at the specified position in this list
@@ -637,7 +639,7 @@ public interface List<E> extends Collection<E> {
      *         ({@code index < 0 || index > size()})
      */
     @ReleasesNoLocks
-    void add(@GuardSatisfied List<E> this, @IndexOrHigh({"this"}) int index, E element);
+    void add(@GuardSatisfied @PolyDet List<E> this, @PolyDet("use") @IndexOrHigh({"this"}) int index, E element);
 
     /**
      * Removes the element at the specified position in this list (optional
@@ -653,7 +655,7 @@ public interface List<E> extends Collection<E> {
      *         ({@code index < 0 || index >= size()})
      */
     @ReleasesNoLocks
-    E remove(@GuardSatisfied List<E> this, @IndexFor({"this"}) int index);
+    @PolyDet("up") E remove(@GuardSatisfied @PolyDet("noOrderNonDet") List<E> this, @PolyDet("use") @IndexFor({"this"}) int index);
 
 
     // Search Operations
@@ -675,8 +677,8 @@ public interface List<E> extends Collection<E> {
      *         list does not permit null elements
      *         (<a href="Collection.html#optional-restrictions">optional</a>)
      */
-    @GTENegativeOne @Pure
-    int indexOf(@GuardSatisfied List<E> this, Object o);
+    @Pure
+    @PolyDet("up") @GTENegativeOne int indexOf(@GuardSatisfied @PolyDet List<E> this, @PolyDet Object o);
 
     /**
      * Returns the index of the last occurrence of the specified element
@@ -695,8 +697,8 @@ public interface List<E> extends Collection<E> {
      *         list does not permit null elements
      *         (<a href="Collection.html#optional-restrictions">optional</a>)
      */
-    @GTENegativeOne @Pure
-    int lastIndexOf(@GuardSatisfied List<E> this, Object o);
+    @Pure
+    @PolyDet("up") @GTENegativeOne int lastIndexOf(@GuardSatisfied @PolyDet List<E> this, @PolyDet Object o);
 
 
     // List Iterators
@@ -708,7 +710,7 @@ public interface List<E> extends Collection<E> {
      * @return a list iterator over the elements in this list (in proper
      *         sequence)
      */
-    ListIterator<E> listIterator();
+    @PolyDet ListIterator<E> listIterator(@GuardSatisfied @PolyDet List<E> this);
 
     /**
      * Returns a list iterator over the elements in this list (in proper
@@ -725,7 +727,7 @@ public interface List<E> extends Collection<E> {
      * @throws IndexOutOfBoundsException if the index is out of range
      *         ({@code index < 0 || index > size()})
      */
-    ListIterator<E> listIterator(@IndexOrHigh({"this"}) int index);
+    @PolyDet ListIterator<E> listIterator(@GuardSatisfied @PolyDet List<E> this, @PolyDet @IndexOrHigh({"this"}) int index);
 
     // View
 
@@ -764,7 +766,7 @@ public interface List<E> extends Collection<E> {
      *         fromIndex > toIndex})
      */
     @SideEffectFree
-    List<E> subList(@GuardSatisfied List<E> this, @IndexOrHigh({"this"}) int fromIndex, @IndexOrHigh({"this"}) int toIndex);
+    @PolyDet("up") List<E> subList(@GuardSatisfied @PolyDet List<E> this, @PolyDet @IndexOrHigh({"this"}) int fromIndex, @PolyDet @IndexOrHigh({"this"}) int toIndex);
 
     /**
      * Creates a {@link Spliterator} over the elements in this list.
@@ -801,7 +803,7 @@ public interface List<E> extends Collection<E> {
      */
     @SideEffectFree
     @Override
-    default Spliterator<E> spliterator() {
+    default @PolyDet Spliterator<E> spliterator(@GuardSatisfied @PolyDet List<E> this) {
         if (this instanceof RandomAccess) {
             return new AbstractList.RandomAccessSpliterator<>(this);
         } else {
