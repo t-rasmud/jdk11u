@@ -2953,7 +2953,6 @@ public class Arrays {
      * @return {@code true} if the two arrays are equal
      */
     @Pure
-    @HotSpotIntrinsicCandidate
     public static @PolyDet("up") boolean equals(@PolyDet boolean @PolyDet @Nullable [] a, @PolyDet boolean @PolyDet @Nullable [] a2) {
         if (a==a2)
             return true;
