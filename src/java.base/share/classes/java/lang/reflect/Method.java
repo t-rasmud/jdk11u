@@ -232,7 +232,7 @@ public final class Method extends Executable {
      * that declares the method represented by this object.
      */
     @Override
-    public @Det Class<?> getDeclaringClass(@PolyDet Method this) {
+    public @PolyDet Class<?> getDeclaringClass(@PolyDet Method this) {
         return clazz;
     }
 
@@ -241,7 +241,7 @@ public final class Method extends Executable {
      * object, as a {@code String}.
      */
     @Override
-    public @Det @Interned String getName(@PolyDet Method this) {
+    public @PolyDet @Interned String getName(@PolyDet Method this) {
         return name;
     }
 
@@ -249,7 +249,7 @@ public final class Method extends Executable {
      * {@inheritDoc}
      */
     @Override
-    public @Det int getModifiers(@PolyDet Method this) {
+    public @PolyDet int getModifiers(@PolyDet Method this) {
         return modifiers;
     }
 
@@ -260,7 +260,7 @@ public final class Method extends Executable {
      */
     @Override
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public @Det TypeVariable<Method> @Det[] getTypeParameters(@PolyDet Method this) {
+    public @PolyDet TypeVariable<Method> @PolyDet[] getTypeParameters(@PolyDet Method this) {
         if (getGenericSignature() != null)
             return (TypeVariable<Method>[])getGenericInfo().getTypeParameters();
         else
@@ -274,7 +274,7 @@ public final class Method extends Executable {
      * @return the return type for the method this object represents
      */
     @CFComment("lock/nullness: never returns null; returns Void instead")
-    public @Det Class<?> getReturnType(@PolyDet Method this) {
+    public @PolyDet Class<?> getReturnType(@PolyDet Method this) {
         return returnType;
     }
 
@@ -303,7 +303,7 @@ public final class Method extends Executable {
      * @since 1.5
      */
     @CFComment("lock/nullness: never returns null; returns Void instead")
-    public @Det Type getGenericReturnType(@PolyDet Method this) {
+    public @PolyDet Type getGenericReturnType(@PolyDet Method this) {
       if (getGenericSignature() != null) {
         return getGenericInfo().getReturnType();
       } else { return getReturnType();}
@@ -323,7 +323,7 @@ public final class Method extends Executable {
      * {@inheritDoc}
      */
     @Override
-    public @Det Class<?> @Det[] getParameterTypes(@PolyDet Method this) {
+    public @PolyDet Class<?> @PolyDet[] getParameterTypes(@PolyDet Method this) {
         return parameterTypes.clone();
     }
 
@@ -331,7 +331,7 @@ public final class Method extends Executable {
      * {@inheritDoc}
      * @since 1.8
      */
-    public @Det int getParameterCount(@PolyDet Method this) { return parameterTypes.length; }
+    public @PolyDet int getParameterCount(@PolyDet Method this) { return parameterTypes.length; }
 
 
     /**
@@ -342,7 +342,7 @@ public final class Method extends Executable {
      * @since 1.5
      */
     @Override
-    public @Det Type @Det[] getGenericParameterTypes(@PolyDet Method this) {
+    public @PolyDet Type @PolyDet[] getGenericParameterTypes(@PolyDet Method this) {
         return super.getGenericParameterTypes();
     }
 
@@ -350,7 +350,7 @@ public final class Method extends Executable {
      * {@inheritDoc}
      */
     @Override
-    public @Det Class<?> @OrderNonDet[] getExceptionTypes(@PolyDet Method this) {
+    public @PolyDet Class<?> @PolyDet("upDet")[] getExceptionTypes(@PolyDet Method this) {
         return exceptionTypes.clone();
     }
 
@@ -362,7 +362,7 @@ public final class Method extends Executable {
      * @since 1.5
      */
     @Override
-    public @Det Type @OrderNonDet[] getGenericExceptionTypes(@PolyDet Method this) {
+    public @PolyDet Type @PolyDet("upDet")[] getGenericExceptionTypes(@PolyDet Method this) {
         return super.getGenericExceptionTypes();
     }
 
@@ -425,7 +425,7 @@ public final class Method extends Executable {
      * @jls 9.6.1 Annotation Type Elements
      */
     @SideEffectFree
-    public @Det String toString(@PolyDet @GuardSatisfied Method this) {
+    public @PolyDet String toString(@PolyDet @GuardSatisfied Method this) {
         return sharedToString(Modifier.methodModifiers(),
                               isDefault(),
                               parameterTypes,
@@ -496,7 +496,7 @@ public final class Method extends Executable {
      * @jls 9.6.1 Annotation Type Elements
      */
     @Override
-    public @Det String toGenericString(@PolyDet Method this) {
+    public @PolyDet String toGenericString(@PolyDet Method this) {
         return sharedToGenericString(Modifier.methodModifiers(), isDefault());
     }
 
@@ -599,7 +599,7 @@ public final class Method extends Executable {
      * @since 1.5
      */
     @Pure
-    public @Det boolean isBridge(@PolyDet @GuardSatisfied Method this) {
+    public @PolyDet boolean isBridge(@PolyDet @GuardSatisfied Method this) {
         return (getModifiers() & Modifier.BRIDGE) != 0;
     }
 
@@ -609,7 +609,7 @@ public final class Method extends Executable {
      */
     @Pure
     @Override
-    public @Det boolean isVarArgs(@GuardSatisfied @PolyDet Method this) {
+    public @PolyDet boolean isVarArgs(@GuardSatisfied @PolyDet Method this) {
         return super.isVarArgs();
     }
 
@@ -620,7 +620,7 @@ public final class Method extends Executable {
      */
     @Pure
     @Override
-    public @Det boolean isSynthetic(@GuardSatisfied @PolyDet Method this) {
+    public @PolyDet boolean isSynthetic(@GuardSatisfied @PolyDet Method this) {
         return super.isSynthetic();
     }
 
@@ -636,7 +636,7 @@ public final class Method extends Executable {
      * method as defined by the Java Language Specification.
      * @since 1.8
      */
-    public @Det boolean isDefault(@GuardSatisfied @PolyDet Method this) {
+    public @PolyDet boolean isDefault(@GuardSatisfied @PolyDet Method this) {
         // Default methods are public non-abstract instance methods
         // declared in an interface.
         return ((getModifiers() & (Modifier.ABSTRACT | Modifier.PUBLIC | Modifier.STATIC)) ==
@@ -693,7 +693,7 @@ public final class Method extends Executable {
      *     default class value.
      * @since  1.5
      */
-    public @Det @Nullable Object getDefaultValue(@GuardSatisfied @PolyDet Method this) {
+    public @PolyDet @Nullable Object getDefaultValue(@GuardSatisfied @PolyDet Method this) {
         if  (annotationDefault == null)
             return null;
         Class<?> memberType = AnnotationType.invocationHandlerReturnType(
@@ -726,7 +726,7 @@ public final class Method extends Executable {
      * {@inheritDoc}
      * @since 1.5
      */
-    public @Det Annotation @Det[] getDeclaredAnnotations(@GuardSatisfied @PolyDet Method this)  {
+    public @PolyDet Annotation @PolyDet[] getDeclaredAnnotations(@GuardSatisfied @PolyDet Method this)  {
         return super.getDeclaredAnnotations();
     }
 
@@ -735,7 +735,7 @@ public final class Method extends Executable {
      * @since 1.5
      */
     @Override
-    public @Det Annotation @Det[] @Det[] getParameterAnnotations(@GuardSatisfied @PolyDet Method this) {
+    public @PolyDet Annotation @PolyDet[] @PolyDet[] getParameterAnnotations(@GuardSatisfied @PolyDet Method this) {
         return sharedGetParameterAnnotations(parameterTypes, parameterAnnotations);
     }
 
@@ -744,7 +744,7 @@ public final class Method extends Executable {
      * @since 1.8
      */
     @Override
-    public @Det AnnotatedType getAnnotatedReturnType(@GuardSatisfied @PolyDet Method this) {
+    public @PolyDet AnnotatedType getAnnotatedReturnType(@GuardSatisfied @PolyDet Method this) {
         return getAnnotatedReturnType0(getGenericReturnType());
     }
 
