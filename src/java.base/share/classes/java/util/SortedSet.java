@@ -32,6 +32,7 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.framework.qual.HasQualifierParameter;
 
 /**
  * A {@link Set} that further provides a <i>total ordering</i> on its elements.
@@ -115,6 +116,7 @@ import org.checkerframework.framework.qual.CFComment;
 
 @CFComment({"lock/nullness: Subclasses of this interface/class may opt to prohibit null elements"})
 @AnnotatedFor({"lock", "nullness"})
+@HasQualifierParameter(NonDet.class)
 public interface SortedSet<E> extends Set<E> {
     /**
      * Returns the comparator used to order the elements in this set,
@@ -160,7 +162,7 @@ public interface SortedSet<E> extends Set<E> {
      *         {@code toElement} lies outside the bounds of the range
      */
     @SideEffectFree
-    @PolyDet SortedSet<E> subSet(@GuardSatisfied @PolyDet SortedSet<E> this, @GuardSatisfied E fromElement, @GuardSatisfied E toElement);
+    @PolyDet("down")  SortedSet<E> subSet(@GuardSatisfied @PolyDet SortedSet<E> this, @GuardSatisfied E fromElement, @GuardSatisfied E toElement);
 
     /**
      * Returns a view of the portion of this set whose elements are
@@ -188,7 +190,7 @@ public interface SortedSet<E> extends Set<E> {
      *         bounds of the range
      */
     @SideEffectFree
-    @PolyDet SortedSet<E> headSet(@GuardSatisfied @PolyDet SortedSet<E> this, E toElement);
+    @PolyDet("down") SortedSet<E> headSet(@GuardSatisfied @PolyDet SortedSet<E> this, E toElement);
 
     /**
      * Returns a view of the portion of this set whose elements are
@@ -216,7 +218,7 @@ public interface SortedSet<E> extends Set<E> {
      *         bounds of the range
      */
     @SideEffectFree
-    @PolyDet SortedSet<E> tailSet(@GuardSatisfied @PolyDet SortedSet<E> this, E fromElement);
+    @PolyDet("down") SortedSet<E> tailSet(@GuardSatisfied @PolyDet SortedSet<E> this, E fromElement);
 
     /**
      * Returns the first (lowest) element currently in this set.

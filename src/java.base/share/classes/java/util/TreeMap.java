@@ -37,6 +37,8 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.framework.qual.HasQualifierParameter;
+import org.checkerframework.framework.qual.CheckReceiverForMutation;
 
 import java.io.Serializable;
 import java.util.function.BiConsumer;
@@ -123,6 +125,8 @@ import java.util.function.Consumer;
 
 @CFComment({"lock/nullness: This permits null element when using a custom comparator which allows null"})
 @AnnotatedFor({"lock", "nullness", "index"})
+@SuppressWarnings("invalid.upper.bound.on.type.argument")
+@HasQualifierParameter(NonDet.class)
 public class TreeMap<K,V>
     extends AbstractMap<K,V>
     implements NavigableMap<K,V>, Cloneable, java.io.Serializable
@@ -328,7 +332,8 @@ public class TreeMap<K,V>
      *         the specified map contains a null key and this map does not
      *         permit null keys
      */
-    public void putAll(@GuardSatisfied @PolyDet TreeMap<K, V> this, @PolyDet("use") Map<? extends K, ? extends V> map) {
+    @CheckReceiverForMutation
+    public void putAll(@GuardSatisfied @PolyDet TreeMap<@PolyDet("use") K, @PolyDet("use") V> this, @PolyDet("use") Map<? extends K, ? extends V> map) {
         int mapSize = map.size();
         if (size==0 && mapSize!=0 && map instanceof SortedMap) {
             Comparator<?> c = ((SortedMap<?,?>)map).comparator();
@@ -551,7 +556,8 @@ public class TreeMap<K,V>
      *         does not permit null keys
      */
     @EnsuresKeyFor(value={"#1"}, map={"this"})
-    public @Nullable V put(@GuardSatisfied @PolyDet TreeMap<K, V> this, K key, V value) {
+    @CheckReceiverForMutation
+    public @Nullable V put(@GuardSatisfied @PolyDet TreeMap<@PolyDet("use") K, @PolyDet("use") V> this, K key, V value) {
         Entry<K,V> t = root;
         if (t == null) {
             compare(key, key); // type (and possibly null) check
@@ -618,7 +624,8 @@ public class TreeMap<K,V>
      *         and this map uses natural ordering, or its comparator
      *         does not permit null keys
      */
-    public @Nullable V remove(@GuardSatisfied @PolyDet TreeMap<K, V> this, @PolyDet("use") Object key) {
+    @CheckReceiverForMutation
+    public @Nullable V remove(@GuardSatisfied @PolyDet TreeMap<@PolyDet("use") K, @PolyDet("use") V> this, @PolyDet("use") Object key) {
         Entry<K,V> p = getEntry(key);
         if (p == null)
             return null;
@@ -632,7 +639,8 @@ public class TreeMap<K,V>
      * Removes all of the mappings from this map.
      * The map will be empty after this call returns.
      */
-    public void clear(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
+    @CheckReceiverForMutation
+    public void clear(@GuardSatisfied @PolyDet TreeMap<@PolyDet("use") K, @PolyDet("use") V> this) {
         modCount++;
         size = 0;
         root = null;
@@ -688,7 +696,8 @@ public class TreeMap<K,V>
     /**
      * @since 1.6
      */
-    public Map.@PolyDet("down") @Nullable Entry<K,V> pollFirstEntry(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
+    @CheckReceiverForMutation
+    public Map.@PolyDet("down") @Nullable Entry<K,V> pollFirstEntry(@GuardSatisfied @PolyDet TreeMap<@PolyDet("use") K, @PolyDet("use") V> this) {
         Entry<K,V> p = getFirstEntry();
         Map.Entry<K,V> result = exportEntry(p);
         if (p != null)
@@ -699,7 +708,8 @@ public class TreeMap<K,V>
     /**
      * @since 1.6
      */
-    public Map.@PolyDet("down") @Nullable Entry<K,V> pollLastEntry(@GuardSatisfied @PolyDet TreeMap<K, V> this) {
+    @CheckReceiverForMutation
+    public Map.@PolyDet("down") @Nullable Entry<K,V> pollLastEntry(@GuardSatisfied @PolyDet TreeMap<@PolyDet("use") K, @PolyDet("use") V> this) {
         Entry<K,V> p = getLastEntry();
         Map.Entry<K,V> result = exportEntry(p);
         if (p != null)
@@ -1005,7 +1015,8 @@ public class TreeMap<K,V>
     }
 
     @Override
-    public @PolyDet("down") boolean replace(@GuardSatisfied @PolyDet TreeMap<K, V> this, K key, V oldValue, V newValue) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean replace(@GuardSatisfied @PolyDet TreeMap<@PolyDet("use") K, @PolyDet("use") V> this, K key, V oldValue, V newValue) {
         Entry<K,V> p = getEntry(key);
         if (p!=null && Objects.equals(oldValue, p.value)) {
             p.value = newValue;
@@ -1015,7 +1026,8 @@ public class TreeMap<K,V>
     }
 
     @Override
-    public V replace(@GuardSatisfied @PolyDet TreeMap<K, V> this, K key, V value) {
+    @CheckReceiverForMutation
+    public V replace(@GuardSatisfied @PolyDet TreeMap<@PolyDet("use") K, @PolyDet("use") V> this, K key, V value) {
         Entry<K,V> p = getEntry(key);
         if (p!=null) {
             V oldValue = p.value;
@@ -1026,7 +1038,8 @@ public class TreeMap<K,V>
     }
 
     @Override
-    public void forEach(@GuardSatisfied @PolyDet TreeMap<K, V> this, @PolyDet("use") BiConsumer<? super @PolyDet("up") K, ? super @PolyDet("up") V> action) {
+    @CheckReceiverForMutation
+    public void forEach(@GuardSatisfied @PolyDet TreeMap<@PolyDet("use") K, @PolyDet("use") V> this, @PolyDet("use") BiConsumer<? super @PolyDet("up") K, ? super @PolyDet("up") V> action) {
         Objects.requireNonNull(action);
         int expectedModCount = modCount;
         for (Entry<K, V> e = getFirstEntry(); e != null; e = successor(e)) {
@@ -1039,7 +1052,8 @@ public class TreeMap<K,V>
     }
 
     @Override
-    public void replaceAll(@GuardSatisfied @PolyDet TreeMap<K, V> this, @PolyDet("use") BiFunction<? super K, ? super V, ? extends V> function) {
+    @CheckReceiverForMutation
+    public void replaceAll(@GuardSatisfied @PolyDet TreeMap<@PolyDet("use") K, @PolyDet("use") V> this, @PolyDet("use") BiFunction<? super K, ? super V, ? extends V> function) {
         Objects.requireNonNull(function);
         int expectedModCount = modCount;
 

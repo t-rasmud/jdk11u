@@ -29,6 +29,8 @@ import java.util.function.DoubleConsumer;
 import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
 
+import org.checkerframework.checker.determinism.qual.PolyDet;
+
 /**
  * Static classes and methods for operating on or creating instances of
  * {@link Spliterator} and its primitive specializations
@@ -172,8 +174,8 @@ public final class Spliterators {
      *         {@code toIndex} is greater than the array size
      * @see Arrays#spliterator(Object[], int, int)
      */
-    public static <T> Spliterator<T> spliterator(Object[] array, int fromIndex, int toIndex,
-                                                 int additionalCharacteristics) {
+    public static <T extends @PolyDet("use") Object> @PolyDet Spliterator<T> spliterator(@PolyDet("use") Object @PolyDet[] array, @PolyDet int fromIndex, @PolyDet int toIndex,
+                                                                                         @PolyDet int additionalCharacteristics) {
         checkFromToBounds(Objects.requireNonNull(array).length, fromIndex, toIndex);
         return new ArraySpliterator<>(array, fromIndex, toIndex, additionalCharacteristics);
     }

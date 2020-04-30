@@ -27,6 +27,7 @@ package java.util;
 
 import org.checkerframework.checker.determinism.qual.NonDet;
 import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.CheckReceiverForMutation;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.lock.qual.ReleasesNoLocks;
@@ -38,6 +39,7 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.framework.qual.HasQualifierParameter;
 
 import java.util.Map.Entry;
 
@@ -82,6 +84,7 @@ import java.util.Map.Entry;
 
 @CFComment("lock: Subclasses of this interface/class may opt to prohibit null elements")
 @AnnotatedFor({"lock", "nullness", "index"})
+@HasQualifierParameter(NonDet.class)
 public abstract class AbstractMap<K,V> implements Map<K,V> {
     /**
      * Sole constructor.  (For invocation by subclass constructors, typically
@@ -230,7 +233,8 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      */
     @ReleasesNoLocks
     @EnsuresKeyFor(value={"#1"}, map={"this"})
-    public @PolyDet("down") @Nullable V put(@GuardSatisfied @PolyDet AbstractMap<K, V> this, K key, V value) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") @Nullable V put(@GuardSatisfied @PolyDet AbstractMap<@PolyDet("use") K, @PolyDet("use") V> this, @PolyDet("use") K key, @PolyDet("use") V value) {
         throw new UnsupportedOperationException();
     }
 
@@ -256,7 +260,8 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * @throws ClassCastException            {@inheritDoc}
      * @throws NullPointerException          {@inheritDoc}
      */
-    public @PolyDet("down") @Nullable V remove(@GuardSatisfied @PolyDet AbstractMap<K, V> this, @PolyDet("use") Object key) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") @Nullable V remove(@GuardSatisfied @PolyDet AbstractMap<@PolyDet("use") K, @PolyDet("use") V> this, @PolyDet("use") Object key) {
         Iterator<Entry<K,V>> i = entrySet().iterator();
         Entry<K,V> correctEntry = null;
         if (key==null) {
@@ -301,7 +306,8 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * @throws NullPointerException          {@inheritDoc}
      * @throws IllegalArgumentException      {@inheritDoc}
      */
-    public void putAll(@GuardSatisfied @PolyDet AbstractMap<K, V> this, @PolyDet("use") Map<? extends K, ? extends V> m) {
+    @CheckReceiverForMutation
+    public void putAll(@GuardSatisfied @PolyDet AbstractMap<@PolyDet("use") K, @PolyDet("use") V> this, @PolyDet("use") Map<? extends K, ? extends V> m) {
         for (Map.Entry<? extends K, ? extends V> e : m.entrySet())
             put(e.getKey(), e.getValue());
     }
@@ -318,7 +324,8 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      *
      * @throws UnsupportedOperationException {@inheritDoc}
      */
-    public void clear(@GuardSatisfied @PolyDet AbstractMap<K, V> this) {
+    @CheckReceiverForMutation
+    public void clear(@GuardSatisfied @PolyDet AbstractMap<@PolyDet("use") K, @PolyDet("use") V> this) {
         entrySet().clear();
     }
 
@@ -505,7 +512,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * @return {@code true} if the specified object is equal to this map
      */
     @Pure
-    public @PolyDet("down") boolean equals(@GuardSatisfied @PolyDet AbstractMap<K, V> this, @GuardSatisfied @PolyDet @Nullable Object o) {
+    public @PolyDet("down") boolean equals(@GuardSatisfied @PolyDet AbstractMap<K, V> this, @GuardSatisfied @PolyDet("upDet") @Nullable Object o) {
         if (o == this)
             return true;
 
