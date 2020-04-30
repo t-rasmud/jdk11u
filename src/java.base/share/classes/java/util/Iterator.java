@@ -32,6 +32,8 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
 import org.checkerframework.framework.qual.Covariant;
+import org.checkerframework.framework.qual.HasQualifierParameter;
+
 
 import java.util.function.Consumer;
 
@@ -69,6 +71,7 @@ import java.util.function.Consumer;
 @AnnotatedFor({"lock"})
 @CollectionType
 @Covariant({0})
+@HasQualifierParameter(NonDet.class)
 public interface Iterator<E> {
     /**
      * Returns {@code true} if the iteration has more elements.
@@ -142,7 +145,7 @@ public interface Iterator<E> {
      * @throws NullPointerException if the specified action is null
      * @since 1.8
      */
-    default void forEachRemaining(@GuardSatisfied @PolyDet Iterator<E> this, @PolyDet("use") Consumer<? super E> action) {
+    default void forEachRemaining(@GuardSatisfied @PolyDet Iterator<@PolyDet("down") E> this, @PolyDet("use") Consumer<? super E> action) {
         Objects.requireNonNull(action);
         while (hasNext())
             action.accept(next());

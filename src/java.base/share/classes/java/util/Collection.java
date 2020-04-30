@@ -28,6 +28,7 @@ package java.util;
 import org.checkerframework.checker.determinism.qual.CollectionType;
 import org.checkerframework.checker.determinism.qual.NonDet;
 import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.CheckReceiverForMutation;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -36,6 +37,7 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.framework.qual.HasQualifierParameter;
 
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
@@ -233,6 +235,7 @@ import java.util.stream.StreamSupport;
 @CFComment("lock/nullness: Subclasses of this interface/class may opt to prohibit null elements")
 @AnnotatedFor({"lock", "nullness", "index"})
 @CollectionType
+@HasQualifierParameter(NonDet.class)
 public interface Collection<E> extends Iterable<E> {
     // Query Operations
 
@@ -312,7 +315,7 @@ public interface Collection<E> extends Iterable<E> {
     "methods, because the most useful type for toArray is not expressible",
     "in the surface syntax that the nullness annotations support."})
     @SideEffectFree
-    @PolyDet("down") @PolyNull Object @PolyDet[] toArray(@PolyDet Collection<@PolyNull E> this);
+    @PolyDet("down") @PolyNull Object @PolyDet[] toArray(@PolyDet Collection<@PolyDet("down") @PolyNull E> this);
 
     /**
      * Returns an array containing all of the elements in this collection;
@@ -366,7 +369,7 @@ public interface Collection<E> extends Iterable<E> {
      * @throws NullPointerException if the specified array is null
      */
     @SideEffectFree
-    <T> @PolyDet @Nullable T @PolyDet @PolyNull [] toArray(@PolyDet Collection<E> this, T @PolyNull [] a);
+    <T extends @PolyDet("down") Object> @PolyDet("down") @Nullable T @PolyDet @PolyNull [] toArray(@PolyDet Collection<@PolyDet("down") E> this, T @PolyDet("use")  @PolyNull [] a);
 
     /**
      * Returns an array containing all of the elements in this collection,
@@ -442,7 +445,8 @@ public interface Collection<E> extends Iterable<E> {
      * @throws IllegalStateException if the element cannot be added at this
      *         time due to insertion restrictions
      */
-    @PolyDet("down") boolean add(@PolyDet @GuardSatisfied Collection<E> this, E e);
+    @CheckReceiverForMutation
+    @PolyDet("down") boolean add(@PolyDet @GuardSatisfied Collection<@PolyDet("use") E> this, @PolyDet("use") E e);
 
     /**
      * Removes a single instance of the specified element from this
@@ -464,7 +468,8 @@ public interface Collection<E> extends Iterable<E> {
      * @throws UnsupportedOperationException if the {@code remove} operation
      *         is not supported by this collection
      */
-    @PolyDet("down") boolean remove(@GuardSatisfied @PolyDet Collection<E> this, @PolyDet("use") Object o);
+    @CheckReceiverForMutation
+    @PolyDet("down") boolean remove(@GuardSatisfied @PolyDet Collection<@PolyDet("use") E> this, @PolyDet("use") Object o);
 
 
     // Bulk Operations
@@ -514,7 +519,8 @@ public interface Collection<E> extends Iterable<E> {
      *         this time due to insertion restrictions
      * @see #add(Object)
      */
-    @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet Collection<E> this, @PolyDet("down") Collection<? extends E> c);
+    @CheckReceiverForMutation
+    @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet Collection<@PolyDet("use") E> this, @PolyDet("use") Collection<? extends E> c);
 
     /**
      * Removes all of this collection's elements that are also contained in the
@@ -539,7 +545,8 @@ public interface Collection<E> extends Iterable<E> {
      * @see #remove(Object)
      * @see #contains(Object)
      */
-    @PolyDet("down") boolean removeAll(@GuardSatisfied @PolyDet Collection<E> this, @PolyDet("use") Collection<?> c);
+    @CheckReceiverForMutation
+    @PolyDet("down") boolean removeAll(@GuardSatisfied @PolyDet Collection<@PolyDet("use") E> this, @PolyDet("use") Collection<?> c);
 
     /**
      * Removes all of the elements of this collection that satisfy the given
@@ -563,7 +570,8 @@ public interface Collection<E> extends Iterable<E> {
      *         supported.
      * @since 1.8
      */
-    default @PolyDet("down") boolean removeIf(@GuardSatisfied @PolyDet Collection<E> this, @PolyDet("use") Predicate<? super E> filter) {
+    @CheckReceiverForMutation
+    default @PolyDet("down") boolean removeIf(@GuardSatisfied @PolyDet Collection<@PolyDet("use") E> this, @PolyDet("use") Predicate<? super E> filter) {
         Objects.requireNonNull(filter);
         boolean removed = false;
         final Iterator<E> each = iterator();
@@ -598,7 +606,8 @@ public interface Collection<E> extends Iterable<E> {
      * @see #remove(Object)
      * @see #contains(Object)
      */
-    @PolyDet("down") boolean retainAll(@GuardSatisfied @PolyDet Collection<E> this, @PolyDet("use") Collection<?> c);
+    @CheckReceiverForMutation
+    @PolyDet("down") boolean retainAll(@GuardSatisfied @PolyDet Collection<@PolyDet("use") E> this, @PolyDet("use") Collection<?> c);
 
     /**
      * Removes all of the elements from this collection (optional operation).
@@ -607,7 +616,8 @@ public interface Collection<E> extends Iterable<E> {
      * @throws UnsupportedOperationException if the {@code clear} operation
      *         is not supported by this collection
      */
-    void clear(@GuardSatisfied @PolyDet Collection<E> this);
+    @CheckReceiverForMutation
+    void clear(@GuardSatisfied @PolyDet Collection<@PolyDet("use") E> this);
 
 
     // Comparison and hashing
