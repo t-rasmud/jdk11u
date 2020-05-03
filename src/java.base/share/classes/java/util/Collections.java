@@ -390,7 +390,7 @@ public class Collections {
      *         its list-iterator does not support the {@code set} operation.
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void reverse(@GuardSatisfied @PolyDet List<? super @PolyDet("down") Object> list) {
+    public static void reverse(@GuardSatisfied @PolyDet List<?> list) {
         int size = list.size();
         if (size < REVERSE_THRESHOLD || list instanceof RandomAccess) {
             for (int i=0, mid=size>>1, j=size-1; i<mid; i++, j--)
@@ -437,7 +437,7 @@ public class Collections {
      * @throws UnsupportedOperationException if the specified list or
      *         its list-iterator does not support the {@code set} operation.
      */
-    public static void shuffle(@GuardSatisfied @PolyDet List<@PolyDet("use") ? super @PolyDet("down") Object> list) {
+    public static void shuffle(@GuardSatisfied @PolyDet List<?> list) {
         Random rnd = r;
         if (rnd == null)
             r = rnd = new Random(); // harmless race.
@@ -470,7 +470,7 @@ public class Collections {
      *         list-iterator does not support the {@code set} operation.
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void shuffle(@GuardSatisfied @PolyDet List<? super @PolyDet("down") Object> list, @PolyDet("use") Random rnd) {
+    public static void shuffle(@GuardSatisfied @PolyDet List<?> list, @PolyDet("use") Random rnd) {
         int size = list.size();
         if (size < SHUFFLE_THRESHOLD || list instanceof RandomAccess) {
             for (int i=size; i>1; i--)
@@ -508,7 +508,7 @@ public class Collections {
      * @since 1.4
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void swap(@GuardSatisfied @PolyDet List<? super @PolyDet("down") Object> list, @PolyDet("use") int i, @PolyDet("use") int j) {
+    public static void swap(@GuardSatisfied @PolyDet List<?> list, @PolyDet("use") int i, @PolyDet("use") int j) {
         // instead of using a raw type here, it's possible to capture
         // the wildcard but it will require a call to a supplementary
         // private method
@@ -790,7 +790,7 @@ public class Collections {
      *         its list-iterator does not support the {@code set} operation.
      * @since 1.4
      */
-    public static void rotate(@GuardSatisfied @PolyDet List<? super @PolyDet("down") Object> list, @PolyDet("use") int distance) {
+    public static void rotate(@GuardSatisfied @PolyDet List<?> list, @PolyDet("use") int distance) {
         if (list instanceof RandomAccess || list.size() < ROTATE_THRESHOLD)
             rotate1(list, distance);
         else
@@ -820,7 +820,7 @@ public class Collections {
         }
     }
 
-    private static void rotate2(@PolyDet List<? super @PolyDet("down") Object> list, @PolyDet("use") int distance) {
+    private static void rotate2(@PolyDet List<?> list, @PolyDet("use") int distance) {
         int size = list.size();
         if (size == 0)
             return;
