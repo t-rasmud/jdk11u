@@ -27,6 +27,8 @@ package java.util;
 
 import org.checkerframework.checker.determinism.qual.Det;
 import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.CheckReceiverForMutation;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.EnsuresKeyFor;
@@ -38,7 +40,6 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
 import org.checkerframework.framework.qual.HasQualifierParameter;
-import org.checkerframework.framework.qual.CheckReceiverForMutation;
 
 import java.io.Serializable;
 import java.util.function.BiConsumer;

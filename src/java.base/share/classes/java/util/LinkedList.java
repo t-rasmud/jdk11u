@@ -859,7 +859,7 @@ public class LinkedList<E>
      * @return {@code true} if the list contained the specified element
      * @since 1.6
      */
-    @CheckReceiverForMutatio
+    @CheckReceiverForMutation
     public @PolyDet("down") boolean removeFirstOccurrence(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this, @PolyDet("use") @Nullable Object o) {
         return remove(o);
     }

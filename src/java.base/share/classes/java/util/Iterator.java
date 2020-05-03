@@ -27,6 +27,7 @@ package java.util;
 
 import org.checkerframework.checker.determinism.qual.CollectionType;
 import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.NonDet;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
