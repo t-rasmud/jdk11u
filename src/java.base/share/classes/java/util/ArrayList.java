@@ -1543,7 +1543,7 @@ public class ArrayList<E> extends AbstractList<E>
             checkForComodification();
 
             // ArrayListSpliterator not used here due to late-binding
-            return new @PolyDet Spliterator<E>() {
+            return new Spliterator<E>() {
                 private int index = offset; // current index, modified on advance/split
                 private int fence = -1; // -1 until used; then one past last index
                 private int expectedModCount; // initialized when fence set
