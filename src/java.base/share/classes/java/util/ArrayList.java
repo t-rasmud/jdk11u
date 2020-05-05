@@ -1392,7 +1392,7 @@ public class ArrayList<E> extends AbstractList<E>
             checkForComodification();
             rangeCheckForAdd(index);
 
-            return new @PolyDet ListIterator<E>() {
+            return new ListIterator<E>() {
                 int cursor = index;
                 int lastRet = -1;
                 int expectedModCount = root.modCount;
