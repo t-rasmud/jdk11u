@@ -26,7 +26,6 @@
 package java.io;
 
 import org.checkerframework.checker.determinism.qual.NonDet;
-import org.checkerframework.checker.determinism.qual.OrderNonDet;
 import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.interning.qual.Interned;
@@ -1812,7 +1811,7 @@ public class File
      * @since  1.2
      * @see java.nio.file.FileStore
      */
-    public static @Det File @Nullable @OrderNonDet [] listRoots() {
+    public static @NonDet File @Nullable @NonDet [] listRoots() {
         return fs.listRoots();
     }
 
