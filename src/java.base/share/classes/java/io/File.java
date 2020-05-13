@@ -1147,7 +1147,7 @@ public class File
      *          SecurityManager#checkRead(String)} method denies read access to
      *          the directory
      */
-    public @NonDet String @NonDet @Nullable [] list(@PolyDet File this) {
+    public @PolyDet String @PolyDet("upDet") @Nullable [] list(@PolyDet File this) {
         SecurityManager security = System.getSecurityManager();
         if (security != null) {
             security.checkRead(path);
@@ -1187,7 +1187,7 @@ public class File
      *
      * @see java.nio.file.Files#newDirectoryStream(Path,String)
      */
-    public @NonDet String @NonDet @Nullable [] list(@PolyDet File this, @PolyDet @Nullable FilenameFilter filter) {
+    public @PolyDet String @PolyDet("upDet") @Nullable [] list(@PolyDet File this, @PolyDet @Nullable FilenameFilter filter) {
         @NonDet String names @NonDet[] = list();
         if ((names == null) || (filter == null)) {
             return names;
@@ -1280,7 +1280,7 @@ public class File
      * @since  1.2
      * @see java.nio.file.Files#newDirectoryStream(Path,String)
      */
-    public @NonDet File @Nullable @NonDet [] listFiles(@PolyDet File this, @Nullable @PolyDet FilenameFilter filter) {
+    public @PolyDet File @Nullable @PolyDet("upDet") [] listFiles(@PolyDet File this, @Nullable @PolyDet FilenameFilter filter) {
         @NonDet String ss @NonDet[] = list();
         if (ss == null) return null;
         @NonDet ArrayList<File> files = new @NonDet ArrayList<>();
@@ -1318,7 +1318,7 @@ public class File
      * @since  1.2
      * @see java.nio.file.Files#newDirectoryStream(Path,java.nio.file.DirectoryStream.Filter)
      */
-    public @NonDet File @NonDet @Nullable [] listFiles(@PolyDet File this, @Nullable @PolyDet FileFilter filter) {
+    public @PolyDet File @PolyDet("upDet") @Nullable [] listFiles(@PolyDet File this, @Nullable @PolyDet FileFilter filter) {
         @NonDet String ss @NonDet[] = list();
         if (ss == null) return null;
         @NonDet ArrayList<File> files = new @NonDet ArrayList<>();
