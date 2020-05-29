@@ -509,7 +509,7 @@ public class LinkedList<E>
      * @return the element previously at the specified position
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    public @PolyDet("up") E set(@GuardSatisfied @PolyDet("noOrderNonDet") LinkedList<E> this, @PolyDet("use") @NonNegative int index, E element) {
+    public @PolyDet("up") E set(@GuardSatisfied @PolyDet("noOrderNonDet") LinkedList<@PolyDet("noOrderNonDet") E> this, @PolyDet("useNoOrderNonDet") @NonNegative int index, @PolyDet("useNoOrderNonDet") E element) {
         checkElementIndex(index);
         Node<E> x = node(index);
         E oldVal = x.item;

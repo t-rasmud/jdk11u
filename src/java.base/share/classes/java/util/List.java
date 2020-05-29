@@ -617,7 +617,7 @@ public interface List<E> extends Collection<E> {
      * @throws IndexOutOfBoundsException if the index is out of range
      *         ({@code index < 0 || index >= size()})
      */
-    @PolyDet("up") E set(@GuardSatisfied @PolyDet("noOrderNonDet") List<E> this, @PolyDet("use") @IndexFor({"this"}) int index, E element);
+    @PolyDet("up") E set(@GuardSatisfied @PolyDet("noOrderNonDet") List<@PolyDet("noOrderNonDet") E> this, @PolyDet("useNoOrderNonDet") @IndexFor({"this"}) int index, @PolyDet("useNoOrderNonDet") E element);
 
     /**
      * Inserts the specified element at the specified position in this list
