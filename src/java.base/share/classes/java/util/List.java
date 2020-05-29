@@ -655,7 +655,7 @@ public interface List<E> extends Collection<E> {
      *         ({@code index < 0 || index >= size()})
      */
     @ReleasesNoLocks
-    @PolyDet("up") E remove(@GuardSatisfied @PolyDet("noOrderNonDet") List<E> this, @PolyDet("use") @IndexFor({"this"}) int index);
+    @PolyDet("up") E remove(@GuardSatisfied @PolyDet("noOrderNonDet") List<@PolyDet("noOrderNonDet") E> this, @PolyDet("useNoOrderNonDet") @IndexFor({"this"}) int index);
 
 
     // Search Operations

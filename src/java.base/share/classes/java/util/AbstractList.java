@@ -178,7 +178,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws UnsupportedOperationException {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
      */
-    public @PolyDet("up") E remove(@GuardSatisfied @PolyDet("noOrderNonDet") AbstractList<E> this, @PolyDet("use") @IndexFor({"this"}) int index) {
+    public @PolyDet("up") E remove(@GuardSatisfied @PolyDet("noOrderNonDet") AbstractList<@PolyDet("noOrderNonDet") E> this, @PolyDet("useNoOrderNonDet") @IndexFor({"this"}) int index) {
         throw new UnsupportedOperationException();
     }
 
