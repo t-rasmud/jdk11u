@@ -25,6 +25,7 @@
 package java.util.function;
 
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.determinism.qual.PolyDet;
 
 /**
  * Represents a function that accepts an int-valued argument and produces a
@@ -49,5 +50,5 @@ public interface IntFunction<R> {
      * @param value the function argument
      * @return the function result
      */
-    R apply(int value);
+    @PolyDet R apply(@PolyDet int value);
 }

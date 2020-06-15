@@ -30,6 +30,9 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.framework.qual.HasQualifierParameter;
 
 /**
  * An iterator for lists that allows the programmer
@@ -64,6 +67,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  * @since   1.2
  */
 @AnnotatedFor({"lock", "nullness", "index"})
+@HasQualifierParameter(NonDet.class)
 public interface ListIterator<E> extends Iterator<E> {
     // Query Operations
 
@@ -89,7 +93,7 @@ public interface ListIterator<E> extends Iterator<E> {
      * @return the next element in the list
      * @throws NoSuchElementException if the iteration has no next element
      */
-    E next(@GuardSatisfied ListIterator<E> this);
+    @PolyDet("up") E next(@PolyDet @GuardSatisfied ListIterator<E> this);
 
     /**
      * Returns {@code true} if this list iterator has more elements when
@@ -180,7 +184,7 @@ public interface ListIterator<E> extends Iterator<E> {
      *         {@code add} have been called after the last call to
      *         {@code next} or {@code previous}
      */
-    void set(@GuardSatisfied ListIterator<E> this, E e);
+    void set(@PolyDet @GuardSatisfied ListIterator<@PolyDet("down") E> this, @PolyDet("use") E e);
 
     /**
      * Inserts the specified element into the list (optional operation).
@@ -202,5 +206,5 @@ public interface ListIterator<E> extends Iterator<E> {
      * @throws IllegalArgumentException if some aspect of this element
      *         prevents it from being added to this list
      */
-    void add(@GuardSatisfied ListIterator<E> this, E e);
+    void add(@PolyDet @GuardSatisfied ListIterator<@PolyDet("down") E> this, @PolyDet("use") E e);
 }

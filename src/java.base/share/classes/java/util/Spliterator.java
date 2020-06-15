@@ -27,6 +27,7 @@ package java.util;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.determinism.qual.PolyDet;
 
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
@@ -311,7 +312,7 @@ public interface Spliterator<T> {
      * upon entry to this method, else {@code true}.
      * @throws NullPointerException if the specified action is null
      */
-    boolean tryAdvance(Consumer<? super T> action);
+    @PolyDet boolean tryAdvance(@PolyDet Spliterator<T> this, @PolyDet("use") Consumer<? super T> action);
 
     /**
      * Performs the given action for each remaining element, sequentially in
@@ -327,7 +328,7 @@ public interface Spliterator<T> {
      * @param action The action
      * @throws NullPointerException if the specified action is null
      */
-    default void forEachRemaining(Consumer<? super T> action) {
+    default void forEachRemaining(@PolyDet Spliterator<T> this, @PolyDet("use") Consumer<? super T> action) {
         do { } while (tryAdvance(action));
     }
 

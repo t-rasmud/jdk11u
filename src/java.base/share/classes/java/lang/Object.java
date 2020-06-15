@@ -243,7 +243,7 @@ public class Object {
      */
     @SideEffectFree
     @HotSpotIntrinsicCandidate
-    protected native Object clone(@GuardSatisfied Object this) throws CloneNotSupportedException;
+    protected native @PolyDet("up") Object clone(@PolyDet @GuardSatisfied Object this) throws CloneNotSupportedException;
 
     /**
      * Returns a string representation of the object. In general, the
