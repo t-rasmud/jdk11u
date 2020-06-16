@@ -156,7 +156,7 @@ public class Collections {
      * @see List#sort(Comparator)
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Comparable<? super T>> void sort(@PolyDet List<T> list) {
+    public static <@PolyDet("down") T extends @PolyDet("use") Comparable<? super T>> void sort(@PolyDet List<T> list) {
         list.sort(null);
     }
 
@@ -190,7 +190,7 @@ public class Collections {
      * @see List#sort(Comparator)
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static <T> void sort(@PolyDet List<T> list, @PolyDet("use") @Nullable Comparator<? super T> c) {
+    public static <@PolyDet("down") T extends @PolyDet("use") Object> void sort(@PolyDet List<T> list, @PolyDet("use") @Nullable Comparator<? super T> c) {
         list.sort(c);
     }
 
@@ -227,7 +227,7 @@ public class Collections {
      *         with the elements of the list.
      */
     public static <T>
-    @PolyDet("down") int binarySearch(@PolyDet List<? extends Comparable<? super T>> list, T key) {
+    @PolyDet("down") int binarySearch(@PolyDet("noOrderNonDet") List<? extends Comparable<? super T>> list, T key) {
         if (list instanceof RandomAccess || list.size()<BINARYSEARCH_THRESHOLD)
             return Collections.indexedBinarySearch(list, key);
         else
@@ -331,7 +331,7 @@ public class Collections {
      *         elements of the list using this comparator.
      */
     @SuppressWarnings("unchecked")
-    public static <T> @PolyDet("up") int binarySearch(@PolyDet List<? extends T> list, T key, @PolyDet @Nullable Comparator<? super T> c) {
+    public static <T> @PolyDet("up") int binarySearch(@PolyDet("noOrderNonDet") List<? extends T> list, T key, @PolyDet @Nullable Comparator<? super T> c) {
         if (c==null)
             return binarySearch((List<? extends Comparable<? super T>>) list, key);
 
@@ -470,7 +470,7 @@ public class Collections {
      *         list-iterator does not support the {@code set} operation.
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void shuffle(@GuardSatisfied @PolyDet List<?> list, @PolyDet Random rnd) {
+    public static void shuffle(@GuardSatisfied @PolyDet List<?> list, @PolyDet("use") Random rnd) {
         int size = list.size();
         if (size < SHUFFLE_THRESHOLD || list instanceof RandomAccess) {
             for (int i=size; i>1; i--)
@@ -537,7 +537,7 @@ public class Collections {
      * @throws UnsupportedOperationException if the specified list or its
      *         list-iterator does not support the {@code set} operation.
      */
-    public static <T> void fill(@GuardSatisfied @PolyDet List<? super T> list, T obj) {
+    public static <@PolyDet("down") T extends @PolyDet("use") Object> void fill(@GuardSatisfied @PolyDet List<? super T> list, T obj) {
         int size = list.size();
 
         if (size < FILL_THRESHOLD || list instanceof RandomAccess) {
@@ -820,7 +820,7 @@ public class Collections {
         }
     }
 
-    private static void rotate2(List<?> list, int distance) {
+    private static void rotate2(@PolyDet List<?> list, @PolyDet("use") int distance) {
         int size = list.size();
         if (size == 0)
             return;
@@ -854,7 +854,7 @@ public class Collections {
      *         its list-iterator does not support the {@code set} operation.
      * @since  1.4
      */
-    public static <T> boolean replaceAll(@PolyDet List<T> list, @Nullable T oldVal, T newVal) {
+    public static <@PolyDet("down") T extends @PolyDet("use") Object> @PolyDet("down") boolean replaceAll(@PolyDet List<T> list, @Nullable T oldVal, T newVal) {
         boolean result = false;
         int size = list.size();
         if (size < REPLACEALL_THRESHOLD || list instanceof RandomAccess) {
@@ -5581,7 +5581,7 @@ public class Collections {
      * @since 1.5
      */
     @SafeVarargs
-    public static <T> @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet Collection<? super T> c, T... elements) {
+    public static <@PolyDet("down") T extends @PolyDet("use") Object> @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet Collection<? super T> c, T... elements) {
         boolean result = false;
         for (T element : elements)
             result |= c.add(element);

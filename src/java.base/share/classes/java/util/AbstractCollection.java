@@ -26,6 +26,8 @@
 package java.util;
 
 import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.CheckReceiverForMutation;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -34,6 +36,7 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.framework.qual.HasQualifierParameter;
 
 /**
  * This class provides a skeletal implementation of the {@code Collection}
@@ -70,6 +73,7 @@ import org.checkerframework.framework.qual.CFComment;
 
 @CFComment("lock/nullness: Subclasses of this interface/class may opt to prohibit null elements")
 @AnnotatedFor({"lock", "nullness", "index"})
+@HasQualifierParameter(NonDet.class)
 public abstract class AbstractCollection<E> implements Collection<E> {
     /**
      * Sole constructor.  (For invocation by subclass constructors, typically
@@ -156,7 +160,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      */
     @Override
     @SideEffectFree
-    public @PolyDet("down") Object @PolyDet[] toArray(@PolyDet AbstractCollection<E> this) {
+    public @PolyDet("down") Object @PolyDet[] toArray(@PolyDet AbstractCollection<@PolyDet("down") E> this) {
         // Estimate size of array; be prepared to see more or fewer elements
         Object[] r = new Object[size()];
         Iterator<E> it = iterator();
@@ -199,7 +203,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
     @Override
     @SideEffectFree
     @SuppressWarnings("unchecked")
-    public <T> @PolyDet("down") @Nullable T @PolyDet @PolyNull [] toArray(@PolyDet AbstractCollection<E> this, @Nullable T @PolyNull [] a) {
+    public <T extends @PolyDet("down") Object> @PolyDet("down") @Nullable T @PolyDet @PolyNull [] toArray(@PolyDet AbstractCollection<@PolyDet("down") E> this, @Nullable T @PolyDet("use") @PolyNull [] a) {
         // Estimate size of array; be prepared to see more or fewer elements
         int size = size();
         T[] r = a.length >= size ? a :
@@ -288,7 +292,8 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      * @throws IllegalStateException         {@inheritDoc}
      */
     @Override
-    public @PolyDet("down") boolean add(@GuardSatisfied @PolyDet AbstractCollection<E> this, E e) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean add(@GuardSatisfied @PolyDet AbstractCollection<@PolyDet("use") E> this, @PolyDet("use")E e) {
         throw new UnsupportedOperationException();
     }
 
@@ -310,7 +315,8 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      * @throws NullPointerException          {@inheritDoc}
      */
     @Override
-    public @PolyDet("down") boolean remove(@GuardSatisfied @PolyDet AbstractCollection<E> this, @PolyDet("use") Object o) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean remove(@GuardSatisfied @PolyDet AbstractCollection<@PolyDet("use") E> this, @PolyDet("use") Object o) {
         Iterator<E> it = iterator();
         if (o==null) {
             while (it.hasNext()) {
@@ -375,7 +381,8 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      * @see #add(Object)
      */
     @Override
-    public @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet AbstractCollection<E> this, @PolyDet("down") Collection<? extends E> c) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet AbstractCollection<@PolyDet("use") E> this, @PolyDet("use") Collection<? extends E> c) {
         boolean modified = false;
         for (E e : c)
             if (add(e))
@@ -406,7 +413,8 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      * @see #contains(Object)
      */
     @Override
-    public @PolyDet("down") boolean removeAll(@GuardSatisfied @PolyDet AbstractCollection<E> this, @PolyDet("use") Collection<?> c) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean removeAll(@GuardSatisfied @PolyDet AbstractCollection<@PolyDet("use") E> this, @PolyDet("use") Collection<?> c) {
         Objects.requireNonNull(c);
         boolean modified = false;
         Iterator<?> it = iterator();
@@ -442,7 +450,8 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      * @see #contains(Object)
      */
     @Override
-    public @PolyDet("down") boolean retainAll(@GuardSatisfied @PolyDet AbstractCollection<E> this, @PolyDet("use") Collection<?> c) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean retainAll(@GuardSatisfied @PolyDet AbstractCollection<@PolyDet("use") E> this, @PolyDet("use") Collection<?> c) {
         Objects.requireNonNull(c);
         boolean modified = false;
         Iterator<E> it = iterator();
@@ -472,7 +481,8 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      * @throws UnsupportedOperationException {@inheritDoc}
      */
     @Override
-    public void clear(@GuardSatisfied @PolyDet AbstractCollection<E> this) {
+    @CheckReceiverForMutation
+    public void clear(@GuardSatisfied @PolyDet AbstractCollection<@PolyDet("use") E> this) {
         Iterator<E> it = iterator();
         while (it.hasNext()) {
             it.next();

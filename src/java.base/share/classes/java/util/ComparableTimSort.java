@@ -29,6 +29,7 @@ package java.util;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.interning.qual.UsesObjectEquals;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.determinism.qual.PolyDet;
 
 /**
  * This is a near duplicate of {@link TimSort}, modified for use with
@@ -181,7 +182,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
      * @param workLen usable size of work array
      * @since 1.8
      */
-    static void sort(Object[] a, @IndexOrHigh({"#1"}) int lo, @IndexOrHigh({"#1"}) int hi, Object[] work, int workBase, int workLen) {
+    static void sort(@PolyDet("use") Object @PolyDet [] a, @PolyDet("use") @IndexOrHigh({"#1"}) int lo, @PolyDet("use") @IndexOrHigh({"#1"}) int hi, @PolyDet("use") Object @PolyDet("use") [] work, @PolyDet("use") int workBase, @PolyDet("use") int workLen) {
         assert a != null && lo >= 0 && lo <= hi && hi <= a.length;
 
         int nRemaining  = hi - lo;

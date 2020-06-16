@@ -25,8 +25,10 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.NonDet;
 import org.checkerframework.checker.determinism.qual.OrderNonDet;
 import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.CheckReceiverForMutation;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.EnsuresKeyFor;
@@ -37,6 +39,7 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.framework.qual.HasQualifierParameter;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -149,6 +152,7 @@ import jdk.internal.misc.SharedSecrets;
  * @since   1.2
  */
 @AnnotatedFor({"lock", "nullness", "index"})
+@HasQualifierParameter(NonDet.class)
 public class HashMap<K,V> extends AbstractMap<K,V>
     implements Map<K,V>, Cloneable, Serializable {
 
@@ -303,7 +307,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
             this.next = next;
         }
 
-        public final K getKey()        { return key; }
+        public final @PolyDet("up") K getKey(@PolyDet Node<K,V> this)        { return key; }
         public final V getValue()      { return value; }
         public final String toString() { return key + "=" + value; }
 
@@ -408,7 +412,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * Holds cached entrySet(). Note that AbstractMap fields are used
      * for keySet() and values().
      */
-    transient Set<Map.Entry<K,V>> entrySet;
+    transient @PolyDet Set<Map.@PolyDet("down") Entry<K,V>> entrySet;
 
     /**
      * The number of key-value mappings contained in this map.
@@ -576,7 +580,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * @param key the key
      * @return the node, or null if none
      */
-    final Node<K,V> getNode(int hash, @Nullable Object key) {
+    final @PolyDet("down") Node<K,V> getNode(@PolyDet HashMap<K, V> this, @PolyDet int hash, @PolyDet @Nullable Object key) {
         Node<K,V>[] tab; Node<K,V> first, e; int n; K k;
         if ((tab = table) != null && (n = tab.length) > 0 &&
             (first = tab[(n - 1) & hash]) != null) {
@@ -623,7 +627,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      *         previously associated {@code null} with {@code key}.)
      */
     @EnsuresKeyFor(value={"#1"}, map={"this"})
-    public @Nullable V put(@GuardSatisfied @PolyDet HashMap<K, V> this, K key, V value) {
+    @CheckReceiverForMutation
+    public @Nullable V put(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, @PolyDet("use") K key, @PolyDet("use") V value) {
         return putVal(hash(key), key, value, false, true);
     }
 
@@ -810,7 +815,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      *         (A {@code null} return can also indicate that the map
      *         previously associated {@code null} with {@code key}.)
      */
-    public @Nullable V remove(@GuardSatisfied @PolyDet HashMap<K, V> this, @PolyDet("use") @Nullable Object key) {
+    @CheckReceiverForMutation
+    public @Nullable V remove(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, @PolyDet("use") @Nullable Object key) {
         Node<K,V> e;
         return (e = removeNode(hash(key), key, null, false, true)) == null ?
             null : e.value;
@@ -826,8 +832,9 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * @param movable if false do not move other nodes while removing
      * @return the node, or null if none
      */
-    final Node<K,V> removeNode(int hash, @Nullable Object key, @Nullable Object value,
-                               boolean matchValue, boolean movable) {
+    @CheckReceiverForMutation
+    final @PolyDet("down") Node<K,V> removeNode(@PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, @PolyDet("use") int hash, @PolyDet("use") @Nullable Object key, @PolyDet("use") @Nullable Object value,
+                                                @PolyDet("use") boolean matchValue, @PolyDet("use") boolean movable) {
         Node<K,V>[] tab; Node<K,V> p; int n, index;
         if ((tab = table) != null && (n = tab.length) > 0 &&
             (p = tab[index = (n - 1) & hash]) != null) {
@@ -871,7 +878,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * Removes all of the mappings from this map.
      * The map will be empty after this call returns.
      */
-    public void clear(@GuardSatisfied @PolyDet HashMap<K, V> this) {
+    @CheckReceiverForMutation
+    public void clear(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use ") V> this) {
         Node<K,V>[] tab;
         modCount++;
         if ((tab = table) != null && size > 0) {
@@ -1088,17 +1096,20 @@ public class HashMap<K,V> extends AbstractMap<K,V>
 
     @EnsuresKeyFor(value={"#1"}, map={"this"})
     @Override
-    public @Nullable V putIfAbsent(@GuardSatisfied @PolyDet HashMap<K, V> this, K key, V value) {
+    @CheckReceiverForMutation
+    public @Nullable V putIfAbsent(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, K key, V value) {
         return putVal(hash(key), key, value, true, true);
     }
 
     @Override
-    public @PolyDet("down") boolean remove(@GuardSatisfied @PolyDet HashMap<K, V> this, @PolyDet("use") @Nullable Object key, @PolyDet("use") @Nullable Object value) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean remove(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, @PolyDet("use") @Nullable Object key, @PolyDet("use") @Nullable Object value) {
         return removeNode(hash(key), key, value, true, true) != null;
     }
 
     @Override
-    public @PolyDet("down") boolean replace(@GuardSatisfied @PolyDet HashMap<K, V> this, K key, V oldValue, V newValue) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean replace(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, K key, V oldValue, V newValue) {
         Node<K,V> e; V v;
         if ((e = getNode(hash(key), key)) != null &&
             ((v = e.value) == oldValue || (v != null && v.equals(oldValue)))) {
@@ -1110,7 +1121,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     }
 
     @Override
-    public @Nullable V replace(@GuardSatisfied @PolyDet HashMap<K, V> this, K key, V value) {
+    @CheckReceiverForMutation
+    public @Nullable V replace(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, K key, V value) {
         Node<K,V> e;
         if ((e = getNode(hash(key), key)) != null) {
             V oldValue = e.value;
@@ -1132,7 +1144,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * mapping function modified this map
      */
     @Override
-    public V computeIfAbsent(@GuardSatisfied @PolyDet HashMap<K, V> this, K key,
+    @CheckReceiverForMutation
+    public V computeIfAbsent(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, K key,
                              @PolyDet("use") Function<? super K, ? extends V> mappingFunction) {
         if (mappingFunction == null)
             throw new NullPointerException();
@@ -1198,7 +1211,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * remapping function modified this map
      */
     @Override
-    public V computeIfPresent(@GuardSatisfied @PolyDet HashMap<K, V> this, K key,
+    @CheckReceiverForMutation
+    public V computeIfPresent(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, K key,
                               @PolyDet("use") BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
         if (remappingFunction == null)
             throw new NullPointerException();
@@ -1231,7 +1245,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * remapping function modified this map
      */
     @Override
-    public V compute(@GuardSatisfied @PolyDet HashMap<K, V> this, K key,
+    @CheckReceiverForMutation
+    public V compute(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, K key,
                      @PolyDet("use") BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
         if (remappingFunction == null)
             throw new NullPointerException();
@@ -1296,7 +1311,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * remapping function modified this map
      */
     @Override
-    public V merge(@GuardSatisfied @PolyDet HashMap<K, V> this, K key, V value,
+    @CheckReceiverForMutation
+    public V merge(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, K key, V value,
                    @PolyDet("use") BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
         if (value == null)
             throw new NullPointerException();
@@ -1360,7 +1376,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     }
 
     @Override
-    public void forEach(@GuardSatisfied @PolyDet HashMap<K, V> this, @PolyDet("use") BiConsumer<? super @PolyDet("up") K, ? super @PolyDet("up") V> action) {
+    @CheckReceiverForMutation
+    public void forEach(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, @PolyDet("use") BiConsumer<? super @PolyDet("up") K, ? super @PolyDet("up") V> action) {
         Node<K,V>[] tab;
         if (action == null)
             throw new NullPointerException();
@@ -1376,7 +1393,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     }
 
     @Override
-    public void replaceAll(@PolyDet HashMap<K, V> this, @PolyDet("use") BiFunction<? super K, ? super V, ? extends V> function) {
+    @CheckReceiverForMutation
+    public void replaceAll(@PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, @PolyDet("use") BiFunction<? super K, ? super V, ? extends V> function) {
         Node<K,V>[] tab;
         if (function == null)
             throw new NullPointerException();
@@ -1863,7 +1881,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
 
     // Callbacks to allow LinkedHashMap post-actions
     void afterNodeAccess(Node<K,V> p) { }
-    void afterNodeInsertion(boolean evict) { }
+    void afterNodeInsertion(@PolyDet HashMap<K, V> this, @PolyDet("use") boolean evict) { }
     void afterNodeRemoval(Node<K,V> p) { }
 
     // Called only from writeObject, to ensure compatible ordering.

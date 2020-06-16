@@ -239,7 +239,7 @@ public final @UsesObjectEquals class Objects {
      */
     @CFComment({"lock: TODO: treat like other nullness assertion methods in the Checker Framework."})
     @EnsuresNonNull("#1")
-    public static <T> @NonNull T requireNonNull(@PolyDet @NonNull T obj) {
+    public static <T> @PolyDet @NonNull T requireNonNull(@PolyDet @NonNull T obj) {
         if (obj == null)
             throw new NullPointerException();
         return obj;

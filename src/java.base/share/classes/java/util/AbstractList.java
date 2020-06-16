@@ -27,6 +27,7 @@ package java.util;
 
 import org.checkerframework.checker.determinism.qual.NonDet;
 import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.CheckReceiverForMutation;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
@@ -36,6 +37,7 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.framework.qual.HasQualifierParameter;
 
 import java.util.function.Consumer;
 
@@ -84,6 +86,7 @@ import java.util.function.Consumer;
 
 @CFComment("lock/nullness: Subclasses of this interface/class may opt to prohibit null elements")
 @AnnotatedFor({"lock", "nullness", "index"})
+@HasQualifierParameter(NonDet.class)
 public abstract class AbstractList<E> extends AbstractCollection<E> implements List<E> {
     /**
      * Sole constructor.  (For invocation by subclass constructors, typically
@@ -121,7 +124,8 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws IllegalArgumentException if some property of this element
      *         prevents it from being added to this list
      */
-    public @PolyDet("down") boolean add(@GuardSatisfied @PolyDet AbstractList<E> this, E e) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean add(@GuardSatisfied @PolyDet AbstractList<@PolyDet("use") E> this, @PolyDet("use") E e) {
         add(size(), e);
         return true;
     }
@@ -147,7 +151,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
      */
-    public @PolyDet("up") E set(@GuardSatisfied @PolyDet("noOrderNonDet") AbstractList<E> this, @PolyDet("use") @IndexFor({"this"}) int index, E element) {
+    public @PolyDet("up") E set(@GuardSatisfied @PolyDet("noOrderNonDet") AbstractList<@PolyDet("noOrderNonDet") E> this, @PolyDet("useNoOrderNonDet") @IndexFor({"this"}) int index, @PolyDet("useNoOrderNonDet") E element) {
         throw new UnsupportedOperationException();
     }
 
@@ -164,7 +168,8 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
      */
-    public void add(@GuardSatisfied @PolyDet AbstractList<E> this, @PolyDet("use") @IndexOrHigh({"this"}) int index, E element) {
+    @CheckReceiverForMutation
+    public void add(@GuardSatisfied @PolyDet AbstractList<@PolyDet("use") E> this, @PolyDet("use") @IndexOrHigh({"this"}) int index, @PolyDet("use") E element) {
         throw new UnsupportedOperationException();
     }
 
@@ -178,7 +183,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws UnsupportedOperationException {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
      */
-    public @PolyDet("up") E remove(@GuardSatisfied @PolyDet("noOrderNonDet") AbstractList<E> this, @PolyDet("use") @IndexFor({"this"}) int index) {
+    public @PolyDet("up") E remove(@GuardSatisfied @PolyDet("noOrderNonDet") AbstractList<@PolyDet("noOrderNonDet") E> this, @PolyDet("useNoOrderNonDet") @IndexFor({"this"}) int index) {
         throw new UnsupportedOperationException();
     }
 
@@ -256,7 +261,8 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws UnsupportedOperationException if the {@code clear} operation
      *         is not supported by this list
      */
-    public void clear(@GuardSatisfied @PolyDet AbstractList<E> this) {
+    @CheckReceiverForMutation
+    public void clear(@GuardSatisfied @PolyDet AbstractList<@PolyDet("use") E> this) {
         removeRange(0, size());
     }
 
@@ -280,7 +286,8 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
      */
-    public @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet AbstractList<E> this, @PolyDet("use") @IndexOrHigh({"this"}) int index, @PolyDet("down") Collection<? extends E> c) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet AbstractList<@PolyDet("use") E> this, @PolyDet("use") @IndexOrHigh({"this"}) int index, @PolyDet("use") Collection<? extends E> c) {
         rangeCheckForAdd(index);
         boolean modified = false;
         for (E e : c) {
@@ -612,7 +619,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @param fromIndex index of first element to be removed
      * @param toIndex index after last element to be removed
      */
-    protected void removeRange(@PolyDet AbstractList<E> this, @PolyDet("use") @IndexOrHigh({"this"}) int fromIndex, @PolyDet("use") @IndexOrHigh({"this"}) int toIndex) {
+    protected void removeRange(@PolyDet("noOrderNonDet") AbstractList<@PolyDet("noOrderNonDet") E> this, @PolyDet("useNoOrderNonDet") @IndexOrHigh({"this"}) int fromIndex, @PolyDet("useNoOrderNonDet") @IndexOrHigh({"this"}) int toIndex) {
         ListIterator<E> it = listIterator(fromIndex);
         for (int i=0, n=toIndex-fromIndex; i<n; i++) {
             it.next();
