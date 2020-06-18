@@ -1531,7 +1531,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public @PolyDet boolean startsWith(PolyDet String this, @PolyDet String prefix, @PolyDet int toffset) {
+    public @PolyDet boolean startsWith(@PolyDet String this, @PolyDet String prefix, @PolyDet int toffset) {
         // Note: toffset might be near -1>>>1.
         if (toffset < 0 || toffset > length() - prefix.length()) {
             return false;
