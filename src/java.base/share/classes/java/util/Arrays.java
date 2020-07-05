@@ -35,6 +35,7 @@ import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.signedness.qual.PolySigned;
+import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -4912,7 +4913,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static @PolyDet("up") String toString(@PolyDet long @PolyDet @Nullable [] a) {
+    public static @PolyDet("up") @MinLen(2) String toString(@PolyDet long @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
         int iMax = a.length - 1;
@@ -4943,7 +4944,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static @PolyDet("up") String toString(@PolyDet int @PolyDet @Nullable [] a) {
+    public static @PolyDet("up") @MinLen(2) String toString(@PolyDet int @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
         int iMax = a.length - 1;
@@ -4974,7 +4975,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static @PolyDet("up") String toString(@PolyDet short @PolyDet @Nullable [] a) {
+    public static @PolyDet("up") @MinLen(2) String toString(@PolyDet short @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
         int iMax = a.length - 1;
@@ -5005,7 +5006,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static @PolyDet("up") String toString(@PolyDet char @PolyDet @Nullable [] a) {
+    public static @PolyDet("up") @MinLen(2) String toString(@PolyDet char @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
         int iMax = a.length - 1;
@@ -5036,7 +5037,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static @PolyDet("up") String toString(@PolyDet @PolySigned byte @PolyDet @Nullable [] a) {
+    public static @PolyDet("up") @MinLen(2) String toString(@PolyDet byte @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
         int iMax = a.length - 1;
@@ -5067,7 +5068,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static @PolyDet("up") String toString(@PolyDet boolean @PolyDet @Nullable [] a) {
+    public static @PolyDet("up") @MinLen(2) String toString(@PolyDet boolean @PolyDet@Nullable [] a) {
         if (a == null)
             return "null";
         int iMax = a.length - 1;
@@ -5098,7 +5099,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static @PolyDet("up") String toString(@PolyDet float @PolyDet @Nullable [] a) {
+    public static @PolyDet("up") @MinLen(2) String toString(@PolyDet float @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
 
@@ -5130,7 +5131,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static @PolyDet("up") String toString(@PolyDet double @PolyDet @Nullable [] a) {
+    public static @PolyDet("up") @MinLen(2) String toString(@PolyDet double @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
         int iMax = a.length - 1;
@@ -5164,7 +5165,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static @PolyDet("up") String toString(@PolyDet @PolyNull @PolyInterned Object @PolyDet @Nullable [] a) {
+    public static @PolyDet("up") @MinLen(2) String toString(@PolyDet @PolyNull @PolyInterned Object @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
 
@@ -5216,7 +5217,7 @@ public class Arrays {
      * @since 1.5
      */
     @SideEffectFree
-    public static @PolyDet("up") String deepToString(@PolyDet("use") @PolyNull @PolyInterned Object @PolyDet @Nullable [] a) {
+    public static @PolyDet("up") @MinLen(2) String deepToString(@PolyDet("use") @PolyNull @PolyInterned Object @PolyDet @Nullable [] a) {
         if (a == null)
             return "null";
 
