@@ -58,6 +58,7 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.common.aliasing.qual.Unique;
 
 import java.io.ObjectStreamField;
 import java.io.UnsupportedEncodingException;
@@ -156,7 +157,7 @@ import jdk.internal.vm.annotation.Stable;
  * @jls     15.18.1 String Concatenation Operator +
  */
 
-@AnnotatedFor({"formatter", "index", "interning", "lock", "nullness", "regex", "signature", "signedness", "value"})
+@AnnotatedFor({"aliasing", "formatter", "index", "interning", "lock", "nullness", "regex", "signature", "signedness"})
 public final class String
     implements java.io.Serializable, Comparable<String>, CharSequence {
 
@@ -253,7 +254,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @StringVal("") String() {
+    public @StringVal("") @Unique String() {
         this.value = "".value;
         this.coder = "".coder;
     }
@@ -271,7 +272,7 @@ public final class String
     @SideEffectFree
     @StaticallyExecutable
     @HotSpotIntrinsicCandidate
-    public @PolyValue @PolyDet String(@PolyValue @PolyDet String original) {
+    public @PolyValue @PolyDet @Unique String(@PolyValue @PolyDet String original) {
         this.value = original.value;
         this.coder = original.coder;
         this.hash = original.hash;
@@ -288,7 +289,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @PolyDet("up") @PolyValue String(@PolyDet char value @GuardSatisfied @PolyDet @PolyValue []) {
+    public @PolyDet("up") @PolyValue @Unique String(@PolyDet char value @GuardSatisfied @PolyDet @PolyValue []) {
         this(value, 0, value.length, null);
     }
 
@@ -315,7 +316,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @PolyDet("up") String(@PolyDet char value @GuardSatisfied @PolyDet [], @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int count) {
+    public @PolyDet("up") @Unique String(@PolyDet char value @GuardSatisfied @PolyDet [], @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int count) {
         this(value, offset, count, rangeCheck(value, offset, count));
     }
 
@@ -354,7 +355,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @PolyDet("up") String(@PolyDet int @GuardSatisfied @PolyDet [] codePoints, @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int count) {
+    public @PolyDet("up") @Unique String(@PolyDet int @GuardSatisfied @PolyDet [] codePoints, @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int count) {
         checkBoundsOffCount(offset, count, codePoints.length);
         if (count == 0) {
             this.value = "".value;
@@ -416,7 +417,7 @@ public final class String
     @SideEffectFree
     @StaticallyExecutable
     @Deprecated(since="1.1")
-    public @PolyDet("up") String(@PolyDet byte ascii @GuardSatisfied @PolyDet [], @PolyDet int hibyte, @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int count) {
+    public @PolyDet("up") @Unique String(@PolyDet byte ascii @GuardSatisfied @PolyDet [], @PolyDet int hibyte, @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int count) {
         checkBoundsOffCount(offset, count, ascii.length);
         if (count == 0) {
             this.value = "".value;
@@ -470,7 +471,7 @@ public final class String
     @SideEffectFree
     @StaticallyExecutable
     @Deprecated(since="1.1")
-    public @PolyDet("up") String(@PolyDet byte ascii @GuardSatisfied @PolyDet[], @PolyDet int hibyte) {
+    public @PolyDet("up") @Unique String(@PolyDet byte ascii @GuardSatisfied @PolyDet[], @PolyDet int hibyte) {
         this(ascii, hibyte, 0, ascii.length);
     }
 
@@ -509,7 +510,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @PolyDet("up") String(@PolyDet @PolySigned byte bytes @PolyDet @GuardSatisfied [], @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int length, @PolyDet String charsetName)
+    public @PolyDet("up") @Unique String(@PolyDet @PolySigned byte bytes @PolyDet @GuardSatisfied [], @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int length, @PolyDet String charsetName)
             throws UnsupportedEncodingException {
         if (charsetName == null)
             throw new NullPointerException("charsetName");
@@ -552,7 +553,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @PolyDet("up") String(@PolyDet @PolySigned byte bytes @GuardSatisfied @PolyDet [], @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int length, Charset charset) {
+    public @PolyDet("up") @Unique String(@PolyDet @PolySigned byte bytes @GuardSatisfied @PolyDet [], @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int length, Charset charset) {
         if (charset == null)
             throw new NullPointerException("charset");
         checkBoundsOffCount(offset, length, bytes.length);
@@ -587,7 +588,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @PolyDet("up") String(@PolyDet @PolySigned byte bytes @PolyDet @GuardSatisfied [], @PolyDet String charsetName)
+    public @PolyDet("up") @Unique String(@PolyDet @PolySigned byte bytes @PolyDet @GuardSatisfied [], @PolyDet String charsetName)
             throws UnsupportedEncodingException {
         this(bytes, 0, bytes.length, charsetName);
     }
@@ -614,7 +615,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @PolyDet("up") String(@PolyDet @PolySigned byte bytes @GuardSatisfied @PolyDet [], @PolyDet Charset charset) {
+    public @PolyDet("up") @Unique String(@PolyDet @PolySigned byte bytes @GuardSatisfied @PolyDet [], @PolyDet Charset charset) {
         this(bytes, 0, bytes.length, charset);
     }
 
@@ -646,7 +647,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @PolyDet("up") String(@PolyDet @PolySigned byte bytes @GuardSatisfied @PolyDet [], @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int length) {
+    public @PolyDet("up") @Unique String(@PolyDet @PolySigned byte bytes @GuardSatisfied @PolyDet [], @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int length) {
         checkBoundsOffCount(offset, length, bytes.length);
         StringCoding.Result ret = StringCoding.decode(bytes, offset, length);
         this.value = ret.value;
@@ -671,7 +672,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @PolyDet("up") String(@PolyDet @PolySigned byte @GuardSatisfied @PolyDet [] bytes) {
+    public @PolyDet("up") @Unique String(@PolyDet @PolySigned byte @GuardSatisfied @PolyDet [] bytes) {
         this(bytes, 0, bytes.length);
     }
 
@@ -686,7 +687,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @PolyDet String(@GuardSatisfied @PolyDet StringBuffer buffer) {
+    public @PolyDet @Unique String(@GuardSatisfied @PolyDet StringBuffer buffer) {
         this(buffer.toString());
     }
 
@@ -707,7 +708,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @PolyDet("up") String(@GuardSatisfied @PolyDet StringBuilder builder) {
+    public @PolyDet("up") @Unique String(@GuardSatisfied @PolyDet StringBuilder builder) {
         this(builder, null);
     }
 
