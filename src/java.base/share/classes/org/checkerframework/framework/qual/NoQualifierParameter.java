@@ -31,4 +31,3 @@ public @interface NoQualifierParameter {
      */
     Class<? extends Annotation>[] value();
 }
-

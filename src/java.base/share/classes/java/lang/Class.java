@@ -827,7 +827,8 @@ public final @Interned class Class<@UnknownKeyFor T> implements java.io.Serializ
      * @return  the name of the class or interface
      *          represented by this object.
      */
-    @CFComment("interning: In the Oracle JDK, the result of getName is interned")
+    @CFComment({"interning: In the Oracle JDK, the result of getName is interned",
+            "signature: For a non-array non-primitive type, returns @BinaryName"})
     @Pure
     public @PolyDet @ClassGetName @Interned String getName(@PolyDet Class<T> this) {
         String name = this.name;

@@ -1,6 +1,9 @@
 package org.checkerframework.framework.qual;
 
+<<<<<<< HEAD
 import java.lang.annotation.*;
+=======
+>>>>>>> 9411c75249dad73ad81105f7fe426dd9cbf9c660
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -20,9 +23,15 @@ import java.lang.annotation.Target;
  * <ol>
  *   <li>Invariant subtyping is used for occurrences of the type: no two occurrences of the type
  *       with different qualifiers have a subtyping relationship.
+<<<<<<< HEAD
  *   <li>The polymorphic qualifier is the default for all occurrences of that type in a method
  *       signature in its own compilation unit, including as the receiver, as another formal
  *       parameter, or as a return type.
+=======
+ *   <li>The polymorphic qualifier is the default for all occurrences of that type in its own
+ *       compilation unit, including as the receiver, as another formal parameter, or as a return
+ *       type.
+>>>>>>> 9411c75249dad73ad81105f7fe426dd9cbf9c660
  * </ol>
  *
  * Here is an example of the effect of invariant subtyping. Suppose we have the following
@@ -64,10 +73,10 @@ import java.lang.annotation.Target;
  *
  * @see NoQualifierParameter
  */
-@Target({ElementType.TYPE, ElementType.PACKAGE})
-@Inherited
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.PACKAGE})
+@Inherited
 public @interface HasQualifierParameter {
 
     /**
