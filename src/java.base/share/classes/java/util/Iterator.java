@@ -69,8 +69,8 @@ import java.util.function.Consumer;
 @CFComment({"nullness: This @Covariant annotation is sound, but it would not be sound on",
             "ListIterator (a subclass of Iterator), which supports a set operation."
 })
-@AnnotatedFor({"lock"})
 @CollectionType
+@AnnotatedFor({"lock", "nullness"})
 @Covariant({0})
 @HasQualifierParameter(NonDet.class)
 public interface Iterator<E> {
