@@ -24,6 +24,9 @@
  */
 package java.lang;
 
+import org.checkerframework.checker.determinism.qual.Det;
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.index.qual.LTLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.interning.qual.UsesObjectEquals;
@@ -191,7 +194,7 @@ public final @UsesObjectEquals class System {
      *
      * @since   1.1
      */
-    public static void setIn(InputStream in) {
+    public static void setIn(@PolyDet InputStream in) {
         checkIO();
         setIn0(in);
     }
@@ -215,7 +218,7 @@ public final @UsesObjectEquals class System {
      *
      * @since   1.1
      */
-    public static void setOut(PrintStream out) {
+    public static void setOut(@PolyDet PrintStream out) {
         checkIO();
         setOut0(out);
     }
@@ -239,7 +242,7 @@ public final @UsesObjectEquals class System {
      *
      * @since   1.1
      */
-    public static void setErr(PrintStream err) {
+    public static void setErr(@PolyDet PrintStream err) {
         checkIO();
         setErr0(err);
     }
@@ -253,7 +256,7 @@ public final @UsesObjectEquals class System {
      *
      * @since   1.6
      */
-     public static @Nullable Console console() {
+     public static @NonDet @Nullable Console console() {
          Console c;
          if ((c = cons) == null) {
              synchronized (System.class) {
@@ -290,7 +293,7 @@ public final @UsesObjectEquals class System {
      *
      * @since 1.5
      */
-    public static @Nullable Channel inheritedChannel() throws IOException {
+    public static @NonDet @Nullable Channel inheritedChannel() throws IOException {
         return SelectorProvider.provider().inheritedChannel();
     }
 
@@ -328,7 +331,7 @@ public final @UsesObjectEquals class System {
      * @see SecurityManager#checkPermission
      * @see java.lang.RuntimePermission
      */
-    public static void setSecurityManager(final @Nullable SecurityManager s) {
+    public static void setSecurityManager(final @PolyDet @Nullable SecurityManager s) {
         if (security == null) {
             // ensure image reader is initialized
             Object.class.getResource("java/lang/ANY");
@@ -384,7 +387,7 @@ public final @UsesObjectEquals class System {
      *          otherwise, {@code null} is returned.
      * @see     #setSecurityManager
      */
-    public static @Nullable SecurityManager getSecurityManager() {
+    public static @NonDet @Nullable SecurityManager getSecurityManager() {
         return security;
     }
 
@@ -405,7 +408,7 @@ public final @UsesObjectEquals class System {
      * @see     java.util.Date
      */
     @HotSpotIntrinsicCandidate
-    public static native long currentTimeMillis();
+    public static native @NonDet long currentTimeMillis();
 
     /**
      * Returns the current value of the running Java Virtual Machine's
@@ -449,7 +452,7 @@ public final @UsesObjectEquals class System {
      * @since 1.5
      */
     @HotSpotIntrinsicCandidate
-    public static native long nanoTime();
+    public static native @NonDet long nanoTime();
 
     /**
      * Copies an array from the specified source array, beginning at the
@@ -545,9 +548,9 @@ public final @UsesObjectEquals class System {
      */
     @SideEffectFree
     @HotSpotIntrinsicCandidate
-    public static native void arraycopy(@PolySigned @GuardSatisfied Object src,  @NonNegative int  srcPos,
-                                        @PolySigned @GuardSatisfied Object dest, @NonNegative int destPos,
-                                        @LTLengthOf(value={"#1", "#3"}, offset={"#2 - 1", "#4 - 1"}) @NonNegative int length);
+    public static native void arraycopy(@PolyDet("use") @PolySigned @GuardSatisfied Object src, @PolyDet("use") @NonNegative int  srcPos,
+                                        @PolyDet @PolySigned @GuardSatisfied Object dest, @PolyDet("use") @NonNegative int destPos,
+                                        @PolyDet("use") @LTLengthOf(value={"#1", "#3"}, offset={"#2 - 1", "#4 - 1"}) @NonNegative int length);
 
     /**
      * Returns the same hash code for the given object as
@@ -564,7 +567,7 @@ public final @UsesObjectEquals class System {
      */
     @Pure
     @HotSpotIntrinsicCandidate
-    public static native int identityHashCode(@GuardSatisfied @Nullable Object x);
+    public static native @NonDet int identityHashCode(@PolyDet @GuardSatisfied @Nullable Object x);
 
     /**
      * System properties. The following properties are guaranteed to be defined:
@@ -727,7 +730,7 @@ public final @UsesObjectEquals class System {
      * @see        java.lang.SecurityManager#checkPropertiesAccess()
      * @see        java.util.Properties
      */
-    public static Properties getProperties() {
+    public static @NonDet Properties getProperties() {
         SecurityManager sm = getSecurityManager();
         if (sm != null) {
             sm.checkPropertiesAccess();
@@ -747,7 +750,7 @@ public final @UsesObjectEquals class System {
      * @return the system-dependent line separator string
      * @since 1.7
      */
-    public static String lineSeparator() {
+    public static @Det String lineSeparator() {
         return lineSeparator;
     }
 
@@ -779,7 +782,7 @@ public final @UsesObjectEquals class System {
      * @see        java.lang.SecurityException
      * @see        java.lang.SecurityManager#checkPropertiesAccess()
      */
-    public static void setProperties(@Nullable Properties props) {
+    public static void setProperties(@PolyDet @Nullable Properties props) {
         SecurityManager sm = getSecurityManager();
         if (sm != null) {
             sm.checkPropertiesAccess();
@@ -825,7 +828,7 @@ public final @UsesObjectEquals class System {
      * @see        java.lang.System#getProperties()
      */
     @Pure
-    public static @Nullable String getProperty(String key) {
+    public static @NonDet @Nullable String getProperty(@PolyDet String key) {
         checkKey(key);
         SecurityManager sm = getSecurityManager();
         if (sm != null) {
@@ -861,7 +864,7 @@ public final @UsesObjectEquals class System {
      * @see        java.lang.System#getProperties()
      */
     @Pure
-    public static @PolyNull String getProperty(String key, @PolyNull String def) {
+    public static @NonDet @PolyNull String getProperty(@PolyDet String key, @PolyDet @PolyNull String def) {
         checkKey(key);
         SecurityManager sm = getSecurityManager();
         if (sm != null) {
@@ -904,7 +907,7 @@ public final @UsesObjectEquals class System {
      * @see        SecurityManager#checkPermission
      * @since      1.2
      */
-    public static @Nullable String setProperty(String key, String value) {
+    public static @NonDet @Nullable String setProperty(@PolyDet String key, @PolyDet String value) {
         checkKey(key);
         SecurityManager sm = getSecurityManager();
         if (sm != null) {
@@ -945,7 +948,7 @@ public final @UsesObjectEquals class System {
      * @see        java.lang.SecurityManager#checkPropertiesAccess()
      * @since 1.5
      */
-    public static @Nullable String clearProperty(String key) {
+    public static @NonDet @Nullable String clearProperty(@PolyDet String key) {
         checkKey(key);
         SecurityManager sm = getSecurityManager();
         if (sm != null) {
@@ -1010,7 +1013,7 @@ public final @UsesObjectEquals class System {
      * @see    #getenv()
      * @see    ProcessBuilder#environment()
      */
-    public static @Nullable String getenv(String name) {
+    public static @NonDet @Nullable String getenv(@PolyDet String name) {
         SecurityManager sm = getSecurityManager();
         if (sm != null) {
             sm.checkPermission(new RuntimePermission("getenv."+name));
@@ -1059,7 +1062,7 @@ public final @UsesObjectEquals class System {
      * @see    ProcessBuilder#environment()
      * @since  1.5
      */
-    public static java.util.Map<String,String> getenv() {
+    public static java.util.@NonDet Map<@NonDet String,@NonDet String> getenv() {
         SecurityManager sm = getSecurityManager();
         if (sm != null) {
             sm.checkPermission(new RuntimePermission("getenv.*"));
@@ -1766,7 +1769,7 @@ public final @UsesObjectEquals class System {
      * @see        java.lang.Runtime#exit(int)
      */
     @TerminatesExecution
-    public static void exit(int status) {
+    public static void exit(@Det int status) {
         Runtime.getRuntime().exit(status);
     }
 
@@ -1851,7 +1854,7 @@ public final @UsesObjectEquals class System {
      * @see        java.lang.SecurityManager#checkLink(java.lang.String)
      */
     @CallerSensitive
-    public static void load(String filename) {
+    public static void load(@PolyDet String filename) {
         Runtime.getRuntime().load0(Reflection.getCallerClass(), filename);
     }
 
@@ -1887,7 +1890,7 @@ public final @UsesObjectEquals class System {
      * @see        java.lang.SecurityManager#checkLink(java.lang.String)
      */
     @CallerSensitive
-    public static void loadLibrary(String libname) {
+    public static void loadLibrary(@PolyDet String libname) {
         Runtime.getRuntime().loadLibrary0(Reflection.getCallerClass(), libname);
     }
 
@@ -1902,7 +1905,7 @@ public final @UsesObjectEquals class System {
      * @see        java.lang.ClassLoader#findLibrary(java.lang.String)
      * @since      1.2
      */
-    public static native String mapLibraryName(String libname);
+    public static native @NonDet String mapLibraryName(@PolyDet String libname);
 
     /**
      * Create PrintStream for stdout/err based on encoding.

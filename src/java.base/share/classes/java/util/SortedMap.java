@@ -32,6 +32,9 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.framework.qual.HasQualifierParameter;
 
 /**
  * A {@link Map} that further provides a <em>total ordering</em> on its keys.
@@ -120,6 +123,7 @@ import org.checkerframework.framework.qual.CFComment;
 
 @CFComment({"lock/nullness: Subclasses of this interface/class may opt to prohibit null elements"})
 @AnnotatedFor({"lock", "nullness"})
+@HasQualifierParameter(NonDet.class)
 public interface SortedMap<K,V> extends Map<K,V> {
     /**
      * Returns the comparator used to order the keys in this map, or
@@ -228,7 +232,7 @@ public interface SortedMap<K,V> extends Map<K,V> {
      * @throws NoSuchElementException if this map is empty
      */
     @SideEffectFree
-    @KeyFor("this") K firstKey(@GuardSatisfied SortedMap<K, V> this);
+    @PolyDet("down") @KeyFor("this") K firstKey(@PolyDet @GuardSatisfied SortedMap<K, V> this);
 
     /**
      * Returns the last (highest) key currently in this map.
@@ -237,7 +241,7 @@ public interface SortedMap<K,V> extends Map<K,V> {
      * @throws NoSuchElementException if this map is empty
      */
     @SideEffectFree
-    @KeyFor("this") K lastKey(@GuardSatisfied SortedMap<K, V> this);
+    @PolyDet("down") @KeyFor("this") K lastKey(@PolyDet @GuardSatisfied SortedMap<K, V> this);
 
     /**
      * Returns a {@link Set} view of the keys contained in this map.

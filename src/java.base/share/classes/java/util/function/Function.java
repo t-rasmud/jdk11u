@@ -25,6 +25,8 @@
 package java.util.function;
 
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.framework.qual.Covariant;
 
 import java.util.Objects;
 
@@ -40,6 +42,7 @@ import java.util.Objects;
  * @since 1.8
  */
 @AnnotatedFor({"lock", "nullness"})
+@Covariant(1)
 @FunctionalInterface
 public interface Function<T, R> {
 
@@ -49,7 +52,7 @@ public interface Function<T, R> {
      * @param t the function argument
      * @return the function result
      */
-    R apply(T t);
+    @PolyDet R apply(@PolyDet T t);
 
     /**
      * Returns a composed function that first applies the {@code before}

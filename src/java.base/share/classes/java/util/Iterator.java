@@ -25,11 +25,16 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.CollectionType;
+import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.NonDet;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
 import org.checkerframework.framework.qual.Covariant;
+import org.checkerframework.framework.qual.HasQualifierParameter;
+
 
 import java.util.function.Consumer;
 
@@ -64,8 +69,10 @@ import java.util.function.Consumer;
 @CFComment({"nullness: This @Covariant annotation is sound, but it would not be sound on",
             "ListIterator (a subclass of Iterator), which supports a set operation."
 })
-@AnnotatedFor({"lock"})
+@CollectionType
+@AnnotatedFor({"lock", "nullness"})
 @Covariant({0})
+@HasQualifierParameter(NonDet.class)
 public interface Iterator<E> {
     /**
      * Returns {@code true} if the iteration has more elements.
@@ -75,7 +82,7 @@ public interface Iterator<E> {
      * @return {@code true} if the iteration has more elements
      */
     @Pure
-    boolean hasNext(@GuardSatisfied Iterator<E> this);
+    @PolyDet("down") boolean hasNext(@GuardSatisfied @PolyDet Iterator<E> this);
 
     /**
      * Returns the next element in the iteration.
@@ -83,7 +90,7 @@ public interface Iterator<E> {
      * @return the next element in the iteration
      * @throws NoSuchElementException if the iteration has no more elements
      */
-    E next(@GuardSatisfied Iterator<E> this);
+    @PolyDet("up") E next(@GuardSatisfied @PolyDet Iterator<E> this);
 
     /**
      * Removes from the underlying collection the last element returned
@@ -110,7 +117,7 @@ public interface Iterator<E> {
      *         been called after the last call to the {@code next}
      *         method
      */
-    default void remove(@GuardSatisfied Iterator<E> this) {
+    default void remove(@GuardSatisfied @PolyDet("noOrderNonDet") Iterator<E> this) {
         throw new UnsupportedOperationException("remove");
     }
 
@@ -139,7 +146,7 @@ public interface Iterator<E> {
      * @throws NullPointerException if the specified action is null
      * @since 1.8
      */
-    default void forEachRemaining(Consumer<? super E> action) {
+    default void forEachRemaining(@GuardSatisfied @PolyDet Iterator<@PolyDet("down") E> this, @PolyDet("use") Consumer<? super E> action) {
         Objects.requireNonNull(action);
         while (hasNext())
             action.accept(next());

@@ -25,6 +25,9 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.CheckReceiverForMutation;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
@@ -35,6 +38,7 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.framework.qual.HasQualifierParameter;
 
 import java.util.function.Consumer;
 
@@ -93,6 +97,7 @@ import java.util.function.Consumer;
 
 @CFComment({"lock/nullness: This class permits null elements"})
 @AnnotatedFor({"lock", "nullness", "index"})
+@HasQualifierParameter(NonDet.class)
 public class LinkedList<E>
     extends AbstractSequentialList<E>
     implements List<E>, Deque<E>, Cloneable, java.io.Serializable
@@ -131,7 +136,7 @@ public class LinkedList<E>
      * @param  c the collection whose elements are to be placed into this list
      * @throws NullPointerException if the specified collection is null
      */
-    public LinkedList(Collection<? extends E> c) {
+    public @PolyDet LinkedList(@PolyDet Collection<? extends E> c) {
         this();
         addAll(c);
     }
@@ -154,7 +159,7 @@ public class LinkedList<E>
     /**
      * Links e as last element.
      */
-    void linkLast(E e) {
+    void linkLast(@PolyDet LinkedList<E> this, E e) {
         final Node<E> l = last;
         final Node<E> newNode = new Node<>(l, e, null);
         last = newNode;
@@ -169,7 +174,7 @@ public class LinkedList<E>
     /**
      * Inserts element e before non-null Node succ.
      */
-    void linkBefore(E e, Node<E> succ) {
+    void linkBefore(@PolyDet LinkedList<E> this, E e, @PolyDet("use") Node<E> succ) {
         // assert succ != null;
         final Node<E> pred = succ.prev;
         final Node<E> newNode = new Node<>(pred, e, succ);
@@ -223,7 +228,8 @@ public class LinkedList<E>
     /**
      * Unlinks non-null node x.
      */
-    E unlink(Node<E> x) {
+    @CheckReceiverForMutation
+    @PolyDet("up") E unlink(@PolyDet LinkedList<@PolyDet("use") E> this, @PolyDet("use") Node<E> x) {
         // assert x != null;
         final E element = x.item;
         final Node<E> next = x.next;
@@ -255,7 +261,7 @@ public class LinkedList<E>
      * @return the first element in this list
      * @throws NoSuchElementException if this list is empty
      */
-    public E getFirst(@GuardSatisfied LinkedList<E> this) {
+    public @PolyDet("up") E getFirst(@GuardSatisfied @PolyDet LinkedList<E> this) {
         final Node<E> f = first;
         if (f == null)
             throw new NoSuchElementException();
@@ -268,7 +274,7 @@ public class LinkedList<E>
      * @return the last element in this list
      * @throws NoSuchElementException if this list is empty
      */
-    public E getLast(@GuardSatisfied LinkedList<E> this) {
+    public @PolyDet("up") E getLast(@GuardSatisfied @PolyDet LinkedList<E> this) {
         final Node<E> l = last;
         if (l == null)
             throw new NoSuchElementException();
@@ -281,7 +287,8 @@ public class LinkedList<E>
      * @return the first element from this list
      * @throws NoSuchElementException if this list is empty
      */
-    public E removeFirst(@GuardSatisfied LinkedList<E> this) {
+    @CheckReceiverForMutation
+    public @PolyDet("up") E removeFirst(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this) {
         final Node<E> f = first;
         if (f == null)
             throw new NoSuchElementException();
@@ -294,7 +301,8 @@ public class LinkedList<E>
      * @return the last element from this list
      * @throws NoSuchElementException if this list is empty
      */
-    public E removeLast(@GuardSatisfied LinkedList<E> this) {
+    @CheckReceiverForMutation
+    public @PolyDet("up") E removeLast(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this) {
         final Node<E> l = last;
         if (l == null)
             throw new NoSuchElementException();
@@ -306,7 +314,8 @@ public class LinkedList<E>
      *
      * @param e the element to add
      */
-    public void addFirst(@GuardSatisfied LinkedList<E> this, E e) {
+    @CheckReceiverForMutation
+    public void addFirst(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this, E e) {
         linkFirst(e);
     }
 
@@ -317,7 +326,8 @@ public class LinkedList<E>
      *
      * @param e the element to add
      */
-    public void addLast(@GuardSatisfied LinkedList<E> this, E e) {
+    @CheckReceiverForMutation
+    public void addLast(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this, E e) {
         linkLast(e);
     }
 
@@ -331,7 +341,7 @@ public class LinkedList<E>
      * @return {@code true} if this list contains the specified element
      */
     @Pure
-    public boolean contains(@GuardSatisfied LinkedList<E> this, @GuardSatisfied @Nullable Object o) {
+    public @PolyDet("down") boolean contains(@GuardSatisfied @PolyDet LinkedList<E> this, @GuardSatisfied @PolyDet @Nullable Object o) {
         return indexOf(o) >= 0;
     }
 
@@ -341,7 +351,7 @@ public class LinkedList<E>
      * @return the number of elements in this list
      */
     @Pure
-    public @NonNegative int size(@GuardSatisfied LinkedList<E> this) {
+    public @PolyDet("down") @NonNegative int size(@GuardSatisfied @PolyDet LinkedList<E> this) {
         return size;
     }
 
@@ -354,7 +364,8 @@ public class LinkedList<E>
      * @return {@code true} (as specified by {@link Collection#add})
      */
     @ReleasesNoLocks
-    public boolean add(@GuardSatisfied LinkedList<E> this, E e) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean add(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this, E e) {
         linkLast(e);
         return true;
     }
@@ -373,7 +384,8 @@ public class LinkedList<E>
      * @return {@code true} if this list contained the specified element
      */
     @ReleasesNoLocks
-    public boolean remove(@GuardSatisfied LinkedList<E> this, @Nullable Object o) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean remove(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this, @PolyDet("use") @Nullable Object o) {
         if (o == null) {
             for (Node<E> x = first; x != null; x = x.next) {
                 if (x.item == null) {
@@ -404,7 +416,8 @@ public class LinkedList<E>
      * @return {@code true} if this list changed as a result of the call
      * @throws NullPointerException if the specified collection is null
      */
-    public boolean addAll(@GuardSatisfied LinkedList<E> this, Collection<? extends E> c) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this, @PolyDet("use") Collection<? extends E> c) {
         return addAll(size, c);
     }
 
@@ -423,7 +436,8 @@ public class LinkedList<E>
      * @throws IndexOutOfBoundsException {@inheritDoc}
      * @throws NullPointerException if the specified collection is null
      */
-    public boolean addAll(@GuardSatisfied LinkedList<E> this, @NonNegative int index, Collection<? extends E> c) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this, @PolyDet("use") @NonNegative int index, @PolyDet("use") Collection<? extends E> c) {
         checkPositionIndex(index);
 
         Object[] a = c.toArray();
@@ -466,7 +480,8 @@ public class LinkedList<E>
      * Removes all of the elements from this list.
      * The list will be empty after this call returns.
      */
-    public void clear(@GuardSatisfied LinkedList<E> this) {
+    @CheckReceiverForMutation
+    public void clear(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this) {
         // Clearing all of the links between nodes is "unnecessary", but:
         // - helps a generational GC if the discarded nodes inhabit
         //   more than one generation
@@ -494,7 +509,7 @@ public class LinkedList<E>
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
     @Pure
-    public E get(@GuardSatisfied LinkedList<E> this, @NonNegative int index) {
+    public @PolyDet("up") E get(@GuardSatisfied @PolyDet LinkedList<E> this, @PolyDet @NonNegative int index) {
         checkElementIndex(index);
         return node(index).item;
     }
@@ -508,7 +523,7 @@ public class LinkedList<E>
      * @return the element previously at the specified position
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    public E set(@GuardSatisfied LinkedList<E> this, @NonNegative int index, E element) {
+    public @PolyDet("up") E set(@GuardSatisfied @PolyDet("noOrderNonDet") LinkedList<@PolyDet("noOrderNonDet") E> this, @PolyDet("useNoOrderNonDet") @NonNegative int index, @PolyDet("useNoOrderNonDet") E element) {
         checkElementIndex(index);
         Node<E> x = node(index);
         E oldVal = x.item;
@@ -525,7 +540,8 @@ public class LinkedList<E>
      * @param element element to be inserted
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    public void add(@GuardSatisfied LinkedList<E> this, @NonNegative int index, E element) {
+    @CheckReceiverForMutation
+    public void add(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this, @PolyDet("use") @NonNegative int index, @PolyDet("use") E element) {
         checkPositionIndex(index);
 
         if (index == size)
@@ -543,7 +559,7 @@ public class LinkedList<E>
      * @return the element previously at the specified position
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    public E remove(@GuardSatisfied LinkedList<E> this, @NonNegative int index) {
+    public @PolyDet("up") E remove(@GuardSatisfied @PolyDet("noOrderNonDet") LinkedList<@PolyDet("noOrderNonDet") E> this, @PolyDet("useNoOrderNonDet") @NonNegative int index) {
         checkElementIndex(index);
         return unlink(node(index));
     }
@@ -615,7 +631,7 @@ public class LinkedList<E>
      *         this list, or -1 if this list does not contain the element
      */
     @Pure
-    public @GTENegativeOne int indexOf(@GuardSatisfied LinkedList<E> this, @GuardSatisfied @Nullable Object o) {
+    public @PolyDet("up") @GTENegativeOne int indexOf(@GuardSatisfied @PolyDet LinkedList<E> this, @GuardSatisfied @PolyDet @Nullable Object o) {
         int index = 0;
         if (o == null) {
             for (Node<E> x = first; x != null; x = x.next) {
@@ -645,7 +661,7 @@ public class LinkedList<E>
      *         this list, or -1 if this list does not contain the element
      */
     @Pure
-    public @GTENegativeOne int lastIndexOf(@GuardSatisfied LinkedList<E> this, @GuardSatisfied @Nullable Object o) {
+    public @PolyDet("up") @GTENegativeOne int lastIndexOf(@GuardSatisfied @PolyDet LinkedList<E> this, @GuardSatisfied @PolyDet @Nullable Object o) {
         int index = size;
         if (o == null) {
             for (Node<E> x = last; x != null; x = x.prev) {
@@ -671,7 +687,7 @@ public class LinkedList<E>
      * @return the head of this list, or {@code null} if this list is empty
      * @since 1.5
      */
-    public @Nullable E peek() {
+    public @PolyDet("up") @Nullable E peek(@GuardSatisfied @PolyDet LinkedList<E> this) {
         final Node<E> f = first;
         return (f == null) ? null : f.item;
     }
@@ -683,7 +699,7 @@ public class LinkedList<E>
      * @throws NoSuchElementException if this list is empty
      * @since 1.5
      */
-    public E element() {
+    public @PolyDet("up") E element(@GuardSatisfied @PolyDet LinkedList<E> this) {
         return getFirst();
     }
 
@@ -693,7 +709,8 @@ public class LinkedList<E>
      * @return the head of this list, or {@code null} if this list is empty
      * @since 1.5
      */
-    public @Nullable E poll(@GuardSatisfied LinkedList<E> this) {
+    @CheckReceiverForMutation
+    public @PolyDet("up") @Nullable E poll(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this) {
         final Node<E> f = first;
         return (f == null) ? null : unlinkFirst(f);
     }
@@ -705,7 +722,8 @@ public class LinkedList<E>
      * @throws NoSuchElementException if this list is empty
      * @since 1.5
      */
-    public E remove(@GuardSatisfied LinkedList<E> this) {
+    @CheckReceiverForMutation
+    public @PolyDet("up") E remove(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this) {
         return removeFirst();
     }
 
@@ -716,7 +734,8 @@ public class LinkedList<E>
      * @return {@code true} (as specified by {@link Queue#offer})
      * @since 1.5
      */
-    public boolean offer(E e) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean offer(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this, E e) {
         return add(e);
     }
 
@@ -728,7 +747,8 @@ public class LinkedList<E>
      * @return {@code true} (as specified by {@link Deque#offerFirst})
      * @since 1.6
      */
-    public boolean offerFirst(E e) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean offerFirst(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this, E e) {
         addFirst(e);
         return true;
     }
@@ -740,7 +760,8 @@ public class LinkedList<E>
      * @return {@code true} (as specified by {@link Deque#offerLast})
      * @since 1.6
      */
-    public boolean offerLast(E e) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean offerLast(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this, E e) {
         addLast(e);
         return true;
     }
@@ -753,7 +774,7 @@ public class LinkedList<E>
      *         if this list is empty
      * @since 1.6
      */
-    public @Nullable E peekFirst() {
+    public @PolyDet("up") @Nullable E peekFirst(@GuardSatisfied @PolyDet LinkedList<E> this) {
         final Node<E> f = first;
         return (f == null) ? null : f.item;
      }
@@ -766,7 +787,7 @@ public class LinkedList<E>
      *         if this list is empty
      * @since 1.6
      */
-    public @Nullable E peekLast() {
+    public @PolyDet("up") @Nullable E peekLast(@GuardSatisfied @PolyDet LinkedList<E> this) {
         final Node<E> l = last;
         return (l == null) ? null : l.item;
     }
@@ -779,7 +800,8 @@ public class LinkedList<E>
      *     this list is empty
      * @since 1.6
      */
-    public @Nullable E pollFirst(@GuardSatisfied LinkedList<E> this) {
+    @CheckReceiverForMutation
+    public @PolyDet("up") @Nullable E pollFirst(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this) {
         final Node<E> f = first;
         return (f == null) ? null : unlinkFirst(f);
     }
@@ -792,7 +814,8 @@ public class LinkedList<E>
      *     this list is empty
      * @since 1.6
      */
-    public @Nullable E pollLast(@GuardSatisfied LinkedList<E> this) {
+    @CheckReceiverForMutation
+    public @PolyDet("up") @Nullable E pollLast(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this) {
         final Node<E> l = last;
         return (l == null) ? null : unlinkLast(l);
     }
@@ -806,7 +829,8 @@ public class LinkedList<E>
      * @param e the element to push
      * @since 1.6
      */
-    public void push(@GuardSatisfied LinkedList<E> this, E e) {
+    @CheckReceiverForMutation
+    public void push(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this, E e) {
         addFirst(e);
     }
 
@@ -821,7 +845,8 @@ public class LinkedList<E>
      * @throws NoSuchElementException if this list is empty
      * @since 1.6
      */
-    public E pop(@GuardSatisfied LinkedList<E> this) {
+    @CheckReceiverForMutation
+    public @PolyDet("up") E pop(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this) {
         return removeFirst();
     }
 
@@ -834,7 +859,8 @@ public class LinkedList<E>
      * @return {@code true} if the list contained the specified element
      * @since 1.6
      */
-    public boolean removeFirstOccurrence(@GuardSatisfied LinkedList<E> this, @Nullable Object o) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean removeFirstOccurrence(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this, @PolyDet("use") @Nullable Object o) {
         return remove(o);
     }
 
@@ -847,7 +873,8 @@ public class LinkedList<E>
      * @return {@code true} if the list contained the specified element
      * @since 1.6
      */
-    public boolean removeLastOccurrence(@GuardSatisfied LinkedList<E> this, @Nullable Object o) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean removeLastOccurrence(@GuardSatisfied @PolyDet LinkedList<@PolyDet("use") E> this, @PolyDet("use") @Nullable Object o) {
         if (o == null) {
             for (Node<E> x = last; x != null; x = x.prev) {
                 if (x.item == null) {
@@ -887,7 +914,7 @@ public class LinkedList<E>
      * @throws IndexOutOfBoundsException {@inheritDoc}
      * @see List#listIterator(int)
      */
-    public ListIterator<E> listIterator(@NonNegative int index) {
+    public @PolyDet ListIterator<E> listIterator(@GuardSatisfied @PolyDet LinkedList<E> this, @PolyDet @NonNegative int index) {
         checkPositionIndex(index);
         return new ListItr(index);
     }
@@ -985,7 +1012,7 @@ public class LinkedList<E>
             checkForComodification();
         }
 
-        final void checkForComodification() {
+        final void checkForComodification(@PolyDet ListItr this) {
             if (modCount != expectedModCount)
                 throw new ConcurrentModificationException();
         }
@@ -1006,7 +1033,7 @@ public class LinkedList<E>
     /**
      * @since 1.6
      */
-    public Iterator<E> descendingIterator() {
+    public @PolyDet Iterator<E> descendingIterator(@GuardSatisfied @PolyDet LinkedList<E> this) {
         return new DescendingIterator();
     }
 
@@ -1042,7 +1069,7 @@ public class LinkedList<E>
      * @return a shallow copy of this {@code LinkedList} instance
      */
     @SideEffectFree
-    public Object clone(@GuardSatisfied LinkedList<E> this) {
+    public @PolyDet("up") Object clone(@GuardSatisfied @PolyDet LinkedList<E> this) {
         LinkedList<E> clone = superClone();
 
         // Put clone into "virgin" state
@@ -1072,7 +1099,7 @@ public class LinkedList<E>
      *         in proper sequence
      */
     @SideEffectFree
-    public @PolyNull Object[] toArray(LinkedList<@PolyNull E> this) {
+    public @PolyDet("down") @PolyNull Object @PolyDet[] toArray(@GuardSatisfied @PolyDet LinkedList<@PolyNull E> this) {
         Object[] result = new Object[size];
         int i = 0;
         for (Node<E> x = first; x != null; x = x.next)
@@ -1120,7 +1147,7 @@ public class LinkedList<E>
      */
     @SideEffectFree
     @SuppressWarnings("unchecked")
-    public <T> @Nullable T @PolyNull [] toArray(T @PolyNull [] a) {
+    public <T> @PolyDet("down") @Nullable T @PolyDet @PolyNull [] toArray(@GuardSatisfied @PolyDet LinkedList<E> this, T @PolyNull [] a) {
         if (a.length < size)
             a = (T[])java.lang.reflect.Array.newInstance(
                                 a.getClass().getComponentType(), size);
@@ -1194,7 +1221,7 @@ public class LinkedList<E>
      */
     @SideEffectFree
     @Override
-    public Spliterator<E> spliterator() {
+    public @PolyDet Spliterator<E> spliterator(@GuardSatisfied @PolyDet LinkedList<E> this) {
         return new LLSpliterator<>(this, -1, 0);
     }
 

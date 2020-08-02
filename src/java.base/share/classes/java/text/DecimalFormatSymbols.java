@@ -38,6 +38,8 @@
 
 package java.text;
 
+import org.checkerframework.checker.determinism.qual.Det;
+import org.checkerframework.checker.determinism.qual.OrderNonDet;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -133,7 +135,7 @@ public class DecimalFormatSymbols implements Cloneable, Serializable {
      *         <code>DecimalFormatSymbols</code> instances are available.
      * @since 1.6
      */
-    public static Locale[] getAvailableLocales() {
+    public static @Det Locale @OrderNonDet [] getAvailableLocales() {
         LocaleServiceProviderPool pool =
             LocaleServiceProviderPool.getPool(DecimalFormatSymbolsProvider.class);
         return pool.getAvailableLocales();

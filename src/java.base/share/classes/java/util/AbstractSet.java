@@ -25,11 +25,15 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.CheckReceiverForMutation;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.framework.qual.HasQualifierParameter;
 
 /**
  * This class provides a skeletal implementation of the {@code Set}
@@ -63,6 +67,7 @@ import org.checkerframework.framework.qual.CFComment;
 
 @CFComment("lock/nullness: Subclasses of this interface/class may opt to prohibit null elements")
 @AnnotatedFor({"lock", "nullness"})
+@HasQualifierParameter(NonDet.class)
 public abstract class AbstractSet<E> extends AbstractCollection<E> implements Set<E> {
     /**
      * Sole constructor.  (For invocation by subclass constructors, typically
@@ -91,7 +96,7 @@ public abstract class AbstractSet<E> extends AbstractCollection<E> implements Se
      * @return {@code true} if the specified object is equal to this set
      */
     @Pure
-    public boolean equals(@GuardSatisfied AbstractSet<E> this, @GuardSatisfied @Nullable Object o) {
+    public @PolyDet("down") boolean equals(@GuardSatisfied @PolyDet AbstractSet<E> this, @GuardSatisfied @PolyDet @Nullable Object o) {
         if (o == this)
             return true;
 
@@ -125,7 +130,7 @@ public abstract class AbstractSet<E> extends AbstractCollection<E> implements Se
      * @see Set#equals(Object)
      */
     @Pure
-    public int hashCode(@GuardSatisfied AbstractSet<E> this) {
+    public @NonDet int hashCode(@GuardSatisfied @PolyDet AbstractSet<E> this) {
         int h = 0;
         Iterator<E> i = iterator();
         while (i.hasNext()) {
@@ -173,7 +178,8 @@ public abstract class AbstractSet<E> extends AbstractCollection<E> implements Se
      * @see #remove(Object)
      * @see #contains(Object)
      */
-    public boolean removeAll(@GuardSatisfied AbstractSet<E> this, Collection<?> c) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean removeAll(@GuardSatisfied @PolyDet AbstractSet<@PolyDet("use") E> this, @PolyDet("use") Collection<?> c) {
         Objects.requireNonNull(c);
         boolean modified = false;
 

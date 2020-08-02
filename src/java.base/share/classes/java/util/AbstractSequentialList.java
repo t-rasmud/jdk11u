@@ -25,11 +25,15 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.CheckReceiverForMutation;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.framework.qual.HasQualifierParameter;
 
 /**
  * This class provides a skeletal implementation of the {@code List}
@@ -74,6 +78,7 @@ import org.checkerframework.framework.qual.CFComment;
 
 @CFComment("lock/nullness: Subclasses of this interface/class may opt to prohibit null elements")
 @AnnotatedFor({"lock", "nullness"})
+@HasQualifierParameter(NonDet.class)
 public abstract class AbstractSequentialList<E> extends AbstractList<E> {
     /**
      * Sole constructor.  (For invocation by subclass constructors, typically
@@ -92,7 +97,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
     @Pure
-    public E get(@GuardSatisfied AbstractSequentialList<E> this, int index) {
+    public @PolyDet("up") E get(@GuardSatisfied @PolyDet AbstractSequentialList<E> this, @PolyDet int index) {
         try {
             return listIterator(index).next();
         } catch (NoSuchElementException exc) {
@@ -119,7 +124,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
      */
-    public E set(@GuardSatisfied AbstractSequentialList<E> this, int index, E element) {
+    public @PolyDet("up") E set(@GuardSatisfied @PolyDet("noOrderNonDet") AbstractSequentialList<@PolyDet("noOrderNonDet") E> this, @PolyDet("useNoOrderNonDet")  int index, @PolyDet("useNoOrderNonDet") E element) {
         try {
             ListIterator<E> e = listIterator(index);
             E oldVal = e.next();
@@ -150,7 +155,8 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
      */
-    public void add(@GuardSatisfied AbstractSequentialList<E> this, int index, E element) {
+    @CheckReceiverForMutation
+    public void add(@GuardSatisfied @PolyDet AbstractSequentialList<@PolyDet("use") E> this, @PolyDet("use") int index, @PolyDet("use") E element) {
         try {
             listIterator(index).add(element);
         } catch (NoSuchElementException exc) {
@@ -175,7 +181,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * @throws UnsupportedOperationException {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
      */
-    public E remove(@GuardSatisfied AbstractSequentialList<E> this, int index) {
+    public @PolyDet("up") E remove(@GuardSatisfied @PolyDet("noOrderNonDet") AbstractSequentialList<@PolyDet("noOrderNonDet") E> this, @PolyDet("useNoOrderNonDet") int index) {
         try {
             ListIterator<E> e = listIterator(index);
             E outCast = e.next();
@@ -218,7 +224,8 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
      */
-    public boolean addAll(@GuardSatisfied AbstractSequentialList<E> this, int index, Collection<? extends E> c) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet AbstractSequentialList<@PolyDet("use") E> this, @PolyDet("use") int index, @PolyDet("use") Collection<? extends E> c) {
         try {
             boolean modified = false;
             ListIterator<E> e1 = listIterator(index);
@@ -244,7 +251,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * @return an iterator over the elements in this list (in proper sequence)
      */
     @SideEffectFree
-    public Iterator<E> iterator() {
+    public @PolyDet Iterator<E> iterator(@PolyDet AbstractSequentialList<E> this) {
         return listIterator();
     }
 
@@ -258,5 +265,5 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      *         sequence)
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    public abstract ListIterator<E> listIterator(int index);
+    public abstract @PolyDet ListIterator<E> listIterator(@PolyDet AbstractSequentialList<E> this, @PolyDet int index);
 }

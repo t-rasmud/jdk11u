@@ -77,6 +77,7 @@
 module java.base {
 
     exports org.checkerframework.checker.compilermsgs.qual;
+    exports org.checkerframework.checker.determinism.qual;
     exports org.checkerframework.checker.fenum.qual;
     exports org.checkerframework.checker.formatter;
     exports org.checkerframework.checker.formatter.qual;
@@ -102,6 +103,7 @@ module java.base {
     exports org.checkerframework.checker.units.qual;
     exports org.checkerframework.common.aliasing.qual;
     exports org.checkerframework.common.reflection.qual;
+    exports org.checkerframework.common.returnsreceiver.qual;
     exports org.checkerframework.common.subtyping.qual;
     exports org.checkerframework.common.util.report.qual;
     exports org.checkerframework.common.value.qual;

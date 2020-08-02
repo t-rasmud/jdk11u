@@ -25,6 +25,9 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.CheckReceiverForMutation;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -33,6 +36,7 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.framework.qual.HasQualifierParameter;
 
 /**
  * A collection that contains no duplicate elements.  More formally, sets
@@ -121,6 +125,7 @@ import org.checkerframework.framework.qual.CFComment;
 
 @CFComment({"lock/nullness: Subclasses of this interface/class may opt to prohibit null elements"})
 @AnnotatedFor({"lock", "nullness", "index"})
+@HasQualifierParameter(NonDet.class)
 public interface Set<E> extends Collection<E> {
     // Query Operations
 
@@ -132,7 +137,7 @@ public interface Set<E> extends Collection<E> {
      * @return the number of elements in this set (its cardinality)
      */
     @Pure
-    @NonNegative int size(@GuardSatisfied Set<E> this);
+    @PolyDet("down") @NonNegative int size(@GuardSatisfied @PolyDet Set<E> this);
 
     /**
      * Returns {@code true} if this set contains no elements.
@@ -140,7 +145,7 @@ public interface Set<E> extends Collection<E> {
      * @return {@code true} if this set contains no elements
      */
     @Pure
-    boolean isEmpty(@GuardSatisfied Set<E> this);
+    @PolyDet("down") boolean isEmpty(@GuardSatisfied @PolyDet Set<E> this);
 
     /**
      * Returns {@code true} if this set contains the specified element.
@@ -158,7 +163,7 @@ public interface Set<E> extends Collection<E> {
      * (<a href="Collection.html#optional-restrictions">optional</a>)
      */
     @Pure
-    boolean contains(@GuardSatisfied Set<E> this, @GuardSatisfied Object o);
+    @PolyDet("down") boolean contains(@GuardSatisfied @PolyDet Set<E> this, @GuardSatisfied @PolyDet Object o);
 
     /**
      * Returns an iterator over the elements in this set.  The elements are
@@ -168,7 +173,7 @@ public interface Set<E> extends Collection<E> {
      * @return an iterator over the elements in this set
      */
     @SideEffectFree
-    Iterator<E> iterator();
+    @PolyDet Iterator<E> iterator(@PolyDet Set<E> this);
 
     /**
      * Returns an array containing all of the elements in this set.
@@ -187,7 +192,7 @@ public interface Set<E> extends Collection<E> {
      * @return an array containing all the elements in this set
      */
     @SideEffectFree
-    Object[] toArray();
+    @PolyDet("down") Object @PolyDet[] toArray(@PolyDet Set<E> this);
 
     /**
      * Returns an array containing all of the elements in this set; the
@@ -232,7 +237,7 @@ public interface Set<E> extends Collection<E> {
      * @throws NullPointerException if the specified array is null
      */
     @SideEffectFree
-    <T> @Nullable T @PolyNull [] toArray(T @PolyNull [] a);
+    <T> @PolyDet("down") @Nullable T @PolyDet @PolyNull [] toArray(@PolyDet Set<E> this, T @PolyNull [] a);
 
 
     // Modification Operations
@@ -267,7 +272,8 @@ public interface Set<E> extends Collection<E> {
      * @throws IllegalArgumentException if some property of the specified element
      *         prevents it from being added to this set
      */
-    boolean add(@GuardSatisfied Set<E> this, E e);
+    @CheckReceiverForMutation
+    @PolyDet("down") boolean add(@GuardSatisfied @PolyDet Set<@PolyDet("use") E> this, @PolyDet("use") E e);
 
 
     /**
@@ -291,7 +297,8 @@ public interface Set<E> extends Collection<E> {
      * @throws UnsupportedOperationException if the {@code remove} operation
      *         is not supported by this set
      */
-    boolean remove(@GuardSatisfied Set<E> this, Object o);
+    @CheckReceiverForMutation
+    @PolyDet("down") boolean remove(@GuardSatisfied @PolyDet Set<@PolyDet("use") E> this, @PolyDet("use") Object o);
 
 
     // Bulk Operations
@@ -316,7 +323,7 @@ public interface Set<E> extends Collection<E> {
      * @see    #contains(Object)
      */
     @Pure
-    boolean containsAll(@GuardSatisfied Set<E> this, @GuardSatisfied Collection<?> c);
+    @PolyDet("down") boolean containsAll(@GuardSatisfied @PolyDet Set<E> this, @GuardSatisfied @PolyDet Collection<?> c);
 
     /**
      * Adds all of the elements in the specified collection to this set if
@@ -340,7 +347,8 @@ public interface Set<E> extends Collection<E> {
      *         specified collection prevents it from being added to this set
      * @see #add(Object)
      */
-    boolean addAll(@GuardSatisfied Set<E> this, Collection<? extends E> c);
+    @CheckReceiverForMutation
+    @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet Set<@PolyDet("use") E> this, @PolyDet("use") Collection<? extends E> c);
 
     /**
      * Retains only the elements in this set that are contained in the
@@ -363,7 +371,8 @@ public interface Set<E> extends Collection<E> {
      *         or if the specified collection is null
      * @see #remove(Object)
      */
-    boolean retainAll(@GuardSatisfied Set<E> this, Collection<?> c);
+    @CheckReceiverForMutation
+    @PolyDet("down") boolean retainAll(@GuardSatisfied @PolyDet Set<@PolyDet("use") E> this, @PolyDet("use") Collection<?> c);
 
     /**
      * Removes from this set all of its elements that are contained in the
@@ -386,7 +395,8 @@ public interface Set<E> extends Collection<E> {
      * @see #remove(Object)
      * @see #contains(Object)
      */
-    boolean removeAll(@GuardSatisfied Set<E> this, Collection<?> c);
+    @CheckReceiverForMutation
+    @PolyDet("down") boolean removeAll(@GuardSatisfied @PolyDet Set<@PolyDet("use") E> this, @PolyDet("use") Collection<?> c);
 
     /**
      * Removes all of the elements from this set (optional operation).
@@ -395,7 +405,8 @@ public interface Set<E> extends Collection<E> {
      * @throws UnsupportedOperationException if the {@code clear} method
      *         is not supported by this set
      */
-    void clear(@GuardSatisfied Set<E> this);
+    @CheckReceiverForMutation
+    void clear(@GuardSatisfied @PolyDet Set<@PolyDet("use") E> this);
 
 
     // Comparison and hashing
@@ -413,7 +424,7 @@ public interface Set<E> extends Collection<E> {
      * @return {@code true} if the specified object is equal to this set
      */
     @Pure
-    boolean equals(@GuardSatisfied Set<E> this, @GuardSatisfied @Nullable Object o);
+    @PolyDet("up") boolean equals(@GuardSatisfied @PolyDet Set<E> this, @GuardSatisfied @PolyDet("upDet") @Nullable Object o);
 
     /**
      * Returns the hash code value for this set.  The hash code of a set is
@@ -429,7 +440,7 @@ public interface Set<E> extends Collection<E> {
      * @see Set#equals(Object)
      */
     @Pure
-    int hashCode(@GuardSatisfied Set<E> this);
+    @NonDet int hashCode(@GuardSatisfied @PolyDet Set<E> this);
 
     /**
      * Creates a {@code Spliterator} over the elements in this set.
@@ -455,7 +466,7 @@ public interface Set<E> extends Collection<E> {
      * @since 1.8
      */
     @Override
-    default Spliterator<E> spliterator() {
+    default @PolyDet Spliterator<E> spliterator(@GuardSatisfied @PolyDet Set<E> this) {
         return Spliterators.spliterator(this, Spliterator.DISTINCT);
     }
 

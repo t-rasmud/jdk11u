@@ -25,6 +25,7 @@
 
 package java.util.spi;
 
+import org.checkerframework.checker.determinism.qual.NonDet;
 import org.checkerframework.checker.interning.qual.UsesObjectEquals;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -187,7 +188,7 @@ public abstract @UsesObjectEquals class LocaleServiceProvider {
      * @return An array of all locales for which this locale service provider
      * can provide localized objects or names.
      */
-    public abstract Locale[] getAvailableLocales();
+    public abstract @NonDet Locale @NonDet [] getAvailableLocales();
 
     /**
      * Returns {@code true} if the given {@code locale} is supported by

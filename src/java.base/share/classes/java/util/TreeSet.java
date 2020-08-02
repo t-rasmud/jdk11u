@@ -25,6 +25,9 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.Det;
+import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.CheckReceiverForMutation;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
@@ -33,6 +36,7 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.framework.qual.HasQualifierParameter;
 
 /**
  * A {@link NavigableSet} implementation based on a {@link TreeMap}.
@@ -100,6 +104,7 @@ import org.checkerframework.framework.qual.CFComment;
 
 @CFComment({"lock/nullness: Subclasses of this interface/class may opt to prohibit null elements"})
 @AnnotatedFor({"lock", "nullness"})
+@SuppressWarnings("determinism:invalid.upper.bound.on.type.argument")
 public class TreeSet<E> extends AbstractSet<E>
     implements NavigableSet<E>, Cloneable, java.io.Serializable
 {
@@ -114,7 +119,8 @@ public class TreeSet<E> extends AbstractSet<E>
     /**
      * Constructs a set backed by the specified navigable map.
      */
-    TreeSet(NavigableMap<E,Object> m) {
+    @SuppressWarnings("determinism:assignment.type.incompatible")
+    @PolyDet("down") TreeSet(@PolyDet NavigableMap<E,Object> m) {
         this.m = m;
     }
 
@@ -131,7 +137,7 @@ public class TreeSet<E> extends AbstractSet<E>
      * integers), the {@code add} call will throw a
      * {@code ClassCastException}.
      */
-    public TreeSet() {
+    public @Det TreeSet() {
         this(new TreeMap<>());
     }
 
@@ -148,7 +154,7 @@ public class TreeSet<E> extends AbstractSet<E>
      *        If {@code null}, the {@linkplain Comparable natural
      *        ordering} of the elements will be used.
      */
-    public TreeSet(@Nullable Comparator<? super E> comparator) {
+    public @PolyDet("down") TreeSet(@PolyDet Comparator<? super E> comparator) {
         this(new TreeMap<>(comparator));
     }
 
@@ -166,7 +172,8 @@ public class TreeSet<E> extends AbstractSet<E>
      *         not {@link Comparable}, or are not mutually comparable
      * @throws NullPointerException if the specified collection is null
      */
-    public TreeSet(Collection<? extends E> c) {
+    @SuppressWarnings("determinism:argument.type.incompatible")
+    public @PolyDet("down") TreeSet(@PolyDet Collection<? extends E> c) {
         this();
         addAll(c);
     }
@@ -178,7 +185,8 @@ public class TreeSet<E> extends AbstractSet<E>
      * @param s sorted set whose elements will comprise the new set
      * @throws NullPointerException if the specified sorted set is null
      */
-    public TreeSet(SortedSet<E> s) {
+    @SuppressWarnings("determinism:argument.type.incompatible")
+    public @PolyDet("down") TreeSet(@PolyDet SortedSet<E> s) {
         this(s.comparator());
         addAll(s);
     }
@@ -189,7 +197,8 @@ public class TreeSet<E> extends AbstractSet<E>
      * @return an iterator over the elements in this set in ascending order
      */
     @SideEffectFree
-    public Iterator<E> iterator() {
+    @SuppressWarnings("determinism:override.return.invalid")
+    public @PolyDet("down") Iterator<E> iterator(@PolyDet TreeSet<E> this) {
         return m.navigableKeySet().iterator();
     }
 
@@ -199,14 +208,14 @@ public class TreeSet<E> extends AbstractSet<E>
      * @return an iterator over the elements in this set in descending order
      * @since 1.6
      */
-    public Iterator<E> descendingIterator() {
+    public @PolyDet("down") Iterator<E> descendingIterator(@PolyDet TreeSet<E> this) {
         return m.descendingKeySet().iterator();
     }
 
     /**
      * @since 1.6
      */
-    public NavigableSet<E> descendingSet() {
+    public @PolyDet("down") NavigableSet<E> descendingSet(@PolyDet TreeSet<E> this) {
         return new TreeSet<>(m.descendingMap());
     }
 
@@ -216,7 +225,7 @@ public class TreeSet<E> extends AbstractSet<E>
      * @return the number of elements in this set (its cardinality)
      */
     @Pure
-    public @NonNegative int size(@GuardSatisfied TreeSet<E> this) {
+    public @PolyDet("down") @NonNegative int size(@GuardSatisfied @PolyDet TreeSet<E> this) {
         return m.size();
     }
 
@@ -227,7 +236,7 @@ public class TreeSet<E> extends AbstractSet<E>
      */
     @EnsuresNonNullIf(expression={"pollFirst()", "pollLast()"}, result=false)
     @Pure
-    public boolean isEmpty(@GuardSatisfied TreeSet<E> this) {
+    public @PolyDet("down") boolean isEmpty(@GuardSatisfied @PolyDet TreeSet<E> this) {
         return m.isEmpty();
     }
 
@@ -246,7 +255,7 @@ public class TreeSet<E> extends AbstractSet<E>
      *         does not permit null elements
      */
     @Pure
-    public boolean contains(@GuardSatisfied TreeSet<E> this, @GuardSatisfied Object o) {
+    public @PolyDet("down") boolean contains(@GuardSatisfied @PolyDet TreeSet<E> this, @GuardSatisfied @PolyDet Object o) {
         return m.containsKey(o);
     }
 
@@ -267,7 +276,8 @@ public class TreeSet<E> extends AbstractSet<E>
      *         and this set uses natural ordering, or its comparator
      *         does not permit null elements
      */
-    public boolean add(@GuardSatisfied TreeSet<E> this, E e) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean add(@GuardSatisfied @PolyDet TreeSet<@PolyDet("use") E> this, @PolyDet("use") E e) {
         return m.put(e, PRESENT)==null;
     }
 
@@ -288,7 +298,8 @@ public class TreeSet<E> extends AbstractSet<E>
      *         and this set uses natural ordering, or its comparator
      *         does not permit null elements
      */
-    public boolean remove(@GuardSatisfied TreeSet<E> this, Object o) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean remove(@GuardSatisfied @PolyDet TreeSet<@PolyDet("use") E> this, @PolyDet("use") Object o) {
         return m.remove(o)==PRESENT;
     }
 
@@ -296,7 +307,8 @@ public class TreeSet<E> extends AbstractSet<E>
      * Removes all of the elements from this set.
      * The set will be empty after this call returns.
      */
-    public void clear(@GuardSatisfied TreeSet<E> this) {
+    @CheckReceiverForMutation
+    public void clear(@GuardSatisfied @PolyDet TreeSet<@PolyDet("use") E> this) {
         m.clear();
     }
 
@@ -311,13 +323,14 @@ public class TreeSet<E> extends AbstractSet<E>
      *         if any element is null and this set uses natural ordering, or
      *         its comparator does not permit null elements
      */
-    public  boolean addAll(@GuardSatisfied TreeSet<E> this, Collection<? extends E> c) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet TreeSet<@PolyDet("use") E> this, @PolyDet("use") Collection<? extends E> c) {
         // Use linear-time version if applicable
         if (m.size()==0 && c.size() > 0 &&
             c instanceof SortedSet &&
             m instanceof TreeMap) {
-            SortedSet<? extends E> set = (SortedSet<? extends E>) c;
-            TreeMap<E,Object> map = (TreeMap<E, Object>) m;
+            @PolyDet("use") SortedSet<? extends E> set = (SortedSet<? extends E>) c;
+            @PolyDet TreeMap<E,Object> map = (TreeMap<E, Object>) m;
             Comparator<?> cc = set.comparator();
             Comparator<? super E> mc = map.comparator();
             if (cc==mc || (cc != null && cc.equals(mc))) {
@@ -337,8 +350,8 @@ public class TreeSet<E> extends AbstractSet<E>
      * @since 1.6
      */
     @SideEffectFree
-    public NavigableSet<E> subSet(@GuardSatisfied TreeSet<E> this, @GuardSatisfied E fromElement, boolean fromInclusive,
-                                  @GuardSatisfied E toElement,   boolean toInclusive) {
+    public @PolyDet("down") NavigableSet<E> subSet(@GuardSatisfied @PolyDet TreeSet<E> this, @GuardSatisfied E fromElement, @PolyDet boolean fromInclusive,
+                                  @GuardSatisfied E toElement,   @PolyDet boolean toInclusive) {
         return new TreeSet<>(m.subMap(fromElement, fromInclusive,
                                        toElement,   toInclusive));
     }
@@ -352,7 +365,7 @@ public class TreeSet<E> extends AbstractSet<E>
      * @since 1.6
      */
     @SideEffectFree
-    public NavigableSet<E> headSet(@GuardSatisfied TreeSet<E> this, @GuardSatisfied E toElement, boolean inclusive) {
+    public @PolyDet("down") NavigableSet<E> headSet(@GuardSatisfied @PolyDet TreeSet<E> this, @GuardSatisfied E toElement, @PolyDet boolean inclusive) {
         return new TreeSet<>(m.headMap(toElement, inclusive));
     }
 
@@ -365,7 +378,7 @@ public class TreeSet<E> extends AbstractSet<E>
      * @since 1.6
      */
     @SideEffectFree
-    public NavigableSet<E> tailSet(@GuardSatisfied TreeSet<E> this, @GuardSatisfied E fromElement, boolean inclusive) {
+    public @PolyDet("down") NavigableSet<E> tailSet(@GuardSatisfied @PolyDet TreeSet<E> this, @GuardSatisfied E fromElement, @PolyDet boolean inclusive) {
         return new TreeSet<>(m.tailMap(fromElement, inclusive));
     }
 
@@ -377,7 +390,7 @@ public class TreeSet<E> extends AbstractSet<E>
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @SideEffectFree
-    public SortedSet<E> subSet(@GuardSatisfied TreeSet<E> this, @GuardSatisfied E fromElement, @GuardSatisfied E toElement) {
+    public @PolyDet("down") SortedSet<E> subSet(@GuardSatisfied @PolyDet TreeSet<E> this, @GuardSatisfied E fromElement, @GuardSatisfied E toElement) {
         return subSet(fromElement, true, toElement, false);
     }
 
@@ -389,7 +402,7 @@ public class TreeSet<E> extends AbstractSet<E>
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @SideEffectFree
-    public SortedSet<E> headSet(@GuardSatisfied TreeSet<E> this, E toElement) {
+    public @PolyDet("down") SortedSet<E> headSet(@GuardSatisfied @PolyDet TreeSet<E> this, @GuardSatisfied E toElement) {
         return headSet(toElement, false);
     }
 
@@ -401,12 +414,12 @@ public class TreeSet<E> extends AbstractSet<E>
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @SideEffectFree
-    public SortedSet<E> tailSet(@GuardSatisfied TreeSet<E> this, E fromElement) {
+    public @PolyDet("down") SortedSet<E> tailSet(@GuardSatisfied @PolyDet TreeSet<E> this, @GuardSatisfied E fromElement) {
         return tailSet(fromElement, true);
     }
 
     @Pure
-    public @Nullable Comparator<? super E> comparator(@GuardSatisfied TreeSet<E> this) {
+    public @PolyDet @Nullable Comparator<? super E> comparator(@GuardSatisfied @PolyDet TreeSet<E> this) {
         return m.comparator();
     }
 
@@ -414,7 +427,7 @@ public class TreeSet<E> extends AbstractSet<E>
      * @throws NoSuchElementException {@inheritDoc}
      */
     @SideEffectFree
-    public E first(@GuardSatisfied TreeSet<E> this) {
+    public @PolyDet("down") E first(@GuardSatisfied @PolyDet TreeSet<E> this) {
         return m.firstKey();
     }
 
@@ -422,7 +435,7 @@ public class TreeSet<E> extends AbstractSet<E>
      * @throws NoSuchElementException {@inheritDoc}
      */
     @SideEffectFree
-    public E last(@GuardSatisfied TreeSet<E> this) {
+    public @PolyDet("down") E last(@GuardSatisfied @PolyDet TreeSet<E> this) {
         return m.lastKey();
     }
 
@@ -435,7 +448,7 @@ public class TreeSet<E> extends AbstractSet<E>
      *         does not permit null elements
      * @since 1.6
      */
-    public @Nullable E lower(E e) {
+    public @PolyDet("down") @Nullable E lower(@GuardSatisfied @PolyDet TreeSet<E> this, E e) {
         return m.lowerKey(e);
     }
 
@@ -446,7 +459,7 @@ public class TreeSet<E> extends AbstractSet<E>
      *         does not permit null elements
      * @since 1.6
      */
-    public @Nullable E floor(E e) {
+    public @PolyDet("down") @Nullable E floor(@GuardSatisfied @PolyDet TreeSet<E> this, E e) {
         return m.floorKey(e);
     }
 
@@ -457,7 +470,7 @@ public class TreeSet<E> extends AbstractSet<E>
      *         does not permit null elements
      * @since 1.6
      */
-    public @Nullable E ceiling(E e) {
+    public @PolyDet("down") @Nullable E ceiling(@GuardSatisfied @PolyDet TreeSet<E> this, E e) {
         return m.ceilingKey(e);
     }
 
@@ -468,22 +481,24 @@ public class TreeSet<E> extends AbstractSet<E>
      *         does not permit null elements
      * @since 1.6
      */
-    public @Nullable E higher(E e) {
+    public @PolyDet("down") @Nullable E higher(@GuardSatisfied @PolyDet TreeSet<E> this, E e) {
         return m.higherKey(e);
     }
 
     /**
      * @since 1.6
      */
-    public @Nullable E pollFirst(@GuardSatisfied TreeSet<E> this) {
-        Map.Entry<E,?> e = m.pollFirstEntry();
+    @CheckReceiverForMutation
+    public @PolyDet("down") @Nullable E pollFirst(@GuardSatisfied @PolyDet TreeSet<@PolyDet("use") E> this) {
+        Map.@PolyDet("down") Entry<E,?> e = m.pollFirstEntry();
         return (e == null) ? null : e.getKey();
     }
 
     /**
      * @since 1.6
      */
-    public @Nullable E pollLast(@GuardSatisfied TreeSet<E> this) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") @Nullable E pollLast(@GuardSatisfied @PolyDet TreeSet<@PolyDet("down") E> this) {
         Map.Entry<E,?> e = m.pollLastEntry();
         return (e == null) ? null : e.getKey();
     }
@@ -495,16 +510,16 @@ public class TreeSet<E> extends AbstractSet<E>
      * @return a shallow copy of this set
      */
     @SideEffectFree
-    @SuppressWarnings("unchecked")
-    public Object clone(@GuardSatisfied TreeSet<E> this) {
+    @SuppressWarnings({"unchecked", "determinism:invariant.cast.unsafe"})
+    public @PolyDet Object clone(@GuardSatisfied @PolyDet TreeSet<E> this) {
         TreeSet<E> clone;
         try {
-            clone = (TreeSet<E>) super.clone();
+            clone = (@PolyDet TreeSet<E>) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new InternalError(e);
         }
 
-        clone.m = new TreeMap<>(m);
+        clone.m = new @PolyDet TreeMap<>(m);
         return clone;
     }
 
@@ -550,7 +565,7 @@ public class TreeSet<E> extends AbstractSet<E>
             Comparator<? super E> c = (Comparator<? super E>) s.readObject();
 
         // Create backing TreeMap
-        TreeMap<E,Object> tm = new TreeMap<>(c);
+        @PolyDet TreeMap<E,Object> tm = new TreeMap<>(c);
         m = tm;
 
         // Read in size
@@ -578,7 +593,7 @@ public class TreeSet<E> extends AbstractSet<E>
      * @return a {@code Spliterator} over the elements in this set
      * @since 1.8
      */
-    public Spliterator<E> spliterator() {
+    public @PolyDet Spliterator<E> spliterator(@GuardSatisfied @PolyDet TreeSet<E> this) {
         return TreeMap.keySpliteratorFor(m);
     }
 

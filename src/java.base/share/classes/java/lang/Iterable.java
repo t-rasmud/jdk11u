@@ -25,6 +25,7 @@
 package java.lang;
 
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.determinism.qual.PolyDet;
 
 import java.util.Iterator;
 import java.util.Objects;
@@ -72,7 +73,7 @@ public interface Iterable<T> {
      * @throws NullPointerException if the specified action is null
      * @since 1.8
      */
-    default void forEach(Consumer<? super T> action) {
+    default void forEach(@PolyDet Iterable<T> this, @PolyDet("use") Consumer<? super T> action) {
         Objects.requireNonNull(action);
         for (T t : this) {
             action.accept(t);

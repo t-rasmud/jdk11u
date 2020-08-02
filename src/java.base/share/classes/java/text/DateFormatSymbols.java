@@ -38,6 +38,9 @@
 
 package java.text;
 
+import org.checkerframework.checker.determinism.qual.Det;
+import org.checkerframework.checker.determinism.qual.OrderNonDet;
+import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -317,7 +320,7 @@ public class DateFormatSymbols implements Serializable, Cloneable {
      *         <code>DateFormatSymbols</code> instances are available.
      * @since 1.6
      */
-    public static Locale[] getAvailableLocales() {
+    public static @Det Locale @OrderNonDet [] getAvailableLocales() {
         LocaleServiceProviderPool pool=
             LocaleServiceProviderPool.getPool(DateFormatSymbolsProvider.class);
         return pool.getAvailableLocales();
@@ -578,7 +581,7 @@ public class DateFormatSymbols implements Serializable, Cloneable {
      * @return the time zone strings.
      * @see #setZoneStrings(String[][])
      */
-    public String[] @MinLen(5) [] getZoneStrings() {
+    public @PolyDet String @PolyDet("upDet") [] @MinLen(5) @PolyDet("upDet") [] getZoneStrings(@PolyDet DateFormatSymbols this) {
         return getZoneStringsImpl(true);
     }
 
