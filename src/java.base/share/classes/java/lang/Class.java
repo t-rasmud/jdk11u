@@ -3744,7 +3744,7 @@ public final @Interned class Class<@UnknownKeyFor T> implements java.io.Serializ
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <A extends Annotation> A getDeclaredAnnotation(@PolyDet Class<T> this, @PolyDet Class<A> annotationClass) {
+    public <A extends Annotation> @Nullable A getDeclaredAnnotation(@PolyDet Class<T> this, @PolyDet Class<A> annotationClass) {
         Objects.requireNonNull(annotationClass);
 
         return (A) annotationData().declaredAnnotations.get(annotationClass);

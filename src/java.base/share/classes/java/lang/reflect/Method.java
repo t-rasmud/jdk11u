@@ -718,7 +718,7 @@ public final class Method extends Executable {
      * @throws NullPointerException  {@inheritDoc}
      * @since 1.5
      */
-    public <T extends @Nullable Annotation> @Nullable T getAnnotation(@GuardSatisfied @PolyDet Method this, @PolyDet Class<T> annotationClass) {
+    public <T extends Annotation> @Nullable T getAnnotation(@PolyDet Method this, @PolyDet Class<T> annotationClass) {
         return super.getAnnotation(annotationClass);
     }
 
