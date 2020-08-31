@@ -13,12 +13,26 @@ them cause build failures, especially in the interim builds):
 Annotations for classes that exist in JDK 8 but were removed in JDK 11 appear
 in jdk8.astub files in repository https://github.com/typetools/checker-framework/ .
 
+
+Contributing
+------------
+
+We welcome pull requests that add new annotations or correct existing ones.
+Thanks in advance for your contributions!
+
+When adding annotations, please annotate an entire file at a time, and add an
+`@AnnotatedFor` annotation on the class declaration.  The rationale is explained
+at https://checkerframework.org/manual/#library-tips-fully-annotate .
+
+
+Relationship to other repositories
+----------------------------------
+
 This fork is not up to date with respect to `openjdk/jdk` (the current OpenJDK version).
 This fork contains all commits through the release of JDK 11:
 https://github.com/typetools/jdk/commit/da75f3c4ad5bdf25167a3ed80e51f567ab3dbd01
 with commit message:
 8209806: API docs should be updated to refer to javase11
-[TODO: How did I determine that was the right commit to use?]
 
 This fork is an ancestor of JDK release forks such as jdk11u.  This fork
 does not compile, because the commit of `openjdk/jdk` on which it is based
@@ -82,17 +96,15 @@ Qualifier definitions
 The java.base module contains a copy of the Checker Framework qualifiers.
 To update that copy:
 
-# Get version number from https://checkerframework.org/ .
-VER=3.3.0
-cd src/java.base/share/classes
-rm -rf org/checkerframework
-wget https://repo1.maven.org/maven2/org/checkerframework/checker-qual/$VER/checker-qual-$VER-sources.jar
-unzip checker-qual-$VER-sources.jar -x 'META-INF*'
-chmod -R u+w org/checkerframework
-jar tf checker-qual-$VER-sources.jar  | grep '\.java$' | sed 's/\/[^/]*\.java/;/' | sed 's/\//./g' | sed 's/^/    exports /' | sort | uniq
-rm -f checker-qual-$VER-sources.jar
+(cd $CHECKERFRAMEWORK && rm -rf checker-qual/build/libs && ./gradlew :checker-qual:sourcesJar) && \
+cp -pf $CHECKERFRAMEWORK/checker-qual/build/libs/checker-qual-*-source.jar checker-qual.jar && \
+(cd src/java.base/share/classes && rm -rf org/checkerframework && \
+  unzip ../../../../checker-qual.jar -x 'META-INF*' && \
+  rm -f org/checkerframework/checker/signedness/SignednessUtilExtra.java && \
+  chmod -R u+w org/checkerframework) && \
+jar tf checker-qual.jar | grep '\.java$' | sed 's/\/[^/]*\.java/;/' | sed 's/\//./g' | sed 's/^/    exports /' | sort | uniq
 
-Copy the exports lines that were printed by the penultimate command to
+Copy the exports lines that were printed by the last command to
 src/java.base/share/classes/module-info.java .
 
 

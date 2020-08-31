@@ -825,7 +825,8 @@ public final @Interned class Class<@UnknownKeyFor T> implements java.io.Serializ
      * @return  the name of the class or interface
      *          represented by this object.
      */
-    @CFComment("interning: In the Oracle JDK, the result of getName is interned")
+    @CFComment({"interning: In the Oracle JDK, the result of getName is interned",
+            "signature: For a non-array non-primitive type, returns @BinaryName"})
     @Pure
     public @ClassGetName @Interned String getName() {
         String name = this.name;
@@ -3740,7 +3741,7 @@ public final @Interned class Class<@UnknownKeyFor T> implements java.io.Serializ
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <A extends Annotation> A getDeclaredAnnotation(Class<A> annotationClass) {
+    public <A extends Annotation> @Nullable A getDeclaredAnnotation(Class<A> annotationClass) {
         Objects.requireNonNull(annotationClass);
 
         return (A) annotationData().declaredAnnotations.get(annotationClass);
