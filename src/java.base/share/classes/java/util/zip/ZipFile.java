@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1995, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1995, 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -380,7 +380,7 @@ public
      */
     public @Nullable InputStream getInputStream(ZipEntry entry) throws IOException {
         Objects.requireNonNull(entry, "entry");
-        int pos = -1;
+        int pos;
         ZipFileInputStream in;
         Source zsrc = res.zsrc;
         Set<InputStream> istreams = res.istreams;
@@ -617,7 +617,7 @@ public
         byte[] cen = res.zsrc.cen;
         int nlen = CENNAM(cen, pos);
         if (!zc.isUTF8() && (CENFLG(cen, pos) & USE_UTF8) != 0) {
-            return zc.toStringUTF8(cen, pos + CENHDR, nlen);
+            return ZipCoder.toStringUTF8(cen, pos + CENHDR, nlen);
         } else {
             return zc.toString(cen, pos + CENHDR, nlen);
         }
@@ -677,7 +677,7 @@ public
             // (2) not equal to the name stored, a slash is appended during
             // getEntryPos() search.
             if (!zc.isUTF8() && (flag & USE_UTF8) != 0) {
-                name = zc.toStringUTF8(cen, pos + CENHDR, nlen);
+                name = ZipCoder.toStringUTF8(cen, pos + CENHDR, nlen);
             } else {
                 name = zc.toString(cen, pos + CENHDR, nlen);
             }
@@ -696,7 +696,7 @@ public
         if (clen != 0) {
             int start = pos + CENHDR + nlen + elen;
             if (!zc.isUTF8() && (flag & USE_UTF8) != 0) {
-                e.comment = zc.toStringUTF8(cen, start, clen);
+                e.comment = ZipCoder.toStringUTF8(cen, start, clen);
             } else {
                 e.comment = zc.toString(cen, start, clen);
             }
@@ -735,7 +735,7 @@ public
             this.cleanable = CleanerFactory.cleaner().register(zf, this);
             this.istreams = Collections.newSetFromMap(new WeakHashMap<>());
             this.inflaterCache = new ArrayDeque<>();
-            this.zsrc = Source.get(file, (mode & OPEN_DELETE) != 0);
+            this.zsrc = Source.get(file, (mode & OPEN_DELETE) != 0, zf.zc);
         }
 
         void clean() {
@@ -828,12 +828,12 @@ public
             }
         }
 
-        CleanableResource(File file, int mode)
+        CleanableResource(File file, int mode, ZipCoder zc)
             throws IOException {
             this.cleanable = null;
             this.istreams = Collections.newSetFromMap(new WeakHashMap<>());
             this.inflaterCache = new ArrayDeque<>();
-            this.zsrc = Source.get(file, (mode & OPEN_DELETE) != 0);
+            this.zsrc = Source.get(file, (mode & OPEN_DELETE) != 0, zc);
         }
 
         /*
@@ -859,7 +859,7 @@ public
             ZipFile zf;
             FinalizableResource(ZipFile zf, File file, int mode)
                 throws IOException {
-                super(file, mode);
+                super(file, mode, zf.zc);
                 this.zf = zf;
             }
 
@@ -1229,7 +1229,7 @@ public
         private static final HashMap<Key, Source> files = new HashMap<>();
 
 
-        static Source get(File file, boolean toDelete) throws IOException {
+        static Source get(File file, boolean toDelete, ZipCoder zc) throws IOException {
             final Key key;
             try {
                 key = new Key(file,
@@ -1245,7 +1245,7 @@ public
                     return src;
                 }
             }
-            src = new Source(key, toDelete);
+            src = new Source(key, toDelete, zc);
 
             synchronized (files) {
                 if (files.containsKey(key)) {    // someone else put in first
@@ -1268,7 +1268,7 @@ public
             }
         }
 
-        private Source(Key key, boolean toDelete) throws IOException {
+        private Source(Key key, boolean toDelete, ZipCoder zc) throws IOException {
             this.key = key;
             if (toDelete) {
                 if (isWindows) {
@@ -1282,7 +1282,7 @@ public
                 this.zfile = new RandomAccessFile(key.file, "r");
             }
             try {
-                initCEN(-1);
+                initCEN(-1, zc);
                 byte[] buf = new byte[4];
                 readFullyAt(buf, 0, 4, 0);
                 this.startsWithLoc = (LOCSIG(buf) == LOCSIG);
@@ -1326,6 +1326,32 @@ public
             synchronized (zfile) {
                 zfile.seek(pos);
                 return zfile.read(buf, off, len);
+            }
+        }
+
+        private static final void checkUTF8(byte[] a, int pos, int len) throws ZipException {
+            try {
+                int end = pos + len;
+                while (pos < end) {
+                    // ASCII fast-path: When checking that a range of bytes is
+                    // valid UTF-8, we can avoid some allocation by skipping
+                    // past bytes in the 0-127 range
+                    if (a[pos] < 0) {
+                        ZipCoder.toStringUTF8(a, pos, end - pos);
+                        break;
+                    }
+                    pos++;
+                }
+            } catch(Exception e) {
+                zerror("invalid CEN header (bad entry name)");
+            }
+        }
+
+        private final void checkEncoding(ZipCoder zc, byte[] a, int pos, int nlen) throws ZipException {
+            try {
+                zc.toString(a, pos, nlen);
+            } catch(Exception e) {
+                zerror("invalid CEN header (bad entry name)");
             }
         }
 
@@ -1449,7 +1475,7 @@ public
         }
 
         // Reads zip file central directory.
-        private void initCEN(int knownTotal) throws IOException {
+        private void initCEN(int knownTotal, ZipCoder zc) throws IOException {
             if (knownTotal == -1) {
                 End end = findEND();
                 if (end.endpos == 0) {
@@ -1483,15 +1509,15 @@ public
             table    =  new int[tablelen];
             Arrays.fill(table, ZIP_ENDCHAIN);
             int idx = 0;
-            int hash = 0;
-            int next = -1;
+            int hash;
+            int next;
 
             // list for all meta entries
             ArrayList<Integer> metanamesList = null;
 
             // Iterate through the entries in the central directory
             int i = 0;
-            int hsh = 0;
+            int hsh;
             int pos = 0;
             int limit = cen.length - ENDHDR;
             while (pos + CENHDR <= limit) {
@@ -1499,7 +1525,7 @@ public
                     // This will only happen if the zip file has an incorrect
                     // ENDTOT field, which usually means it contains more than
                     // 65535 entries.
-                    initCEN(countCENHeaders(cen, limit));
+                    initCEN(countCENHeaders(cen, limit), zc);
                     return;
                 }
                 if (CENSIG(cen, pos) != CENSIG)
@@ -1508,12 +1534,18 @@ public
                 int nlen   = CENNAM(cen, pos);
                 int elen   = CENEXT(cen, pos);
                 int clen   = CENCOM(cen, pos);
-                if ((CENFLG(cen, pos) & 1) != 0)
+                int flag   = CENFLG(cen, pos);
+                if ((flag & 1) != 0)
                     zerror("invalid CEN header (encrypted entry)");
                 if (method != STORED && method != DEFLATED)
                     zerror("invalid CEN header (bad compression method: " + method + ")");
                 if (pos + CENHDR + nlen > limit)
                     zerror("invalid CEN header (bad header size)");
+                if (zc.isUTF8() || (flag & USE_UTF8) != 0) {
+                    checkUTF8(cen, pos + CENHDR, nlen);
+                } else {
+                    checkEncoding(zc, cen, pos + CENHDR, nlen);
+                }
                 // Record the CEN offset and the name hash in our hash cell.
                 hash = hashN(cen, pos + CENHDR, nlen);
                 hsh = (hash & 0x7fffffff) % tablelen;

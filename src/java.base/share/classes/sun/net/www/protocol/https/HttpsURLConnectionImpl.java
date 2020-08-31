@@ -493,16 +493,6 @@ public class HttpsURLConnectionImpl
         delegate.setDefaultUseCaches(defaultusecaches);
     }
 
-    /*
-     * finalize (dispose) the delegated object.  Otherwise
-     * sun.net.www.protocol.http.HttpURLConnection's finalize()
-     * would have to be made public.
-     */
-    @SuppressWarnings("deprecation")
-    protected void finalize() throws Throwable {
-        delegate.dispose();
-    }
-
     @Pure
     @EnsuresNonNullIf(expression="#1", result=true)
     public boolean equals(@Nullable Object obj) {

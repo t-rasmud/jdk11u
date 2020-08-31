@@ -1373,6 +1373,7 @@ public final @UsesObjectEquals class Math {
      * @param   a   the argument whose absolute value is to be determined
      * @return  the absolute value of the argument.
      */
+    @HotSpotIntrinsicCandidate
     @Pure
     public static @NonNegative int abs(int a) {
         return (a < 0) ? -a : a;
@@ -1391,6 +1392,7 @@ public final @UsesObjectEquals class Math {
      * @param   a   the argument whose absolute value is to be determined
      * @return  the absolute value of the argument.
      */
+    @HotSpotIntrinsicCandidate
     @Pure
     public static @NonNegative long abs(long a) {
         return (a < 0) ? -a : a;
@@ -1416,6 +1418,7 @@ public final @UsesObjectEquals class Math {
      * @param   a   the argument whose absolute value is to be determined
      * @return  the absolute value of the argument.
      */
+    @HotSpotIntrinsicCandidate
     @Pure
     public static float abs(float a) {
         return (a <= 0.0F) ? 0.0F - a : a;
