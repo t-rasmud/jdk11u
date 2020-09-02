@@ -25,6 +25,9 @@
 
 package java.lang;
 
+import org.checkerframework.checker.determinism.qual.Det;
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.guieffect.qual.PolyUI;
 import org.checkerframework.checker.guieffect.qual.PolyUIType;
 import org.checkerframework.checker.guieffect.qual.SafeEffect;
@@ -126,7 +129,7 @@ public class Object {
      */
     @Pure
     @HotSpotIntrinsicCandidate
-    public native int hashCode(@GuardSatisfied Object this);
+    public native @NonDet int hashCode(@GuardSatisfied @PolyDet Object this);
 
     /**
      * Indicates whether some other object is "equal to" this one.
@@ -176,7 +179,7 @@ public class Object {
      */
     @Pure
     @EnsuresNonNullIf(expression="#1", result=true)
-    public boolean equals(@GuardSatisfied Object this, @GuardSatisfied @Nullable Object obj) {
+    public @PolyDet("up") boolean equals(@GuardSatisfied @PolyDet Object this, @GuardSatisfied @PolyDet @Nullable Object obj) {
         return (this == obj);
     }
 
@@ -242,7 +245,7 @@ public class Object {
      */
     @SideEffectFree
     @HotSpotIntrinsicCandidate
-    protected native Object clone(@GuardSatisfied Object this) throws CloneNotSupportedException;
+    protected native @PolyDet("up") Object clone(@PolyDet @GuardSatisfied Object this) throws CloneNotSupportedException;
 
     /**
      * Returns a string representation of the object. In general, the
@@ -269,7 +272,7 @@ public class Object {
     "that differs according to ==, and @Deterministic requires that the results of",
     "two calls of the method are ==."})
     @SideEffectFree
-    public String toString(@GuardSatisfied Object this) {
+    public @NonDet String toString(@GuardSatisfied @PolyDet Object this) {
         return getClass().getName() + "@" + Integer.toHexString(hashCode());
     }
 

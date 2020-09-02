@@ -25,6 +25,9 @@
 
 package java.lang;
 
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.RequiresDetToString;
 import org.checkerframework.checker.formatter.qual.FormatMethod;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
@@ -269,7 +272,7 @@ public final class String
     @SideEffectFree
     @StaticallyExecutable
     @HotSpotIntrinsicCandidate
-    public @PolyValue @Unique String(@PolyValue String original) {
+    public @PolyValue @PolyDet @Unique String(@PolyValue @PolyDet String original) {
         this.value = original.value;
         this.coder = original.coder;
         this.hash = original.hash;
@@ -286,7 +289,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @PolyValue @Unique String(char value @GuardSatisfied @PolyValue []) {
+    public @PolyDet("up") @PolyValue @Unique String(@PolyDet char value @GuardSatisfied @PolyDet @PolyValue []) {
         this(value, 0, value.length, null);
     }
 
@@ -313,7 +316,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @Unique String(char value @GuardSatisfied [], @IndexOrHigh({"#1"}) int offset, @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int count) {
+    public @PolyDet("up") @Unique String(@PolyDet char value @GuardSatisfied @PolyDet [], @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int count) {
         this(value, offset, count, rangeCheck(value, offset, count));
     }
 
@@ -352,7 +355,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @Unique String(int @GuardSatisfied [] codePoints, @IndexOrHigh({"#1"}) int offset, @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int count) {
+    public @PolyDet("up") @Unique String(@PolyDet int @GuardSatisfied @PolyDet [] codePoints, @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int count) {
         checkBoundsOffCount(offset, count, codePoints.length);
         if (count == 0) {
             this.value = "".value;
@@ -414,7 +417,7 @@ public final class String
     @SideEffectFree
     @StaticallyExecutable
     @Deprecated(since="1.1")
-    public @Unique String(byte ascii @GuardSatisfied [], int hibyte, @IndexOrHigh({"#1"}) int offset, @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int count) {
+    public @PolyDet("up") @Unique String(@PolyDet byte ascii @GuardSatisfied @PolyDet [], @PolyDet int hibyte, @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int count) {
         checkBoundsOffCount(offset, count, ascii.length);
         if (count == 0) {
             this.value = "".value;
@@ -468,7 +471,7 @@ public final class String
     @SideEffectFree
     @StaticallyExecutable
     @Deprecated(since="1.1")
-    public @Unique String(byte ascii @GuardSatisfied [], int hibyte) {
+    public @PolyDet("up") @Unique String(@PolyDet byte ascii @GuardSatisfied @PolyDet[], @PolyDet int hibyte) {
         this(ascii, hibyte, 0, ascii.length);
     }
 
@@ -507,7 +510,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @Unique String(@PolySigned byte bytes @GuardSatisfied [], @IndexOrHigh({"#1"}) int offset, @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int length, String charsetName)
+    public @PolyDet("up") @Unique String(@PolyDet @PolySigned byte bytes @PolyDet @GuardSatisfied [], @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int length, @PolyDet String charsetName)
             throws UnsupportedEncodingException {
         if (charsetName == null)
             throw new NullPointerException("charsetName");
@@ -550,7 +553,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @Unique String(@PolySigned byte bytes @GuardSatisfied [], @IndexOrHigh({"#1"}) int offset, @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int length, Charset charset) {
+    public @PolyDet("up") @Unique String(@PolyDet @PolySigned byte bytes @GuardSatisfied @PolyDet [], @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int length, Charset charset) {
         if (charset == null)
             throw new NullPointerException("charset");
         checkBoundsOffCount(offset, length, bytes.length);
@@ -585,7 +588,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @Unique String(@PolySigned byte bytes @GuardSatisfied [], String charsetName)
+    public @PolyDet("up") @Unique String(@PolyDet @PolySigned byte bytes @PolyDet @GuardSatisfied [], @PolyDet String charsetName)
             throws UnsupportedEncodingException {
         this(bytes, 0, bytes.length, charsetName);
     }
@@ -612,7 +615,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @Unique String(@PolySigned byte bytes @GuardSatisfied [], Charset charset) {
+    public @PolyDet("up") @Unique String(@PolyDet @PolySigned byte bytes @GuardSatisfied @PolyDet [], @PolyDet Charset charset) {
         this(bytes, 0, bytes.length, charset);
     }
 
@@ -644,7 +647,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @Unique String(@PolySigned byte bytes @GuardSatisfied [], @IndexOrHigh({"#1"}) int offset, @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int length) {
+    public @PolyDet("up") @Unique String(@PolyDet @PolySigned byte bytes @GuardSatisfied @PolyDet [], @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int length) {
         checkBoundsOffCount(offset, length, bytes.length);
         StringCoding.Result ret = StringCoding.decode(bytes, offset, length);
         this.value = ret.value;
@@ -669,7 +672,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @Unique String(@PolySigned byte @GuardSatisfied [] bytes) {
+    public @PolyDet("up") @Unique String(@PolyDet @PolySigned byte @GuardSatisfied @PolyDet [] bytes) {
         this(bytes, 0, bytes.length);
     }
 
@@ -684,7 +687,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @Unique String(@GuardSatisfied StringBuffer buffer) {
+    public @PolyDet @Unique String(@GuardSatisfied @PolyDet StringBuffer buffer) {
         this(buffer.toString());
     }
 
@@ -705,7 +708,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @Unique String(@GuardSatisfied StringBuilder builder) {
+    public @PolyDet("up") @Unique String(@GuardSatisfied @PolyDet StringBuilder builder) {
         this(builder, null);
     }
 
@@ -719,7 +722,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public @LengthOf({"this"}) int length() {
+    public @PolyDet @LengthOf({"this"}) int length(@PolyDet String this) {
         return value.length >> coder();
     }
 
@@ -736,7 +739,7 @@ public final class String
     @Pure
     @StaticallyExecutable
     @EnsuresMinLenIf(expression="this", result=false, targetValue=1)
-    public boolean isEmpty() {
+    public @PolyDet boolean isEmpty(@PolyDet String this) {
         return value.length == 0;
     }
 
@@ -760,7 +763,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public char charAt(@IndexFor({"this"}) int index) {
+    public @PolyDet char charAt(@PolyDet String this, @PolyDet @IndexFor({"this"}) int index) {
         if (isLatin1()) {
             return StringLatin1.charAt(value, index);
         } else {
@@ -792,7 +795,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public int codePointAt(@IndexFor({"this"}) int index) {
+    public @PolyDet int codePointAt(@PolyDet String this, @PolyDet @IndexFor({"this"}) int index) {
         if (isLatin1()) {
             checkIndex(index, value.length);
             return value[index] & 0xff;
@@ -826,7 +829,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public int codePointBefore(@LTEqLengthOf({"this"}) @Positive int index) {
+    public @PolyDet int codePointBefore(@PolyDet String this, @PolyDet @LTEqLengthOf({"this"}) @Positive int index) {
         int i = index - 1;
         if (i < 0 || i >= length()) {
             throw new StringIndexOutOfBoundsException(index);
@@ -860,7 +863,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public @NonNegative int codePointCount(@IndexOrHigh({"this"}) int beginIndex, @IndexOrHigh({"this"}) int endIndex) {
+    public @PolyDet @NonNegative int codePointCount(@PolyDet String this, @PolyDet @IndexOrHigh({"this"}) int beginIndex, @PolyDet @IndexOrHigh({"this"}) int endIndex) {
         if (beginIndex < 0 || beginIndex > endIndex ||
             endIndex > length()) {
             throw new IndexOutOfBoundsException();
@@ -893,7 +896,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public @IndexOrHigh({"this"}) int offsetByCodePoints(@IndexOrHigh({"this"}) int index, int codePointOffset) {
+    public @PolyDet @IndexOrHigh({"this"}) int offsetByCodePoints(@PolyDet String this, @PolyDet @IndexOrHigh({"this"}) int index, @PolyDet int codePointOffset) {
         if (index < 0 || index > length()) {
             throw new IndexOutOfBoundsException();
         }
@@ -930,7 +933,7 @@ public final class String
      *            <li>{@code dstBegin+(srcEnd-srcBegin)} is larger than
      *                {@code dst.length}</ul>
      */
-    public void getChars(@IndexOrHigh({"this"}) int srcBegin, @IndexOrHigh({"this"}) int srcEnd, char dst @GuardSatisfied [], @IndexOrHigh({"#3"}) int dstBegin) {
+    public void getChars(@PolyDet("use") String this, @PolyDet("use") @IndexOrHigh({"this"}) int srcBegin, @PolyDet("use") @IndexOrHigh({"this"}) int srcEnd, @PolyDet char dst @PolyDet @GuardSatisfied [], @PolyDet("use") @IndexOrHigh({"#3"}) int dstBegin) {
         checkBoundsBeginEnd(srcBegin, srcEnd, length());
         checkBoundsOffCount(dstBegin, srcEnd - srcBegin, dst.length);
         if (isLatin1()) {
@@ -984,7 +987,7 @@ public final class String
      *          </ul>
      */
     @Deprecated(since="1.1")
-    public void getBytes(@IndexOrHigh({"this"}) int srcBegin, @IndexOrHigh({"this"}) int srcEnd, byte dst @GuardSatisfied [], @IndexOrHigh({"#3"}) int dstBegin) {
+    public void getBytes(@PolyDet("use") String this, @PolyDet("use") @IndexOrHigh({"this"}) int srcBegin, @PolyDet("use") @IndexOrHigh({"this"}) int srcEnd, @PolyDet byte dst @GuardSatisfied @PolyDet [], @PolyDet("use") @IndexOrHigh({"#3"}) int dstBegin) {
         checkBoundsBeginEnd(srcBegin, srcEnd, length());
         Objects.requireNonNull(dst);
         checkBoundsOffCount(dstBegin, srcEnd - srcBegin, dst.length);
@@ -1017,7 +1020,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @PolySigned byte[] getBytes(String charsetName)
+    public @PolyDet("down") @PolySigned byte @PolyDet[] getBytes(@PolyDet String this, @PolyDet String charsetName)
             throws UnsupportedEncodingException {
         if (charsetName == null) throw new NullPointerException();
         return StringCoding.encode(charsetName, coder(), value);
@@ -1043,7 +1046,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @PolySigned byte[] getBytes(Charset charset) {
+    public @PolyDet("down") @PolySigned byte @PolyDet[] getBytes(@PolyDet String this, @PolyDet Charset charset) {
         if (charset == null) throw new NullPointerException();
         return StringCoding.encode(charset, coder(), value);
      }
@@ -1063,7 +1066,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @PolySigned byte[] getBytes() {
+    public @PolyDet @PolySigned byte @PolyDet[] getBytes(@PolyDet String this) {
         return StringCoding.encode(coder(), value);
     }
 
@@ -1088,7 +1091,7 @@ public final class String
     @EnsuresNonNullIf(expression={"#1"}, result=true)
     @Pure
     @StaticallyExecutable
-    public boolean equals(@GuardSatisfied @Nullable Object anObject) {
+    public @PolyDet boolean equals(@PolyDet String this, @PolyDet @GuardSatisfied @Nullable Object anObject) {
         if (this == anObject) {
             return true;
         }
@@ -1122,7 +1125,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public boolean contentEquals(@GuardSatisfied StringBuffer sb) {
+    public @PolyDet boolean contentEquals(@PolyDet String this, @PolyDet @GuardSatisfied StringBuffer sb) {
         return contentEquals((CharSequence)sb);
     }
 
@@ -1170,7 +1173,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public boolean contentEquals(@GuardSatisfied CharSequence cs) {
+    public @PolyDet boolean contentEquals(@PolyDet String this, @GuardSatisfied @PolyDet CharSequence cs) {
         // Argument is a StringBuffer, StringBuilder
         if (cs instanceof AbstractStringBuilder) {
             if (cs instanceof StringBuffer) {
@@ -1236,7 +1239,7 @@ public final class String
     @EnsuresNonNullIf(expression={"#1"}, result=true)
     @Pure
     @StaticallyExecutable
-    public boolean equalsIgnoreCase(@Nullable String anotherString) {
+    public @PolyDet boolean equalsIgnoreCase(@PolyDet String this, @PolyDet @Nullable String anotherString) {
         return (this == anotherString) ? true
                 : (anotherString != null)
                 && (anotherString.length() == length())
@@ -1289,7 +1292,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public int compareTo(String anotherString) {
+    public @PolyDet int compareTo(@PolyDet String this, @PolyDet String anotherString) {
         byte v1[] = value;
         byte v2[] = anotherString.value;
         if (coder() == anotherString.coder()) {
@@ -1354,7 +1357,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public int compareToIgnoreCase(String str) {
+    public @PolyDet int compareToIgnoreCase(@PolyDet String this, @PolyDet String str) {
         return CASE_INSENSITIVE_ORDER.compare(this, str);
     }
 
@@ -1395,7 +1398,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public boolean regionMatches(int toffset, String other, int ooffset, int len) {
+    public @PolyDet boolean regionMatches(@PolyDet String this, @PolyDet int toffset, @PolyDet String other, @PolyDet int ooffset, @PolyDet int len) {
         byte tv[] = value;
         byte ov[] = other.value;
         // Note: toffset, ooffset, or len might be near -1>>>1.
@@ -1487,8 +1490,8 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public boolean regionMatches(boolean ignoreCase, int toffset,
-            String other, int ooffset, int len) {
+    public @PolyDet boolean regionMatches(@PolyDet String this, @PolyDet boolean ignoreCase, @PolyDet int toffset,
+        @PolyDet String other, @PolyDet int ooffset, @PolyDet int len) {
         if (!ignoreCase) {
             return regionMatches(toffset, other, ooffset, len);
         }
@@ -1529,7 +1532,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public boolean startsWith(String prefix, int toffset) {
+    public @PolyDet boolean startsWith(@PolyDet String this, @PolyDet String prefix, @PolyDet int toffset) {
         // Note: toffset might be near -1>>>1.
         if (toffset < 0 || toffset > length() - prefix.length()) {
             return false;
@@ -1574,7 +1577,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public boolean startsWith(String prefix) {
+    public @PolyDet boolean startsWith(@PolyDet String this, @PolyDet String prefix) {
         return startsWith(prefix, 0);
     }
 
@@ -1591,7 +1594,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public boolean endsWith(String suffix) {
+    public @PolyDet boolean endsWith(@PolyDet String this, @PolyDet String suffix) {
         return startsWith(suffix, length() - suffix.length());
     }
 
@@ -1610,7 +1613,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public int hashCode() {
+    public @NonDet int hashCode(@PolyDet String this) {
         int h = hash;
         if (h == 0 && value.length > 0) {
             hash = h = isLatin1() ? StringLatin1.hashCode(value)
@@ -1645,7 +1648,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public @IndexOrLow({"this"}) int indexOf(int ch) {
+    public @PolyDet @IndexOrLow({"this"}) int indexOf(@PolyDet String this, @PolyDet int ch) {
         return indexOf(ch, 0);
     }
 
@@ -1690,7 +1693,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public @IndexOrLow({"this"}) int indexOf(int ch, int fromIndex) {
+    public @PolyDet @IndexOrLow({"this"}) int indexOf(@PolyDet String this, @PolyDet int ch, @PolyDet int fromIndex) {
         return isLatin1() ? StringLatin1.indexOf(value, ch, fromIndex)
                           : StringUTF16.indexOf(value, ch, fromIndex);
     }
@@ -1720,7 +1723,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public @IndexOrLow({"this"}) int lastIndexOf(int ch) {
+    public @PolyDet @IndexOrLow({"this"}) int lastIndexOf(@PolyDet String this, @PolyDet int ch) {
         return lastIndexOf(ch, length() - 1);
     }
 
@@ -1760,7 +1763,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public @IndexOrLow({"this"}) int lastIndexOf(int ch, int fromIndex) {
+    public @PolyDet @IndexOrLow({"this"}) int lastIndexOf(@PolyDet String this, @PolyDet int ch, @PolyDet int fromIndex) {
         return isLatin1() ? StringLatin1.lastIndexOf(value, ch, fromIndex)
                           : StringUTF16.lastIndexOf(value, ch, fromIndex);
     }
@@ -1781,7 +1784,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public @LTEqLengthOf({"this"}) @SubstringIndexFor(value={"this"}, offset={"#1.length()-1"}) int indexOf(String str) {
+    public @PolyDet @LTEqLengthOf({"this"}) @SubstringIndexFor(value={"this"}, offset={"#1.length()-1"}) int indexOf(@PolyDet String this, @PolyDet String str) {
         if (coder() == str.coder()) {
             return isLatin1() ? StringLatin1.indexOf(value, str.value)
                               : StringUTF16.indexOf(value, str.value);
@@ -1811,7 +1814,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public @LTEqLengthOf({"this"}) @SubstringIndexFor(value={"this"}, offset={"#1.length()-1"}) int indexOf(String str, int fromIndex) {
+    public @PolyDet @LTEqLengthOf({"this"}) @SubstringIndexFor(value={"this"}, offset={"#1.length()-1"}) int indexOf(@PolyDet String this, @PolyDet String str, @PolyDet int fromIndex) {
         return indexOf(value, coder(), length(), str, fromIndex);
     }
 
@@ -1826,8 +1829,8 @@ public final class String
      * @param   tgtStr    the characters being searched for.
      * @param   fromIndex the index to begin searching from.
      */
-    static int indexOf(byte[] src, byte srcCoder, int srcCount,
-                       String tgtStr, int fromIndex) {
+    static @PolyDet int indexOf(@PolyDet byte[] src, @PolyDet byte srcCoder, @PolyDet int srcCount,
+                       @PolyDet String tgtStr, @PolyDet int fromIndex) {
         byte[] tgt    = tgtStr.value;
         byte tgtCoder = tgtStr.coder();
         int tgtCount  = tgtStr.length();
@@ -1873,7 +1876,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public @LTEqLengthOf({"this"}) @SubstringIndexFor(value={"this"}, offset={"#1.length()-1"}) int lastIndexOf(String str) {
+    public @PolyDet @LTEqLengthOf({"this"}) @SubstringIndexFor(value={"this"}, offset={"#1.length()-1"}) int lastIndexOf(@PolyDet String this, @PolyDet String str) {
         return lastIndexOf(str, length());
     }
 
@@ -1896,7 +1899,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public @LTEqLengthOf({"this"}) @SubstringIndexFor(value={"this"}, offset={"#1.length()-1"}) int lastIndexOf(String str, int fromIndex) {
+    public @PolyDet @LTEqLengthOf({"this"}) @SubstringIndexFor(value={"this"}, offset={"#1.length()-1"}) int lastIndexOf(@PolyDet String this, @PolyDet String str, @PolyDet int fromIndex) {
         return lastIndexOf(value, coder(), length(), str, fromIndex);
     }
 
@@ -1962,7 +1965,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public String substring(@IndexOrHigh({"this"}) int beginIndex) {
+    public @PolyDet String substring(@PolyDet String this, @PolyDet @IndexOrHigh({"this"}) int beginIndex) {
         if (beginIndex < 0) {
             throw new StringIndexOutOfBoundsException(beginIndex);
         }
@@ -2001,7 +2004,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public String substring(@IndexOrHigh({"this"}) int beginIndex, @IndexOrHigh({"this"}) int endIndex) {
+    public @PolyDet String substring(@PolyDet String this, @PolyDet @IndexOrHigh({"this"}) int beginIndex, @PolyDet @IndexOrHigh({"this"}) int endIndex) {
         int length = length();
         checkBoundsBeginEnd(beginIndex, endIndex, length);
         int subLen = endIndex - beginIndex;
@@ -2043,7 +2046,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public CharSequence subSequence(@IndexOrHigh({"this"}) int beginIndex, @IndexOrHigh({"this"}) int endIndex) {
+    public @PolyDet CharSequence subSequence(@PolyDet String this, @PolyDet @IndexOrHigh({"this"}) int beginIndex, @PolyDet @IndexOrHigh({"this"}) int endIndex) {
         return this.substring(beginIndex, endIndex);
     }
 
@@ -2069,8 +2072,9 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public String concat(String str) {
-        if (str.isEmpty()) {
+    public @PolyDet String concat(@PolyDet String this, @PolyDet String str) {
+        int olen = str.length();
+        if (olen == 0) {
             return this;
         }
         if (coder() == str.coder()) {
@@ -2082,7 +2086,6 @@ public final class String
             return new String(buf, coder);
         }
         int len = length();
-        int olen = str.length();
         byte[] buf = StringUTF16.newBytesFor(len + olen);
         getBytes(buf, 0, UTF16);
         str.getBytes(buf, len, UTF16);
@@ -2120,7 +2123,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public String replace(char oldChar, char newChar) {
+    public @PolyDet String replace(@PolyDet String this, @PolyDet char oldChar, @PolyDet char newChar) {
         if (oldChar != newChar) {
             String ret = isLatin1() ? StringLatin1.replace(value, oldChar, newChar)
                                     : StringUTF16.replace(value, oldChar, newChar);
@@ -2160,7 +2163,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public boolean matches(@Regex String regex) {
+    public @PolyDet boolean matches(@PolyDet String this, @PolyDet @Regex String regex) {
         return Pattern.matches(regex, this);
     }
 
@@ -2174,7 +2177,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public boolean contains(CharSequence s) {
+    public @PolyDet boolean contains(@PolyDet String this, @PolyDet CharSequence s) {
         return indexOf(s.toString()) >= 0;
     }
 
@@ -2221,7 +2224,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public String replaceFirst(@Regex String regex, String replacement) {
+    public @PolyDet String replaceFirst(@PolyDet String this, @PolyDet @Regex String regex, @PolyDet String replacement) {
         return Pattern.compile(regex).matcher(this).replaceFirst(replacement);
     }
 
@@ -2268,7 +2271,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public String replaceAll(@Regex String regex, String replacement) {
+    public @PolyDet String replaceAll(@PolyDet String this, @PolyDet @Regex String regex, @PolyDet String replacement) {
         return Pattern.compile(regex).matcher(this).replaceAll(replacement);
     }
 
@@ -2286,7 +2289,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public String replace(@GuardSatisfied CharSequence target, @GuardSatisfied CharSequence replacement) {
+    public @PolyDet String replace(@GuardSatisfied @PolyDet String this, @PolyDet @GuardSatisfied CharSequence target, @GuardSatisfied @PolyDet CharSequence replacement) {
         String tgtStr = target.toString();
         String replStr = replacement.toString();
         int j = indexOf(tgtStr);
@@ -2412,7 +2415,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public String @MinLen(1) [] split(@Regex String regex, int limit) {
+    public @PolyDet String @MinLen(1) @PolyDet [] split(@PolyDet String this, @PolyDet @Regex String regex, @PolyDet int limit) {
         /* fastpath if the regex is a
          (1)one-char String and this character is not one of the
             RegEx's meta characters ".$|()[{^?*+\\", or
@@ -2512,7 +2515,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public String @MinLen(1) [] split(@Regex String regex) {
+    public @PolyDet String @MinLen(1) @PolyDet[] split(@PolyDet String this, @PolyDet @Regex String regex) {
         return split(regex, 0);
     }
 
@@ -2543,7 +2546,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public static String join(CharSequence delimiter, CharSequence... elements) {
+    public @PolyDet static String join(@PolyDet CharSequence delimiter, @PolyDet CharSequence... elements) {
         Objects.requireNonNull(delimiter);
         Objects.requireNonNull(elements);
         // Number of elements not likely worth Arrays.stream overhead.
@@ -2590,8 +2593,8 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public static String join(CharSequence delimiter,
-            Iterable<? extends CharSequence> elements) {
+    public static @PolyDet String join(@PolyDet CharSequence delimiter,
+                @PolyDet Iterable<? extends CharSequence> elements) {
         Objects.requireNonNull(delimiter);
         Objects.requireNonNull(elements);
         StringJoiner joiner = new StringJoiner(delimiter);
@@ -2657,7 +2660,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public String toLowerCase(@GuardSatisfied Locale locale) {
+    public @PolyDet String toLowerCase(@PolyDet String this, @GuardSatisfied @PolyDet Locale locale) {
         return isLatin1() ? StringLatin1.toLowerCase(this, value, locale)
                           : StringUTF16.toLowerCase(this, value, locale);
     }
@@ -2683,7 +2686,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public String toLowerCase() {
+    public @PolyDet String toLowerCase(@PolyDet String this) {
         return toLowerCase(Locale.getDefault());
     }
 
@@ -2742,7 +2745,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public String toUpperCase(@GuardSatisfied Locale locale) {
+    public @PolyDet String toUpperCase(@PolyDet String this, @GuardSatisfied @PolyDet Locale locale) {
         return isLatin1() ? StringLatin1.toUpperCase(this, value, locale)
                           : StringUTF16.toUpperCase(this, value, locale);
     }
@@ -2768,7 +2771,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public String toUpperCase() {
+    public @PolyDet String toUpperCase(@PolyDet String this) {
         return toUpperCase(Locale.getDefault());
     }
 
@@ -2806,7 +2809,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public String trim() {
+    public @PolyDet String trim(@PolyDet String this) {
         String ret = isLatin1() ? StringLatin1.trim(value)
                                 : StringUTF16.trim(value);
         return ret == null ? this : ret;
@@ -2981,7 +2984,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public @SameLen({"this"}) @PolyRegex @PolyValue String toString(@PolyRegex @PolyValue String this) {
+    public @PolyDet @SameLen({"this"}) @PolyRegex @PolyValue String toString(@PolyDet @PolyRegex @PolyValue String this) {
         return this;
     }
 
@@ -3031,7 +3034,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public @PolySigned char @SameLen({"this"}) @PolyValue [] toCharArray(@PolyValue String this) {
+    public @PolyDet @PolySigned char @PolyDet @SameLen({"this"}) @PolyValue [] toCharArray(@PolyDet @PolyValue String this) {
         return isLatin1() ? StringLatin1.toChars(value)
                           : StringUTF16.toChars(value);
     }
@@ -3076,7 +3079,8 @@ public final class String
     @SideEffectFree
     @StaticallyExecutable
     @FormatMethod
-    public static String format(String format, @GuardSatisfied @Nullable Object @GuardSatisfied ... args) {
+    @RequiresDetToString
+    public static @PolyDet String format(@PolyDet String format, @PolyDet @GuardSatisfied @Nullable Object @GuardSatisfied ... args) {
         return new Formatter().format(format, args).toString();
     }
 
@@ -3120,7 +3124,8 @@ public final class String
     @SideEffectFree
     @StaticallyExecutable
     @FormatMethod
-    public static String format(@GuardSatisfied @Nullable Locale l, String format, @GuardSatisfied @Nullable Object @GuardSatisfied ... args) {
+    @RequiresDetToString
+    public static @PolyDet String format(@PolyDet @GuardSatisfied @Nullable Locale l, @PolyDet String format, @PolyDet @GuardSatisfied @Nullable Object @GuardSatisfied ... args) {
         return new Formatter(l).format(format, args).toString();
     }
 
@@ -3135,7 +3140,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public static String valueOf(@GuardSatisfied @Nullable Object obj) {
+    public static @PolyDet String valueOf(@PolyDet @GuardSatisfied @Nullable Object obj) {
         return (obj == null) ? "null" : obj.toString();
     }
 
@@ -3151,7 +3156,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public static @SameLen({"#1"}) @PolyValue String valueOf(char data @GuardSatisfied @PolyValue []) {
+    public static @PolyDet("up") @SameLen({"#1"}) @PolyValue String valueOf(@PolyDet char data @PolyDet @GuardSatisfied @PolyValue []) {
         return new String(data);
     }
 
@@ -3177,7 +3182,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public static String valueOf(char data @GuardSatisfied [], @IndexOrHigh({"#1"}) int offset, @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int count) {
+    public static @PolyDet("up") String valueOf(@PolyDet char data @GuardSatisfied @PolyDet [], @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int count) {
         return new String(data, offset, count);
     }
 
@@ -3196,7 +3201,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public static String copyValueOf(char data @GuardSatisfied [], @IndexOrHigh({"#1"}) int offset, @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int count) {
+    public static @PolyDet("up") String copyValueOf(@PolyDet char data @GuardSatisfied @PolyDet [], @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int count) {
         return new String(data, offset, count);
     }
 
@@ -3209,7 +3214,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public static @SameLen({"#1"}) @PolyValue String copyValueOf(char data @GuardSatisfied @PolyValue []) {
+    public static @PolyDet("up") @SameLen({"#1"}) @PolyValue String copyValueOf(@PolyDet char data @PolyDet @GuardSatisfied @PolyValue []) {
         return new String(data);
     }
 
@@ -3223,7 +3228,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public static @StringVal({"true", "false"}) String valueOf(boolean b) {
+    public static @PolyDet @StringVal({"true", "false"}) String valueOf(@PolyDet boolean b) {
         return b ? "true" : "false";
     }
 
@@ -3237,7 +3242,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public static @ArrayLen(1) String valueOf(char c) {
+    public static @PolyDet @ArrayLen(1) String valueOf(@PolyDet char c) {
         if (COMPACT_STRINGS && StringLatin1.canEncode(c)) {
             return new String(StringLatin1.toBytes(c), LATIN1);
         }
@@ -3256,7 +3261,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public static @ArrayLenRange(from = 1, to = 11) String valueOf(int i) {
+    public static @PolyDet @ArrayLenRange(from = 1, to = 11) String valueOf(@PolyDet int i) {
         return Integer.toString(i);
     }
 
@@ -3272,7 +3277,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public static @ArrayLenRange(from = 1, to = 20) String valueOf(long l) {
+    public static @PolyDet @ArrayLenRange(from = 1, to = 20) String valueOf(@PolyDet long l) {
         return Long.toString(l);
     }
 
@@ -3288,7 +3293,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public static String valueOf(float f) {
+    public static @PolyDet String valueOf(@PolyDet float f) {
         return Float.toString(f);
     }
 
@@ -3304,7 +3309,7 @@ public final class String
      */
     @SideEffectFree
     @StaticallyExecutable
-    public static String valueOf(double d) {
+    public static @PolyDet String valueOf(@PolyDet double d) {
         return Double.toString(d);
     }
 
@@ -3334,7 +3339,7 @@ public final class String
      */
     @Pure
     @StaticallyExecutable
-    public native @Interned @SameLen({"this"}) @PolySignature @PolyRegex @PolyValue String intern(@PolySignature @PolyRegex @PolyValue String this);
+    public native @PolyDet @Interned @SameLen({"this"}) @PolySignature @PolyRegex @PolyValue String intern(@PolyDet @PolySignature @PolyRegex @PolyValue String this);
 
     /**
      * Returns a string whose value is the concatenation of this

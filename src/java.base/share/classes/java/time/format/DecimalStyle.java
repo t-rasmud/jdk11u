@@ -61,6 +61,7 @@
  */
 package java.time.format;
 
+import org.checkerframework.checker.determinism.qual.NonDet;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -125,7 +126,7 @@ public final class DecimalStyle {
      *
      * @return a Set of Locales for which localization is supported
      */
-    public static Set<Locale> getAvailableLocales() {
+    public static @NonDet Set<@NonDet Locale> getAvailableLocales() {
         Locale[] l = DecimalFormatSymbols.getAvailableLocales();
         Set<Locale> locales = new HashSet<>(l.length);
         Collections.addAll(locales, l);

@@ -40,6 +40,7 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.NonDet;
 import org.checkerframework.checker.interning.qual.Interned;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -1092,7 +1093,7 @@ public final class Locale implements Cloneable, Serializable {
      *
      * @return An array of installed locales.
      */
-    public static Locale[] getAvailableLocales() {
+    public static @NonDet Locale @NonDet [] getAvailableLocales() {
         return LocaleServiceProviderPool.getAllAvailableLocales();
     }
 

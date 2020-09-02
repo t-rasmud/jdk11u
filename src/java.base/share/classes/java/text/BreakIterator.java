@@ -40,6 +40,7 @@
 
 package java.text;
 
+import org.checkerframework.checker.determinism.qual.NonDet;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.common.value.qual.IntVal;
@@ -597,7 +598,7 @@ public abstract class BreakIterator implements Cloneable
      * @return An array of locales for which localized
      *         <code>BreakIterator</code> instances are available.
      */
-    public static synchronized Locale[] getAvailableLocales()
+    public static synchronized @NonDet Locale @NonDet [] getAvailableLocales()
     {
         LocaleServiceProviderPool pool =
             LocaleServiceProviderPool.getPool(BreakIteratorProvider.class);

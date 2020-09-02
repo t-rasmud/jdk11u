@@ -25,6 +25,9 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.Det;
+import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
 
@@ -135,7 +138,7 @@ public class LinkedHashSet<E>
      * @throws     IllegalArgumentException  if the initial capacity is less
      *               than zero, or if the load factor is nonpositive
      */
-    public LinkedHashSet(int initialCapacity, float loadFactor) {
+    public @PolyDet LinkedHashSet(@PolyDet @NonNegative int initialCapacity, @PolyDet float loadFactor) {
         super(initialCapacity, loadFactor, true);
     }
 
@@ -147,7 +150,7 @@ public class LinkedHashSet<E>
      * @throws  IllegalArgumentException if the initial capacity is less
      *              than zero
      */
-    public LinkedHashSet(int initialCapacity) {
+    public @PolyDet LinkedHashSet(@PolyDet @NonNegative int initialCapacity) {
         super(initialCapacity, .75f, true);
     }
 
@@ -155,7 +158,7 @@ public class LinkedHashSet<E>
      * Constructs a new, empty linked hash set with the default initial
      * capacity (16) and load factor (0.75).
      */
-    public LinkedHashSet() {
+    public @Det LinkedHashSet() {
         super(16, .75f, true);
     }
 
@@ -169,7 +172,7 @@ public class LinkedHashSet<E>
      *           this set
      * @throws NullPointerException if the specified collection is null
      */
-    public LinkedHashSet(Collection<? extends E> c) {
+    public @PolyDet LinkedHashSet(@PolyDet Collection<? extends E> c) {
         super(Math.max(2*c.size(), 11), .75f, true);
         addAll(c);
     }
@@ -194,7 +197,7 @@ public class LinkedHashSet<E>
      * @since 1.8
      */
     @Override
-    public Spliterator<E> spliterator() {
+    public @PolyDet Spliterator<E> spliterator(@PolyDet LinkedHashSet<E> this) {
         return Spliterators.spliterator(this, Spliterator.DISTINCT | Spliterator.ORDERED);
     }
 }

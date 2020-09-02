@@ -38,6 +38,8 @@
 
 package java.text;
 
+import org.checkerframework.checker.determinism.qual.Det;
+import org.checkerframework.checker.determinism.qual.OrderNonDet;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -433,7 +435,7 @@ public abstract class Collator
      * @return An array of locales for which localized
      *         <code>Collator</code> instances are available.
      */
-    public static synchronized Locale[] getAvailableLocales() {
+    public static synchronized @Det Locale @OrderNonDet [] getAvailableLocales() {
         LocaleServiceProviderPool pool =
             LocaleServiceProviderPool.getPool(CollatorProvider.class);
         return pool.getAvailableLocales();

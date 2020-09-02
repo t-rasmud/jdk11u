@@ -25,6 +25,9 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.CheckReceiverForMutation;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
@@ -34,6 +37,7 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.framework.qual.HasQualifierParameter;
 
 import java.util.function.Consumer;
 
@@ -82,6 +86,7 @@ import java.util.function.Consumer;
 
 @CFComment("lock/nullness: Subclasses of this interface/class may opt to prohibit null elements")
 @AnnotatedFor({"lock", "nullness", "index"})
+@HasQualifierParameter(NonDet.class)
 public abstract class AbstractList<E> extends AbstractCollection<E> implements List<E> {
     /**
      * Sole constructor.  (For invocation by subclass constructors, typically
@@ -119,7 +124,8 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws IllegalArgumentException if some property of this element
      *         prevents it from being added to this list
      */
-    public boolean add(@GuardSatisfied AbstractList<E> this, E e) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean add(@GuardSatisfied @PolyDet AbstractList<@PolyDet("use") E> this, @PolyDet("use") E e) {
         add(size(), e);
         return true;
     }
@@ -130,7 +136,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
     @Pure
-    public abstract E get(@GuardSatisfied AbstractList<E> this, @IndexFor({"this"}) int index);
+    public abstract @PolyDet("up") E get(@GuardSatisfied @PolyDet AbstractList<E> this, @PolyDet @IndexFor({"this"}) int index);
 
     /**
      * {@inheritDoc}
@@ -145,7 +151,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
      */
-    public E set(@GuardSatisfied AbstractList<E> this, @IndexFor({"this"}) int index, E element) {
+    public @PolyDet("useNoOrderNonDet")  E set(@GuardSatisfied @PolyDet("noOrderNonDet") AbstractList<@PolyDet("noOrderNonDet") E> this, @PolyDet("useNoOrderNonDet")  @IndexFor({"this"}) int index, @PolyDet("useNoOrderNonDet") E element) {
         throw new UnsupportedOperationException();
     }
 
@@ -162,7 +168,8 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
      */
-    public void add(@GuardSatisfied AbstractList<E> this, @IndexOrHigh({"this"}) int index, E element) {
+    @CheckReceiverForMutation
+    public void add(@GuardSatisfied @PolyDet AbstractList<@PolyDet("use") E> this, @PolyDet("use") @IndexOrHigh({"this"}) int index, @PolyDet("use") E element) {
         throw new UnsupportedOperationException();
     }
 
@@ -176,7 +183,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws UnsupportedOperationException {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
      */
-    public E remove(@GuardSatisfied AbstractList<E> this, @IndexFor({"this"}) int index) {
+    public @PolyDet("useNoOrderNonDet") E remove(@GuardSatisfied @PolyDet("noOrderNonDet") AbstractList<@PolyDet("noOrderNonDet") E> this, @PolyDet("useNoOrderNonDet") @IndexFor({"this"}) int index) {
         throw new UnsupportedOperationException();
     }
 
@@ -195,7 +202,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws NullPointerException {@inheritDoc}
      */
     @Pure
-    public @GTENegativeOne int indexOf(@GuardSatisfied AbstractList<E> this, @GuardSatisfied Object o) {
+    public @PolyDet("up") @GTENegativeOne int indexOf(@GuardSatisfied @PolyDet AbstractList<E> this, @PolyDet @GuardSatisfied Object o) {
         ListIterator<E> it = listIterator();
         if (o==null) {
             while (it.hasNext())
@@ -222,7 +229,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws NullPointerException {@inheritDoc}
      */
     @Pure
-    public @GTENegativeOne int lastIndexOf(@GuardSatisfied AbstractList<E> this, @GuardSatisfied Object o) {
+    public @PolyDet("up") @GTENegativeOne int lastIndexOf(@GuardSatisfied @PolyDet AbstractList<E> this, @GuardSatisfied @PolyDet Object o) {
         ListIterator<E> it = listIterator(size());
         if (o==null) {
             while (it.hasPrevious())
@@ -254,7 +261,8 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws UnsupportedOperationException if the {@code clear} operation
      *         is not supported by this list
      */
-    public void clear(@GuardSatisfied AbstractList<E> this) {
+    @CheckReceiverForMutation
+    public void clear(@GuardSatisfied @PolyDet AbstractList<@PolyDet("use") E> this) {
         removeRange(0, size());
     }
 
@@ -278,7 +286,8 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
      */
-    public boolean addAll(@GuardSatisfied AbstractList<E> this, @IndexOrHigh({"this"}) int index, Collection<? extends E> c) {
+    @CheckReceiverForMutation
+    public @PolyDet("down") boolean addAll(@GuardSatisfied @PolyDet AbstractList<@PolyDet("use") E> this, @PolyDet("use") @IndexOrHigh({"this"}) int index, @PolyDet("use") Collection<? extends E> c) {
         rangeCheckForAdd(index);
         boolean modified = false;
         for (E e : c) {
@@ -311,7 +320,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @return an iterator over the elements in this list in proper sequence
      */
     @SideEffectFree
-    public Iterator<E> iterator() {
+    public @PolyDet Iterator<E> iterator(@PolyDet AbstractList<E> this) {
         return new Itr();
     }
 
@@ -323,7 +332,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      *
      * @see #listIterator(int)
      */
-    public ListIterator<E> listIterator() {
+    public @PolyDet ListIterator<E> listIterator(@PolyDet AbstractList<E> this) {
         return listIterator(0);
     }
 
@@ -350,7 +359,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      *
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    public ListIterator<E> listIterator(final @IndexOrHigh({"this"}) int index) {
+    public @PolyDet ListIterator<E> listIterator(@PolyDet AbstractList<E> this, final @PolyDet @IndexOrHigh({"this"}) int index) {
         rangeCheckForAdd(index);
 
         return new ListItr(index);
@@ -510,7 +519,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      *         {@code (fromIndex > toIndex)}
      */
     @SideEffectFree
-    public List<E> subList(@GuardSatisfied AbstractList<E> this, @IndexOrHigh({"this"}) int fromIndex, @IndexOrHigh({"this"}) int toIndex) {
+    public @PolyDet("up") List<E> subList(@GuardSatisfied @PolyDet AbstractList<E> this, @PolyDet @IndexOrHigh({"this"}) int fromIndex, @PolyDet @IndexOrHigh({"this"}) int toIndex) {
         subListRangeCheck(fromIndex, toIndex, size());
         return (this instanceof RandomAccess ?
                 new RandomAccessSubList<>(this, fromIndex, toIndex) :
@@ -552,7 +561,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @return {@code true} if the specified object is equal to this list
      */
     @Pure
-    public boolean equals(@GuardSatisfied AbstractList<E> this, @GuardSatisfied @Nullable Object o) {
+    public @PolyDet("up") boolean equals(@GuardSatisfied @PolyDet AbstractList<E> this, @PolyDet @GuardSatisfied @Nullable Object o) {
         if (o == this)
             return true;
         if (!(o instanceof List))
@@ -580,7 +589,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @return the hash code value for this list
      */
     @Pure
-    public int hashCode(@GuardSatisfied AbstractList<E> this) {
+    public @NonDet int hashCode(@GuardSatisfied @PolyDet AbstractList<E> this) {
         int hashCode = 1;
         for (E e : this)
             hashCode = 31*hashCode + (e==null ? 0 : e.hashCode());
@@ -610,7 +619,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @param fromIndex index of first element to be removed
      * @param toIndex index after last element to be removed
      */
-    protected void removeRange(@IndexOrHigh({"this"}) int fromIndex, @IndexOrHigh({"this"}) int toIndex) {
+    protected void removeRange(@PolyDet("noOrderNonDet") AbstractList<@PolyDet("noOrderNonDet") E> this, @PolyDet("useNoOrderNonDet") @IndexOrHigh({"this"}) int fromIndex, @PolyDet("useNoOrderNonDet") @IndexOrHigh({"this"}) int toIndex) {
         ListIterator<E> it = listIterator(fromIndex);
         for (int i=0, n=toIndex-fromIndex; i<n; i++) {
             it.next();

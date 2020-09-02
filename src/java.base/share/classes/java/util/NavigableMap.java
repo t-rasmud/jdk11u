@@ -41,6 +41,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.framework.qual.HasQualifierParameter;
 
 /**
  * A {@link SortedMap} extended with navigation methods returning the
@@ -103,6 +106,7 @@ import org.checkerframework.framework.qual.CFComment;
  */
 @CFComment({"lock/nullness: Subclasses of this interface/class may opt to prohibit null elements"})
 @AnnotatedFor({"lock", "nullness"})
+@HasQualifierParameter(NonDet.class)
 public interface NavigableMap<K,V> extends SortedMap<K,V> {
     /**
      * Returns a key-value mapping associated with the greatest key
@@ -131,7 +135,7 @@ public interface NavigableMap<K,V> extends SortedMap<K,V> {
      * @throws NullPointerException if the specified key is null
      *         and this map does not permit null keys
      */
-    @Nullable K lowerKey(K key);
+    @PolyDet("down") @Nullable K lowerKey(@PolyDet NavigableMap<K, V> this, K key);
 
     /**
      * Returns a key-value mapping associated with the greatest key
@@ -160,7 +164,7 @@ public interface NavigableMap<K,V> extends SortedMap<K,V> {
      * @throws NullPointerException if the specified key is null
      *         and this map does not permit null keys
      */
-    @Nullable K floorKey(K key);
+    @PolyDet("down") @Nullable K floorKey(@PolyDet NavigableMap<K, V> this, K key);
 
     /**
      * Returns a key-value mapping associated with the least key
@@ -189,7 +193,7 @@ public interface NavigableMap<K,V> extends SortedMap<K,V> {
      * @throws NullPointerException if the specified key is null
      *         and this map does not permit null keys
      */
-    @Nullable K ceilingKey(K key);
+    @PolyDet("down") @Nullable K ceilingKey(@PolyDet NavigableMap<K, V> this, K key);
 
     /**
      * Returns a key-value mapping associated with the least key
@@ -218,7 +222,7 @@ public interface NavigableMap<K,V> extends SortedMap<K,V> {
      * @throws NullPointerException if the specified key is null
      *         and this map does not permit null keys
      */
-    @Nullable K higherKey(K key);
+    @PolyDet("down") @Nullable K higherKey(@PolyDet NavigableMap<K, V> this, K key);
 
     /**
      * Returns a key-value mapping associated with the least
@@ -245,7 +249,7 @@ public interface NavigableMap<K,V> extends SortedMap<K,V> {
      * @return the removed first entry of this map,
      *         or {@code null} if this map is empty
      */
-    Map.@Nullable Entry<K,V> pollFirstEntry(@GuardSatisfied NavigableMap<K, V> this);
+    Map.@PolyDet("down") @Nullable Entry<K,V> pollFirstEntry(@PolyDet @GuardSatisfied NavigableMap<K, V> this);
 
     /**
      * Removes and returns a key-value mapping associated with
@@ -254,7 +258,7 @@ public interface NavigableMap<K,V> extends SortedMap<K,V> {
      * @return the removed last entry of this map,
      *         or {@code null} if this map is empty
      */
-    Map.@Nullable Entry<K,V> pollLastEntry(@GuardSatisfied NavigableMap<K, V> this);
+    Map.@PolyDet("down") @Nullable Entry<K,V> pollLastEntry(@PolyDet @GuardSatisfied NavigableMap<K, V> this);
 
     /**
      * Returns a reverse order view of the mappings contained in this map.
