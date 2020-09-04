@@ -25,6 +25,9 @@
 
 package java.util;
 
+import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.OrderNonDet;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.EnsuresKeyFor;
@@ -220,7 +223,7 @@ public class IdentityHashMap<K,V>
      * Constructs a new, empty identity hash map with a default expected
      * maximum size (21).
      */
-    public IdentityHashMap() {
+    public @OrderNonDet IdentityHashMap() {
         init(DEFAULT_CAPACITY);
     }
 
@@ -233,7 +236,7 @@ public class IdentityHashMap<K,V>
      * @param expectedMaxSize the expected maximum size of the map
      * @throws IllegalArgumentException if {@code expectedMaxSize} is negative
      */
-    public IdentityHashMap(@NonNegative int expectedMaxSize) {
+    public @OrderNonDet IdentityHashMap(@NonDet @NonNegative int expectedMaxSize) {
         if (expectedMaxSize < 0)
             throw new IllegalArgumentException("expectedMaxSize is negative: "
                                                + expectedMaxSize);
@@ -275,7 +278,7 @@ public class IdentityHashMap<K,V>
      * @param m the map whose mappings are to be placed into this map
      * @throws NullPointerException if the specified map is null
      */
-    public IdentityHashMap(Map<? extends K, ? extends V> m) {
+    public @PolyDet("upDet") IdentityHashMap(@PolyDet Map<? extends K, ? extends V> m) {
         // Allow for a bit of growth
         this((int) ((1 + m.size()) * 1.1));
         putAll(m);
@@ -287,7 +290,7 @@ public class IdentityHashMap<K,V>
      * @return the number of key-value mappings in this map
      */
     @Pure
-    public @NonNegative int size(@GuardSatisfied IdentityHashMap<K, V> this) {
+    public @PolyDet("down") @NonNegative int size(@PolyDet @GuardSatisfied IdentityHashMap<K, V> this) {
         return size;
     }
 
@@ -299,7 +302,7 @@ public class IdentityHashMap<K,V>
      *         mappings
      */
     @Pure
-    public boolean isEmpty(@GuardSatisfied IdentityHashMap<K, V> this) {
+    public @PolyDet("down") boolean isEmpty(@PolyDet @GuardSatisfied IdentityHashMap<K, V> this) {
         return size == 0;
     }
 
@@ -338,7 +341,7 @@ public class IdentityHashMap<K,V>
      */
     @Pure
     @SuppressWarnings("unchecked")
-    public @Nullable V get(@GuardSatisfied IdentityHashMap<K, V> this, @GuardSatisfied @Nullable Object key) {
+    public @PolyDet @Nullable V get(@PolyDet @GuardSatisfied IdentityHashMap<K, V> this, @PolyDet @GuardSatisfied @Nullable Object key) {
         Object k = maskNull(key);
         Object[] tab = table;
         int len = tab.length;
@@ -364,7 +367,7 @@ public class IdentityHashMap<K,V>
      */
     @EnsuresKeyForIf(expression={"#1"}, result=true, map={"this"})
     @Pure
-    public boolean containsKey(@GuardSatisfied IdentityHashMap<K, V> this, @GuardSatisfied @Nullable Object key) {
+    public @PolyDet("down") boolean containsKey(@PolyDet @GuardSatisfied IdentityHashMap<K, V> this, @PolyDet @GuardSatisfied @Nullable Object key) {
         Object k = maskNull(key);
         Object[] tab = table;
         int len = tab.length;
@@ -389,7 +392,7 @@ public class IdentityHashMap<K,V>
      * @see     #containsKey(Object)
      */
     @Pure
-    public boolean containsValue(@GuardSatisfied IdentityHashMap<K, V> this, @GuardSatisfied @Nullable Object value) {
+    public @PolyDet boolean containsValue(@PolyDet @GuardSatisfied IdentityHashMap<K, V> this, @PolyDet @GuardSatisfied @Nullable Object value) {
         Object[] tab = table;
         for (int i = 1; i < tab.length; i += 2)
             if (tab[i] == value && tab[i - 1] != null)
@@ -437,7 +440,7 @@ public class IdentityHashMap<K,V>
      * @see     #containsKey(Object)
      */
     @EnsuresKeyFor(value={"#1"}, map={"this"})
-    public @Nullable V put(@GuardSatisfied IdentityHashMap<K, V> this, K key, V value) {
+    public @Nullable V put(@PolyDet @GuardSatisfied IdentityHashMap<K, V> this, @PolyDet("use") K key, @PolyDet("use") V value) {
         final Object k = maskNull(key);
 
         retryAfterResize: for (;;) {
@@ -516,7 +519,7 @@ public class IdentityHashMap<K,V>
      * @param m mappings to be stored in this map
      * @throws NullPointerException if the specified map is null
      */
-    public void putAll(@GuardSatisfied IdentityHashMap<K, V> this, Map<? extends K, ? extends V> m) {
+    public void putAll(@GuardSatisfied @PolyDet IdentityHashMap<K, V> this, @PolyDet("use") Map<? extends K, ? extends V> m) {
         int n = m.size();
         if (n == 0)
             return;
@@ -536,7 +539,7 @@ public class IdentityHashMap<K,V>
      *         (A {@code null} return can also indicate that the map
      *         previously associated {@code null} with {@code key}.)
      */
-    public @Nullable V remove(@GuardSatisfied IdentityHashMap<K, V> this, @Nullable Object key) {
+    public @PolyDet("down") @Nullable V remove(@PolyDet @GuardSatisfied IdentityHashMap<K, V> this, @PolyDet @Nullable Object key) {
         Object k = maskNull(key);
         Object[] tab = table;
         int len = tab.length;
@@ -632,7 +635,7 @@ public class IdentityHashMap<K,V>
      * Removes all of the mappings from this map.
      * The map will be empty after this call returns.
      */
-    public void clear(@GuardSatisfied IdentityHashMap<K, V> this) {
+    public void clear(@PolyDet @GuardSatisfied IdentityHashMap<K, V> this) {
         modCount++;
         Object[] tab = table;
         for (int i = 0; i < tab.length; i++)
@@ -658,7 +661,7 @@ public class IdentityHashMap<K,V>
      * @see Object#equals(Object)
      */
     @Pure
-    public boolean equals(@GuardSatisfied @Nullable IdentityHashMap<K, V> this, @GuardSatisfied Object o) {
+    public @PolyDet("up") boolean equals(@PolyDet @GuardSatisfied @Nullable IdentityHashMap<K, V> this, @PolyDet("upDet") @GuardSatisfied Object o) {
         if (o == this) {
             return true;
         } else if (o instanceof IdentityHashMap) {
@@ -701,7 +704,7 @@ public class IdentityHashMap<K,V>
      * @see #equals(Object)
      */
     @Pure
-    public int hashCode(@GuardSatisfied IdentityHashMap<K, V> this) {
+    public @NonDet int hashCode(@PolyDet @GuardSatisfied IdentityHashMap<K, V> this) {
         int result = 0;
         Object[] tab = table;
         for (int i = 0; i < tab.length; i +=2) {

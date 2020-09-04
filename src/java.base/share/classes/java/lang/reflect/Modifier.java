@@ -25,6 +25,7 @@
 
 package java.lang.reflect;
 
+import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.interning.qual.UsesObjectEquals;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -105,7 +106,7 @@ public @UsesObjectEquals class Modifier {
      * @return {@code true} if {@code mod} includes the
      * {@code static} modifier; {@code false} otherwise.
      */
-    public static boolean isStatic(int mod) {
+    public static @PolyDet boolean isStatic(@PolyDet int mod) {
         return (mod & STATIC) != 0;
     }
 

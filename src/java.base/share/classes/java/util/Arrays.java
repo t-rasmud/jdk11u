@@ -5695,7 +5695,7 @@ public class Arrays {
      * @return a {@code Stream} for the array
      * @since 1.8
      */
-    public static <T> Stream<T> stream(T[] array) {
+    public static <T extends @PolyDet("use") Object> Stream<T> stream(T @PolyDet[] array) {
         return stream(array, 0, array.length);
     }
 
