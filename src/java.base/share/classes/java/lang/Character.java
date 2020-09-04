@@ -25,6 +25,7 @@
 
 package java.lang;
 
+import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
@@ -8095,7 +8096,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isValidCodePoint(int codePoint) {
+    public static @PolyDet boolean isValidCodePoint(@PolyDet int codePoint) {
         // Optimized form of:
         //     codePoint >= MIN_CODE_POINT && codePoint <= MAX_CODE_POINT
         int plane = codePoint >>> 16;
@@ -8115,7 +8116,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isBmpCodePoint(int codePoint) {
+    public static @PolyDet boolean isBmpCodePoint(@PolyDet int codePoint) {
         return codePoint >>> 16 == 0;
         // Optimized form of:
         //     codePoint >= MIN_VALUE && codePoint <= MAX_VALUE
@@ -8136,7 +8137,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isSupplementaryCodePoint(int codePoint) {
+    public static @PolyDet boolean isSupplementaryCodePoint(@PolyDet int codePoint) {
         return codePoint >= MIN_SUPPLEMENTARY_CODE_POINT
             && codePoint <  MAX_CODE_POINT + 1;
     }
@@ -8163,7 +8164,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isHighSurrogate(char ch) {
+    public static @PolyDet boolean isHighSurrogate(@PolyDet char ch) {
         // Help VM constant-fold; MAX_HIGH_SURROGATE + 1 == MIN_LOW_SURROGATE
         return ch >= MIN_HIGH_SURROGATE && ch < (MAX_HIGH_SURROGATE + 1);
     }
@@ -8189,7 +8190,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isLowSurrogate(char ch) {
+    public static @PolyDet boolean isLowSurrogate(@PolyDet char ch) {
         return ch >= MIN_LOW_SURROGATE && ch < (MAX_LOW_SURROGATE + 1);
     }
 
@@ -8215,7 +8216,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isSurrogate(char ch) {
+    public static @PolyDet boolean isSurrogate(@PolyDet char ch) {
         return ch >= MIN_SURROGATE && ch < (MAX_SURROGATE + 1);
     }
 
@@ -8239,7 +8240,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isSurrogatePair(char high, char low) {
+    public static @PolyDet boolean isSurrogatePair(@PolyDet char high, @PolyDet char low) {
         return isHighSurrogate(high) && isLowSurrogate(low);
     }
 
@@ -8905,7 +8906,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isLowerCase(char ch) {
+    public static @PolyDet boolean isLowerCase(@PolyDet char ch) {
         return isLowerCase((int)ch);
     }
 
@@ -8939,7 +8940,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isLowerCase(int codePoint) {
+    public static @PolyDet boolean isLowerCase(@PolyDet int codePoint) {
         return getType(codePoint) == Character.LOWERCASE_LETTER ||
                CharacterData.of(codePoint).isOtherLowercase(codePoint);
     }
@@ -8977,7 +8978,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isUpperCase(char ch) {
+    public static @PolyDet boolean isUpperCase(@PolyDet char ch) {
         return isUpperCase((int)ch);
     }
 
@@ -9009,7 +9010,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isUpperCase(int codePoint) {
+    public static @PolyDet boolean isUpperCase(@PolyDet int codePoint) {
         return getType(codePoint) == Character.UPPERCASE_LETTER ||
                CharacterData.of(codePoint).isOtherUppercase(codePoint);
     }
@@ -9053,7 +9054,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isTitleCase(char ch) {
+    public static @PolyDet boolean isTitleCase(@PolyDet char ch) {
         return isTitleCase((int)ch);
     }
 
@@ -9091,7 +9092,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isTitleCase(int codePoint) {
+    public static @PolyDet boolean isTitleCase(@PolyDet int codePoint) {
         return getType(codePoint) == Character.TITLECASE_LETTER;
     }
 
@@ -9132,7 +9133,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isDigit(char ch) {
+    public static @PolyDet boolean isDigit(@PolyDet char ch) {
         return isDigit((int)ch);
     }
 
@@ -9168,7 +9169,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isDigit(int codePoint) {
+    public static @PolyDet boolean isDigit(@PolyDet int codePoint) {
         return getType(codePoint) == Character.DECIMAL_DIGIT_NUMBER;
     }
 
@@ -9199,7 +9200,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isDefined(char ch) {
+    public static @PolyDet boolean isDefined(@PolyDet char ch) {
         return isDefined((int)ch);
     }
 
@@ -9225,7 +9226,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isDefined(int codePoint) {
+    public static @PolyDet boolean isDefined(@PolyDet int codePoint) {
         return getType(codePoint) != Character.UNASSIGNED;
     }
 
@@ -9266,7 +9267,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isLetter(char ch) {
+    public static @PolyDet boolean isLetter(@PolyDet char ch) {
         return isLetter((int)ch);
     }
 
@@ -9301,7 +9302,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isLetter(int codePoint) {
+    public static @PolyDet boolean isLetter(@PolyDet int codePoint) {
         return ((((1 << Character.UPPERCASE_LETTER) |
             (1 << Character.LOWERCASE_LETTER) |
             (1 << Character.TITLECASE_LETTER) |
@@ -9336,7 +9337,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isLetterOrDigit(char ch) {
+    public static @PolyDet boolean isLetterOrDigit(@PolyDet char ch) {
         return isLetterOrDigit((int)ch);
     }
 
@@ -9359,7 +9360,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isLetterOrDigit(int codePoint) {
+    public static @PolyDet boolean isLetterOrDigit(@PolyDet int codePoint) {
         return ((((1 << Character.UPPERCASE_LETTER) |
             (1 << Character.LOWERCASE_LETTER) |
             (1 << Character.TITLECASE_LETTER) |
@@ -9397,7 +9398,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
     @Pure
     @StaticallyExecutable
     @Deprecated(since="1.1")
-    public static boolean isJavaLetter(char ch) {
+    public static @PolyDet boolean isJavaLetter(@PolyDet char ch) {
         return isJavaIdentifierStart(ch);
     }
 
@@ -9435,7 +9436,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
     @Pure
     @StaticallyExecutable
     @Deprecated(since="1.1")
-    public static boolean isJavaLetterOrDigit(char ch) {
+    public static @PolyDet boolean isJavaLetterOrDigit(@PolyDet char ch) {
         return isJavaIdentifierPart(ch);
     }
 
@@ -9463,7 +9464,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isAlphabetic(int codePoint) {
+    public static @PolyDet boolean isAlphabetic(@PolyDet int codePoint) {
         return (((((1 << Character.UPPERCASE_LETTER) |
             (1 << Character.LOWERCASE_LETTER) |
             (1 << Character.TITLECASE_LETTER) |
@@ -9485,7 +9486,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isIdeographic(int codePoint) {
+    public static @PolyDet boolean isIdeographic(@PolyDet int codePoint) {
         return CharacterData.of(codePoint).isIdeographic(codePoint);
     }
 
@@ -9518,7 +9519,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isJavaIdentifierStart(char ch) {
+    public static @PolyDet boolean isJavaIdentifierStart(@PolyDet char ch) {
         return isJavaIdentifierStart((int)ch);
     }
 
@@ -9549,7 +9550,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isJavaIdentifierStart(int codePoint) {
+    public static @PolyDet boolean isJavaIdentifierStart(@PolyDet int codePoint) {
         return CharacterData.of(codePoint).isJavaIdentifierStart(codePoint);
     }
 
@@ -9588,7 +9589,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isJavaIdentifierPart(char ch) {
+    public static @PolyDet boolean isJavaIdentifierPart(@PolyDet char ch) {
         return isJavaIdentifierPart((int)ch);
     }
 
@@ -9623,7 +9624,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isJavaIdentifierPart(int codePoint) {
+    public static @PolyDet boolean isJavaIdentifierPart(@PolyDet int codePoint) {
         return CharacterData.of(codePoint).isJavaIdentifierPart(codePoint);
     }
 
@@ -9654,7 +9655,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isUnicodeIdentifierStart(char ch) {
+    public static @PolyDet boolean isUnicodeIdentifierStart(@PolyDet char ch) {
         return isUnicodeIdentifierStart((int)ch);
     }
 
@@ -9680,7 +9681,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isUnicodeIdentifierStart(int codePoint) {
+    public static @PolyDet boolean isUnicodeIdentifierStart(@PolyDet int codePoint) {
         return CharacterData.of(codePoint).isUnicodeIdentifierStart(codePoint);
     }
 
@@ -9717,7 +9718,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isUnicodeIdentifierPart(char ch) {
+    public static @PolyDet boolean isUnicodeIdentifierPart(@PolyDet char ch) {
         return isUnicodeIdentifierPart((int)ch);
     }
 
@@ -9748,7 +9749,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isUnicodeIdentifierPart(int codePoint) {
+    public static @PolyDet boolean isUnicodeIdentifierPart(@PolyDet int codePoint) {
         return CharacterData.of(codePoint).isUnicodeIdentifierPart(codePoint);
     }
 
@@ -9785,7 +9786,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isIdentifierIgnorable(char ch) {
+    public static @PolyDet boolean isIdentifierIgnorable(@PolyDet char ch) {
         return isIdentifierIgnorable((int)ch);
     }
 
@@ -9817,7 +9818,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isIdentifierIgnorable(int codePoint) {
+    public static @PolyDet boolean isIdentifierIgnorable(@PolyDet int codePoint) {
         return CharacterData.of(codePoint).isIdentifierIgnorable(codePoint);
     }
 
@@ -10234,7 +10235,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
     @Pure
     @StaticallyExecutable
     @Deprecated(since="1.1")
-    public static boolean isSpace(char ch) {
+    public static @PolyDet boolean isSpace(@PolyDet char ch) {
         return (ch <= 0x0020) &&
             (((((1L << 0x0009) |
             (1L << 0x000A) |
@@ -10269,7 +10270,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isSpaceChar(char ch) {
+    public static @PolyDet boolean isSpaceChar(@PolyDet char ch) {
         return isSpaceChar((int)ch);
     }
 
@@ -10294,7 +10295,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isSpaceChar(int codePoint) {
+    public static @PolyDet boolean isSpaceChar(@PolyDet int codePoint) {
         return ((((1 << Character.SPACE_SEPARATOR) |
                   (1 << Character.LINE_SEPARATOR) |
                   (1 << Character.PARAGRAPH_SEPARATOR)) >> getType(codePoint)) & 1)
@@ -10334,7 +10335,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isWhitespace(char ch) {
+    public static @PolyDet boolean isWhitespace(@PolyDet char ch) {
         return isWhitespace((int)ch);
     }
 
@@ -10367,7 +10368,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isWhitespace(int codePoint) {
+    public static @PolyDet boolean isWhitespace(@PolyDet int codePoint) {
         return CharacterData.of(codePoint).isWhitespace(codePoint);
     }
 
@@ -10393,7 +10394,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isISOControl(char ch) {
+    public static @PolyDet boolean isISOControl(@PolyDet char ch) {
         return isISOControl((int)ch);
     }
 
@@ -10413,7 +10414,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isISOControl(int codePoint) {
+    public static @PolyDet boolean isISOControl(@PolyDet int codePoint) {
         // Optimized form of:
         //     (codePoint >= 0x00 && codePoint <= 0x1F) ||
         //     (codePoint >= 0x7F && codePoint <= 0x9F);
@@ -10664,7 +10665,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isMirrored(char ch) {
+    public static @PolyDet boolean isMirrored(@PolyDet char ch) {
         return isMirrored((int)ch);
     }
 
@@ -10685,7 +10686,7 @@ class Character implements java.io.Serializable, Comparable<Character> {
      */
     @Pure
     @StaticallyExecutable
-    public static boolean isMirrored(int codePoint) {
+    public static @PolyDet boolean isMirrored(@PolyDet int codePoint) {
         return CharacterData.of(codePoint).isMirrored(codePoint);
     }
 

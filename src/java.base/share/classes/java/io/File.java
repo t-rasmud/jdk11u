@@ -263,7 +263,7 @@ public class File
     /**
      * Internal constructor for already-normalized pathname strings.
      */
-    private File(String pathname, int prefixLength) {
+    private @PolyDet File(@PolyDet String pathname, @PolyDet int prefixLength) {
         this.path = pathname;
         this.prefixLength = prefixLength;
     }
@@ -273,7 +273,7 @@ public class File
      * The parameter order is used to disambiguate this method from the
      * public(File, String) constructor.
      */
-    private File(String child, File parent) {
+    private @PolyDet File(@PolyDet String child, @PolyDet File parent) {
         assert parent.path != null;
         assert (!parent.path.equals(""));
         this.path = fs.resolve(parent.path, child);
@@ -289,7 +289,7 @@ public class File
      * @throws  NullPointerException
      *          If the <code>pathname</code> argument is <code>null</code>
      */
-    public File(String pathname) {
+    public @PolyDet File(@PolyDet String pathname) {
         if (pathname == null) {
             throw new NullPointerException();
         }
@@ -329,7 +329,7 @@ public class File
      * @throws  NullPointerException
      *          If <code>child</code> is <code>null</code>
      */
-    public File(@Nullable String parent, String child) {
+    public @PolyDet File(@PolyDet @Nullable String parent, @PolyDet String child) {
         if (child == null) {
             throw new NullPointerException();
         }
@@ -372,7 +372,7 @@ public class File
      * @throws  NullPointerException
      *          If <code>child</code> is <code>null</code>
      */
-    public File(@Nullable File parent, String child) {
+    public @PolyDet File(@PolyDet @Nullable File parent, @PolyDet String child) {
         if (child == null) {
             throw new NullPointerException();
         }
@@ -427,7 +427,7 @@ public class File
      * @see java.net.URI
      * @since 1.4
      */
-    public File(URI uri) {
+    public @PolyDet File(@PolyDet URI uri) {
 
         // Check our many preconditions
         if (!uri.isAbsolute())
@@ -573,7 +573,7 @@ public class File
      *
      * @see     java.io.File#isAbsolute()
      */
-    public String getAbsolutePath() {
+    public @PolyDet String getAbsolutePath(@PolyDet File this) {
         return fs.resolve(this);
     }
 
@@ -748,7 +748,7 @@ public class File
      * @see java.net.URI#toURL()
      * @since 1.4
      */
-    public URI toURI() {
+    public @PolyDet URI toURI(@PolyDet File this) {
         try {
             File f = getAbsoluteFile();
             String sp = slashify(f.getPath(), f.isDirectory());
@@ -779,7 +779,7 @@ public class File
      *          java.lang.SecurityManager#checkRead(java.lang.String)}
      *          method denies read access to the file
      */
-    public boolean canRead() {
+    public @PolyDet boolean canRead(@PolyDet File this) {
         SecurityManager security = System.getSecurityManager();
         if (security != null) {
             security.checkRead(path);
@@ -830,7 +830,7 @@ public class File
      *          java.lang.SecurityManager#checkRead(java.lang.String)}
      *          method denies read access to the file or directory
      */
-    public boolean exists() {
+    public @NonDet boolean exists(@PolyDet File this) {
         SecurityManager security = System.getSecurityManager();
         if (security != null) {
             security.checkRead(path);
@@ -861,7 +861,7 @@ public class File
      *          method denies read access to the file
      */
     @Pure
-    public boolean isDirectory(@GuardSatisfied File this) {
+    public @PolyDet boolean isDirectory(@GuardSatisfied @PolyDet File this) {
         SecurityManager security = System.getSecurityManager();
         if (security != null) {
             security.checkRead(path);
@@ -895,7 +895,7 @@ public class File
      *          method denies read access to the file
      */
     @Pure
-    public boolean isFile(@GuardSatisfied File this) {
+    public @PolyDet boolean isFile(@GuardSatisfied @PolyDet File this) {
         SecurityManager security = System.getSecurityManager();
         if (security != null) {
             security.checkRead(path);
@@ -1239,7 +1239,7 @@ public class File
      *
      * @since  1.2
      */
-    public @NonDet File @Nullable @NonDet [] listFiles(@PolyDet File this) {
+    public @PolyDet File @Nullable @PolyDet("upDet") [] listFiles(@PolyDet File this) {
         @NonDet String @NonDet[] ss = list();
         if (ss == null) return null;
         int n = ss.length;

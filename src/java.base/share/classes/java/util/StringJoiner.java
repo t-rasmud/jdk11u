@@ -25,7 +25,10 @@
 package java.util;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.NonDet;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.framework.qual.HasQualifierParameter;
 
 /**
  * {@code StringJoiner} is used to construct a sequence of characters separated
@@ -65,7 +68,8 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  * @see java.util.stream.Collectors#joining(CharSequence, CharSequence, CharSequence)
  * @since  1.8
 */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "determinism"})
+@HasQualifierParameter(NonDet.class)
 public final class StringJoiner {
     private final String prefix;
     private final String delimiter;
@@ -100,7 +104,7 @@ public final class StringJoiner {
      *         element added to the {@code StringJoiner} value
      * @throws NullPointerException if {@code delimiter} is {@code null}
      */
-    public StringJoiner(CharSequence delimiter) {
+    public @PolyDet StringJoiner(@PolyDet CharSequence delimiter) {
         this(delimiter, "", "");
     }
 
@@ -119,9 +123,9 @@ public final class StringJoiner {
      * @throws NullPointerException if {@code prefix}, {@code delimiter}, or
      *         {@code suffix} is {@code null}
      */
-    public StringJoiner(CharSequence delimiter,
-                        CharSequence prefix,
-                        CharSequence suffix) {
+    public @PolyDet StringJoiner(@PolyDet CharSequence delimiter,
+                        @PolyDet CharSequence prefix,
+                        @PolyDet CharSequence suffix) {
         Objects.requireNonNull(prefix, "The prefix must not be null");
         Objects.requireNonNull(delimiter, "The delimiter must not be null");
         Objects.requireNonNull(suffix, "The suffix must not be null");
@@ -145,7 +149,7 @@ public final class StringJoiner {
      * @throws NullPointerException when the {@code emptyValue} parameter is
      *         {@code null}
      */
-    public StringJoiner setEmptyValue(CharSequence emptyValue) {
+    public @PolyDet StringJoiner setEmptyValue(@PolyDet StringJoiner this, @PolyDet CharSequence emptyValue) {
         this.emptyValue = Objects.requireNonNull(emptyValue,
             "The empty value must not be null").toString();
         return this;
@@ -166,7 +170,7 @@ public final class StringJoiner {
      * @return the string representation of this {@code StringJoiner}
      */
     @Override
-    public String toString() {
+    public @PolyDet String toString(@PolyDet StringJoiner this) {
         final String[] elts = this.elts;
         if (elts == null && emptyValue != null) {
             return emptyValue;
@@ -199,7 +203,7 @@ public final class StringJoiner {
      * @param  newElement The element to add
      * @return a reference to this {@code StringJoiner}
      */
-    public StringJoiner add(@Nullable CharSequence newElement) {
+    public @PolyDet StringJoiner add(@PolyDet StringJoiner this, @PolyDet @Nullable CharSequence newElement) {
         final String elt = String.valueOf(newElement);
         if (elts == null) {
             elts = new String[8];
@@ -232,7 +236,7 @@ public final class StringJoiner {
      * @throws NullPointerException if the other {@code StringJoiner} is null
      * @return This {@code StringJoiner}
      */
-    public StringJoiner merge(StringJoiner other) {
+    public @PolyDet StringJoiner merge(@PolyDet StringJoiner this, @PolyDet StringJoiner other) {
         Objects.requireNonNull(other);
         if (other.elts == null) {
             return this;
@@ -265,7 +269,7 @@ public final class StringJoiner {
      *
      * @return the length of the current value of {@code StringJoiner}
      */
-    public int length() {
+    public @PolyDet int length(@PolyDet StringJoiner this) {
         return (size == 0 && emptyValue != null) ? emptyValue.length() :
             len + prefix.length() + suffix.length();
     }

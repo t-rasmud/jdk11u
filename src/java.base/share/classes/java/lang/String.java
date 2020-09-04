@@ -3080,7 +3080,7 @@ public final class String
     @StaticallyExecutable
     @FormatMethod
     @RequiresDetToString
-    public static @PolyDet String format(@PolyDet String format, @PolyDet @GuardSatisfied @Nullable Object @GuardSatisfied ... args) {
+    public static @PolyDet String format(@PolyDet String format, @PolyDet @GuardSatisfied @Nullable Object @GuardSatisfied @PolyDet... args) {
         return new Formatter().format(format, args).toString();
     }
 

@@ -34,6 +34,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.framework.qual.HasQualifierParameter;
+import org.checkerframework.checker.determinism.qual.Det;
+import org.checkerframework.checker.determinism.qual.NonDet;
+import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.determinism.qual.RequiresDetToString;
 
 import jdk.internal.HotSpotIntrinsicCandidate;
 
@@ -92,7 +97,8 @@ import jdk.internal.HotSpotIntrinsicCandidate;
  * @see         java.lang.String
  * @since       1.5
  */
-@AnnotatedFor({"lock", "nullness", "index"})
+@AnnotatedFor({"lock", "nullness", "index", "determinism"})
+@HasQualifierParameter(NonDet.class)
 public final class StringBuilder
     extends AbstractStringBuilder
     implements java.io.Serializable, Comparable<StringBuilder>, CharSequence
@@ -106,7 +112,7 @@ public final class StringBuilder
      * initial capacity of 16 characters.
      */
     @HotSpotIntrinsicCandidate
-    public StringBuilder() {
+    public @Det StringBuilder() {
         super(16);
     }
 
@@ -119,7 +125,7 @@ public final class StringBuilder
      *               argument is less than {@code 0}.
      */
     @HotSpotIntrinsicCandidate
-    public StringBuilder(@NonNegative int capacity) {
+    public @PolyDet StringBuilder(@NonDet @NonNegative int capacity) {
         super(capacity);
     }
 
@@ -131,7 +137,7 @@ public final class StringBuilder
      * @param   str   the initial contents of the buffer.
      */
     @HotSpotIntrinsicCandidate
-    public StringBuilder(String str) {
+    public @PolyDet StringBuilder(@PolyDet String str) {
         super(str.length() + 16);
         append(str);
     }
@@ -144,7 +150,7 @@ public final class StringBuilder
      *
      * @param      seq   the sequence to copy.
      */
-    public StringBuilder(CharSequence seq) {
+    public @PolyDet StringBuilder(@PolyDet CharSequence seq) {
         this(seq.length() + 16);
         append(seq);
     }
@@ -170,18 +176,19 @@ public final class StringBuilder
      * @since 11
      */
     @Override
-    public int compareTo(StringBuilder another) {
+    public @PolyDet int compareTo(@PolyDet StringBuilder this, @PolyDet StringBuilder another) {
         return super.compareTo(another);
     }
 
     @Override
-    public StringBuilder append(@Nullable Object obj) {
+    @RequiresDetToString
+    public @PolyDet StringBuilder append(@PolyDet StringBuilder this, @PolyDet @Nullable Object obj) {
         return append(String.valueOf(obj));
     }
 
     @Override
     @HotSpotIntrinsicCandidate
-    public StringBuilder append(@Nullable String str) {
+    public @PolyDet StringBuilder append(@PolyDet StringBuilder this, @PolyDet @Nullable String str) {
         super.append(str);
         return this;
     }
@@ -205,13 +212,13 @@ public final class StringBuilder
      * @param   sb   the {@code StringBuffer} to append.
      * @return  a reference to this object.
      */
-    public StringBuilder append(@Nullable StringBuffer sb) {
+    public @PolyDet StringBuilder append(@PolyDet StringBuilder this, @PolyDet @Nullable StringBuffer sb) {
         super.append(sb);
         return this;
     }
 
     @Override
-    public StringBuilder append(@Nullable CharSequence s) {
+    public @PolyDet StringBuilder append(@PolyDet StringBuilder this, @PolyDet @Nullable CharSequence s) {
         super.append(s);
         return this;
     }
@@ -220,13 +227,13 @@ public final class StringBuilder
      * @throws     IndexOutOfBoundsException {@inheritDoc}
      */
     @Override
-    public StringBuilder append(@Nullable CharSequence s, @IndexOrHigh({"#1"}) int start, @IndexOrHigh({"#1"}) int end) {
+    public @PolyDet StringBuilder append(@PolyDet StringBuilder this, @PolyDet @Nullable CharSequence s, @PolyDet @IndexOrHigh({"#1"}) int start, @PolyDet @IndexOrHigh({"#1"}) int end) {
         super.append(s, start, end);
         return this;
     }
 
     @Override
-    public StringBuilder append(char[] str) {
+    public @PolyDet StringBuilder append(@PolyDet StringBuilder this, @PolyDet char @PolyDet [] str) {
         super.append(str);
         return this;
     }
@@ -235,45 +242,45 @@ public final class StringBuilder
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
     @Override
-    public StringBuilder append(char[] str, @IndexOrHigh({"#1"}) int offset, @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int len) {
+    public @PolyDet StringBuilder append(@PolyDet StringBuilder this, @PolyDet char @PolyDet [] str, @PolyDet @IndexOrHigh({"#1"}) int offset, @PolyDet @LTLengthOf(value={"#1"}, offset={"#2 - 1"}) @NonNegative int len) {
         super.append(str, offset, len);
         return this;
     }
 
     @Override
-    public StringBuilder append(boolean b) {
+    public @PolyDet StringBuilder append(@PolyDet StringBuilder this, @PolyDet boolean b) {
         super.append(b);
         return this;
     }
 
     @Override
     @HotSpotIntrinsicCandidate
-    public StringBuilder append(char c) {
+    public @PolyDet StringBuilder append(@PolyDet StringBuilder this, @PolyDet char c) {
         super.append(c);
         return this;
     }
 
     @Override
     @HotSpotIntrinsicCandidate
-    public StringBuilder append(int i) {
+    public @PolyDet StringBuilder append(@PolyDet StringBuilder this, @PolyDet int i) {
         super.append(i);
         return this;
     }
 
     @Override
-    public StringBuilder append(long lng) {
+    public @PolyDet StringBuilder append(@PolyDet StringBuilder this, @PolyDet long lng) {
         super.append(lng);
         return this;
     }
 
     @Override
-    public StringBuilder append(float f) {
+    public @PolyDet StringBuilder append(@PolyDet StringBuilder this, @PolyDet float f) {
         super.append(f);
         return this;
     }
 
     @Override
-    public StringBuilder append(double d) {
+    public @PolyDet StringBuilder append(@PolyDet StringBuilder this, @PolyDet double d) {
         super.append(d);
         return this;
     }
@@ -282,7 +289,7 @@ public final class StringBuilder
      * @since 1.5
      */
     @Override
-    public StringBuilder appendCodePoint(int codePoint) {
+    public @PolyDet StringBuilder appendCodePoint(@PolyDet StringBuilder this, @PolyDet int codePoint) {
         super.appendCodePoint(codePoint);
         return this;
     }
@@ -291,7 +298,7 @@ public final class StringBuilder
      * @throws StringIndexOutOfBoundsException {@inheritDoc}
      */
     @Override
-    public StringBuilder delete(@NonNegative int start, @NonNegative int end) {
+    public @PolyDet StringBuilder delete(@PolyDet StringBuilder this, @PolyDet @NonNegative int start, @PolyDet @NonNegative int end) {
         super.delete(start, end);
         return this;
     }
@@ -300,7 +307,7 @@ public final class StringBuilder
      * @throws StringIndexOutOfBoundsException {@inheritDoc}
      */
     @Override
-    public StringBuilder deleteCharAt(@NonNegative int index) {
+    public @PolyDet StringBuilder deleteCharAt(@PolyDet StringBuilder this, @PolyDet @NonNegative int index) {
         super.deleteCharAt(index);
         return this;
     }
@@ -309,7 +316,7 @@ public final class StringBuilder
      * @throws StringIndexOutOfBoundsException {@inheritDoc}
      */
     @Override
-    public StringBuilder replace(@NonNegative int start, @NonNegative int end, String str) {
+    public @PolyDet StringBuilder replace(@PolyDet StringBuilder this, @PolyDet @NonNegative int start, @PolyDet @NonNegative int end, @PolyDet String str) {
         super.replace(start, end, str);
         return this;
     }
@@ -318,8 +325,8 @@ public final class StringBuilder
      * @throws StringIndexOutOfBoundsException {@inheritDoc}
      */
     @Override
-    public StringBuilder insert(@NonNegative int index, char[] str, @IndexOrHigh({"#2"}) int offset,
-                                @IndexOrHigh({"#2"}) int len)
+    public @PolyDet StringBuilder insert(@PolyDet StringBuilder this, @PolyDet @NonNegative int index, @PolyDet char @PolyDet [] str, @PolyDet @IndexOrHigh({"#2"}) int offset,
+                                @PolyDet @IndexOrHigh({"#2"}) int len)
     {
         super.insert(index, str, offset, len);
         return this;
@@ -329,7 +336,8 @@ public final class StringBuilder
      * @throws StringIndexOutOfBoundsException {@inheritDoc}
      */
     @Override
-    public StringBuilder insert(@NonNegative int offset, @Nullable Object obj) {
+    @RequiresDetToString
+    public @PolyDet StringBuilder insert(@PolyDet StringBuilder this, @PolyDet @NonNegative int offset, @PolyDet @Nullable Object obj) {
             super.insert(offset, obj);
             return this;
     }
@@ -338,7 +346,7 @@ public final class StringBuilder
      * @throws StringIndexOutOfBoundsException {@inheritDoc}
      */
     @Override
-    public StringBuilder insert(@NonNegative int offset, @Nullable String str) {
+    public @PolyDet StringBuilder insert(@PolyDet StringBuilder this, @PolyDet @NonNegative int offset, @PolyDet @Nullable String str) {
         super.insert(offset, str);
         return this;
     }
@@ -347,7 +355,7 @@ public final class StringBuilder
      * @throws StringIndexOutOfBoundsException {@inheritDoc}
      */
     @Override
-    public StringBuilder insert(@NonNegative int offset, char[] str) {
+    public @PolyDet StringBuilder insert(@PolyDet StringBuilder this, @PolyDet @NonNegative int offset, @PolyDet char @PolyDet [] str) {
         super.insert(offset, str);
         return this;
     }
@@ -356,7 +364,7 @@ public final class StringBuilder
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
     @Override
-    public StringBuilder insert(@NonNegative int dstOffset, @Nullable CharSequence s) {
+    public @PolyDet StringBuilder insert(@PolyDet StringBuilder this, @PolyDet @NonNegative int dstOffset, @PolyDet @Nullable CharSequence s) {
             super.insert(dstOffset, s);
             return this;
     }
@@ -365,8 +373,8 @@ public final class StringBuilder
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
     @Override
-    public StringBuilder insert(@NonNegative int dstOffset, @Nullable CharSequence s,
-                                @NonNegative int start, @NonNegative int end)
+    public @PolyDet StringBuilder insert(@PolyDet @NonNegative int dstOffset, @PolyDet @Nullable CharSequence s,
+                                @PolyDet @NonNegative int start, @PolyDet @NonNegative int end)
     {
         super.insert(dstOffset, s, start, end);
         return this;
@@ -376,7 +384,7 @@ public final class StringBuilder
      * @throws StringIndexOutOfBoundsException {@inheritDoc}
      */
     @Override
-    public StringBuilder insert(@NonNegative int offset, boolean b) {
+    public @PolyDet StringBuilder insert(@PolyDet StringBuilder this, @PolyDet @NonNegative int offset, @PolyDet boolean b) {
         super.insert(offset, b);
         return this;
     }
@@ -385,7 +393,7 @@ public final class StringBuilder
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
     @Override
-    public StringBuilder insert(@NonNegative int offset, char c) {
+    public @PolyDet StringBuilder insert(@PolyDet StringBuilder this, @PolyDet @NonNegative int offset, @PolyDet char c) {
         super.insert(offset, c);
         return this;
     }
@@ -394,7 +402,7 @@ public final class StringBuilder
      * @throws StringIndexOutOfBoundsException {@inheritDoc}
      */
     @Override
-    public StringBuilder insert(@NonNegative int offset, int i) {
+    public @PolyDet StringBuilder insert(@PolyDet StringBuilder this, @PolyDet @NonNegative int offset, @PolyDet int i) {
         super.insert(offset, i);
         return this;
     }
@@ -403,7 +411,7 @@ public final class StringBuilder
      * @throws StringIndexOutOfBoundsException {@inheritDoc}
      */
     @Override
-    public StringBuilder insert(@NonNegative int offset, long l) {
+    public @PolyDet StringBuilder insert(@PolyDet StringBuilder this, @PolyDet @NonNegative int offset, @PolyDet long l) {
         super.insert(offset, l);
         return this;
     }
@@ -412,7 +420,7 @@ public final class StringBuilder
      * @throws StringIndexOutOfBoundsException {@inheritDoc}
      */
     @Override
-    public StringBuilder insert(@NonNegative int offset, float f) {
+    public @PolyDet StringBuilder insert(@PolyDet StringBuilder this, @PolyDet @NonNegative int offset, @PolyDet float f) {
         super.insert(offset, f);
         return this;
     }
@@ -421,37 +429,37 @@ public final class StringBuilder
      * @throws StringIndexOutOfBoundsException {@inheritDoc}
      */
     @Override
-    public StringBuilder insert(@NonNegative int offset, double d) {
+    public @PolyDet StringBuilder insert(@PolyDet StringBuilder this, @PolyDet @NonNegative int offset, @PolyDet double d) {
         super.insert(offset, d);
         return this;
     }
 
     @Pure
     @Override
-    public @GTENegativeOne int indexOf(@GuardSatisfied StringBuilder this, String str) {
+    public @PolyDet @GTENegativeOne int indexOf(@PolyDet @GuardSatisfied StringBuilder this, @PolyDet String str) {
         return super.indexOf(str);
     }
 
     @Pure
     @Override
-    public @GTENegativeOne int indexOf(@GuardSatisfied StringBuilder this, String str, int fromIndex) {
+    public @PolyDet @GTENegativeOne int indexOf(@PolyDet @GuardSatisfied StringBuilder this, @PolyDet String str, @PolyDet int fromIndex) {
         return super.indexOf(str, fromIndex);
     }
 
     @Pure
     @Override
-    public @GTENegativeOne int lastIndexOf(@GuardSatisfied StringBuilder this, String str) {
+    public @PolyDet @GTENegativeOne int lastIndexOf(@PolyDet @GuardSatisfied StringBuilder this, @PolyDet String str) {
         return super.lastIndexOf(str);
     }
 
     @Pure
     @Override
-    public @GTENegativeOne int lastIndexOf(@GuardSatisfied StringBuilder this, String str, int fromIndex) {
+    public @PolyDet @GTENegativeOne int lastIndexOf(@PolyDet @GuardSatisfied StringBuilder this, @PolyDet String str, @PolyDet int fromIndex) {
         return super.lastIndexOf(str, fromIndex);
     }
 
     @Override
-    public StringBuilder reverse() {
+    public @PolyDet StringBuilder reverse(@PolyDet StringBuilder this) {
         super.reverse();
         return this;
     }
@@ -459,7 +467,7 @@ public final class StringBuilder
     @SideEffectFree
     @Override
     @HotSpotIntrinsicCandidate
-    public String toString(@GuardSatisfied StringBuilder this) {
+    public @PolyDet String toString(@PolyDet @GuardSatisfied StringBuilder this) {
         // Create a copy, don't share the array
         return isLatin1() ? StringLatin1.newString(value, 0, count)
                           : StringUTF16.newString(value, 0, count);

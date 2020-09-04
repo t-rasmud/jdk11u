@@ -25,6 +25,7 @@
 
 package java.util.regex;
 
+import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.interning.qual.UsesObjectEquals;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.regex.qual.PolyRegex;
@@ -1077,7 +1078,7 @@ public final @UsesObjectEquals class Pattern
      */
     @CFComment({"lock/nullness: pure wrt equals(@GuardSatisfied Pattern this) but not =="})
     @Pure
-    public static Pattern compile(@Regex String regex) {
+    public static @PolyDet Pattern compile(@PolyDet @Regex String regex) {
         return new Pattern(regex, 0);
     }
 
@@ -1139,7 +1140,7 @@ public final @UsesObjectEquals class Pattern
      *
      * @return  A new matcher for this pattern
      */
-    public @PolyRegex Matcher matcher(@PolyRegex Pattern this, CharSequence input) {
+    public @PolyRegex @PolyDet Matcher matcher(@PolyDet @PolyRegex Pattern this, @PolyDet CharSequence input) {
         if (!compiled) {
             synchronized(this) {
                 if (!compiled)
@@ -1366,7 +1367,7 @@ public final @UsesObjectEquals class Pattern
      */
     @CFComment({"nullness: pure wrt equals() but not =="})
     @Pure
-    public static @Regex String quote(String s) {
+    public static @PolyDet @Regex String quote(@PolyDet String s) {
         int slashEIndex = s.indexOf("\\E");
         if (slashEIndex == -1)
             return "\\Q" + s + "\\E";

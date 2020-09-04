@@ -25,6 +25,7 @@
 
 package java.lang;
 
+import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.PolyIndex;
@@ -290,7 +291,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      */
     @SideEffectFree
     @StaticallyExecutable
-    public static @ArrayLenRange(from = 1, to = 8) String toHexString(@Unsigned int i) {
+    public static @PolyDet @ArrayLenRange(from = 1, to = 8) String toHexString(@PolyDet @Unsigned int i) {
         return toUnsignedString0(i, 4);
     }
 
@@ -1007,7 +1008,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      */
     @SideEffectFree
     @StaticallyExecutable
-    public static Integer valueOf(String s, @Positive @IntRange(from = 2, to = 36) int radix) throws NumberFormatException {
+    public static @PolyDet Integer valueOf(@PolyDet String s, @PolyDet @Positive @IntRange(from = 2, to = 36) int radix) throws NumberFormatException {
         return Integer.valueOf(parseInt(s,radix));
     }
 
@@ -1035,7 +1036,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      */
     @SideEffectFree
     @StaticallyExecutable
-    public static Integer valueOf(String s) throws NumberFormatException {
+    public static @PolyDet Integer valueOf(@PolyDet String s) throws NumberFormatException {
         return Integer.valueOf(parseInt(s, 10));
     }
 
@@ -1102,7 +1103,7 @@ public final class Integer extends Number implements Comparable<Integer> {
     @SideEffectFree
     @StaticallyExecutable
     @HotSpotIntrinsicCandidate
-    public static @PolyIndex @PolyValue Integer valueOf(@PolyIndex @PolyValue int i) {
+    public static @PolyDet @PolyIndex @PolyValue Integer valueOf(@PolyDet @PolyIndex @PolyValue int i) {
         if (i >= IntegerCache.low && i <= IntegerCache.high)
             return IntegerCache.cache[i + (-IntegerCache.low)];
         return new Integer(i);
@@ -1187,7 +1188,7 @@ public final class Integer extends Number implements Comparable<Integer> {
     @Pure
     @StaticallyExecutable
     @HotSpotIntrinsicCandidate
-    public @PolyIndex @PolyValue int intValue(@PolyIndex @PolyValue Integer this) {
+    public @PolyDet @PolyIndex @PolyValue int intValue(@PolyDet @PolyIndex @PolyValue Integer this) {
         return value;
     }
 

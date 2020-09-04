@@ -25,6 +25,7 @@
 
 package java.lang;
 
+import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.LTLengthOf;
@@ -132,7 +133,7 @@ abstract @UsesObjectEquals class AbstractStringBuilder implements Appendable, Ch
      */
     @Pure
     @Override
-    public @NonNegative int length(@GuardSatisfied AbstractStringBuilder this) {
+    public @PolyDet @NonNegative int length(@PolyDet @GuardSatisfied AbstractStringBuilder this) {
         return count;
     }
 

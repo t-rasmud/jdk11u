@@ -25,6 +25,7 @@
 
 package java.util.regex;
 
+import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.interning.qual.UsesObjectEquals;
@@ -745,7 +746,7 @@ public final @UsesObjectEquals class Matcher implements MatchResult {
      * @return  {@code true} if, and only if, a subsequence of the input
      *          sequence matches this matcher's pattern
      */
-    public boolean find() {
+    public @PolyDet boolean find(@PolyDet Matcher this) {
         int nextSearchIndex = last;
         if (nextSearchIndex == first)
             nextSearchIndex++;

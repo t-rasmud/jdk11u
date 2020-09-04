@@ -300,7 +300,7 @@ public interface Map<K, V> {
     @ReleasesNoLocks
     @EnsuresKeyFor(value={"#1"}, map={"this"})
     @CheckReceiverForMutation
-    @Nullable V put(@GuardSatisfied @PolyDet Map<@PolyDet("use") K, @PolyDet("use") V> this, @PolyDet("use") K key, @PolyDet("use") V value);
+    @Nullable @PolyDet("down") V put(@GuardSatisfied @PolyDet Map<@PolyDet("use") K, @PolyDet("use") V> this, @PolyDet("use") K key, @PolyDet("use") V value);
 
     /**
      * Removes the mapping for a key from this map if it is present
@@ -333,7 +333,7 @@ public interface Map<K, V> {
      * (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
      */
     @CheckReceiverForMutation
-    @Nullable V remove(@GuardSatisfied @PolyDet Map<@PolyDet("use") K, @PolyDet("use") V> this, @PolyDet("use") Object key);
+    @Nullable @PolyDet("down") V remove(@GuardSatisfied @PolyDet Map<@PolyDet("use") K, @PolyDet("use") V> this, @PolyDet("use") Object key);
 
 
     // Bulk Operations

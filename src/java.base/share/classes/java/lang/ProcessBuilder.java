@@ -25,6 +25,7 @@
 
 package java.lang;
 
+import org.checkerframework.checker.determinism.qual.PolyDet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -210,7 +211,7 @@ public final class ProcessBuilder
      *
      * @param  command the list containing the program and its arguments
      */
-    public ProcessBuilder(List<String> command) {
+    public @PolyDet ProcessBuilder(@PolyDet List<@PolyDet("use") String> command) {
         if (command == null)
             throw new NullPointerException();
         this.command = command;

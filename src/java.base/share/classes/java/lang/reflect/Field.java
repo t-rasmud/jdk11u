@@ -223,7 +223,7 @@ class Field extends AccessibleObject implements Member {
      * @see Modifier
      */
     @Pure
-    public int getModifiers(@GuardSatisfied Field this) {
+    public @PolyDet int getModifiers(@PolyDet @GuardSatisfied Field this) {
         return modifiers;
     }
 

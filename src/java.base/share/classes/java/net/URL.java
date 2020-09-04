@@ -25,6 +25,7 @@
 
 package java.net;
 
+import org.checkerframework.checker.determinism.qual.*;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -339,7 +340,7 @@ public final class URL implements java.io.Serializable {
      * @see        java.net.URLStreamHandlerFactory#createURLStreamHandler(
      *                  java.lang.String)
      */
-    public URL(String protocol, @Nullable String host, int port, String file)
+    public @PolyDet URL(@PolyDet String protocol, @PolyDet @Nullable String host, @PolyDet int port, @PolyDet String file)
         throws MalformedURLException
     {
         this(protocol, host, port, file, null);

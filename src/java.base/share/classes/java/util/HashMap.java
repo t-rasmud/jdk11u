@@ -879,7 +879,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * The map will be empty after this call returns.
      */
     @CheckReceiverForMutation
-    public void clear(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use ") V> this) {
+    public void clear(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this) {
         Node<K,V>[] tab;
         modCount++;
         if ((tab = table) != null && size > 0) {
