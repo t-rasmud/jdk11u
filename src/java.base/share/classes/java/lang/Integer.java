@@ -291,7 +291,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      */
     @SideEffectFree
     @StaticallyExecutable
-    public static @PolyDet @ArrayLenRange(from = 1, to = 8) String toHexString(@PolyDet @Unsigned int i) {
+    public static @PolyDet @ArrayLenRange(from = 1, to = 8) String toHexString(@PolyDet @UnknownSignedness int i) {
         return toUnsignedString0(i, 4);
     }
 
