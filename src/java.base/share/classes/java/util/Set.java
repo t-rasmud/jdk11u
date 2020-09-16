@@ -192,7 +192,7 @@ public interface Set<E> extends Collection<E> {
      * @return an array containing all the elements in this set
      */
     @SideEffectFree
-    @PolyDet("down") Object @PolyDet[] toArray(@PolyDet Set<E> this);
+    @PolyDet("down") @PolyNull Object @PolyDet[] toArray(@PolyDet Set<@PolyNull E> this);
 
     /**
      * Returns an array containing all of the elements in this set; the
