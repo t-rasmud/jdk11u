@@ -160,7 +160,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      */
     @Override
     @SideEffectFree
-    public @PolyDet("down") Object @PolyDet[] toArray(@PolyDet AbstractCollection<@PolyDet("down") E> this) {
+    public @PolyDet("down") @PolyNull Object @PolyDet[] toArray(@PolyDet AbstractCollection<@PolyDet("down") @PolyNull E> this) {
         // Estimate size of array; be prepared to see more or fewer elements
         Object[] r = new Object[size()];
         Iterator<E> it = iterator();
