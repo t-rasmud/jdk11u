@@ -4342,6 +4342,7 @@ public class Arrays {
      * @return a list view of the specified array
      */
     @SafeVarargs
+    @SideEffectFree
     @SuppressWarnings("varargs")
     public static <T> @PolyDet List<@PolyDet T> asList(@PolyDet T... a) {
         return new ArrayList<>(a);
