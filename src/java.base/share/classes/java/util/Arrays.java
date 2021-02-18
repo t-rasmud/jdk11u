@@ -27,6 +27,7 @@ package java.util;
 
 import org.checkerframework.checker.determinism.qual.NonDet;
 import org.checkerframework.checker.determinism.qual.PolyDet;
+import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.SearchIndexFor;
@@ -35,6 +36,7 @@ import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.signedness.qual.PolySigned;
+import org.checkerframework.checker.signedness.qual.Unsigned;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
@@ -6119,7 +6121,7 @@ public class Arrays {
      *         lexicographically greater than the second array
      * @since 9
      */
-    public static int compareUnsigned(byte[] a, byte[] b) {
+    public static int compareUnsigned(@Unsigned byte[] a, @Unsigned byte[] b) {
         if (a == b)
             return 0;
         if (a == null || b == null)
@@ -6186,8 +6188,8 @@ public class Arrays {
      *         if either array is null
      * @since 9
      */
-    public static int compareUnsigned(byte[] a, int aFromIndex, int aToIndex,
-                                      byte[] b, int bFromIndex, int bToIndex) {
+    public static int compareUnsigned(@Unsigned byte[] a, @IndexFor("#1") int aFromIndex, @IndexFor("#1") int aToIndex,
+                                      @Unsigned byte[] b, @IndexFor("#3") int bFromIndex, @IndexFor("#3") int bToIndex) {
         rangeCheck(a.length, aFromIndex, aToIndex);
         rangeCheck(b.length, bFromIndex, bToIndex);
 
@@ -6374,7 +6376,7 @@ public class Arrays {
      *         lexicographically greater than the second array
      * @since 9
      */
-    public static int compareUnsigned(short[] a, short[] b) {
+    public static int compareUnsigned(@Unsigned short[] a, @Unsigned short[] b) {
         if (a == b)
             return 0;
         if (a == null || b == null)
@@ -6440,8 +6442,8 @@ public class Arrays {
      *         if either array is null
      * @since 9
      */
-    public static int compareUnsigned(short[] a, int aFromIndex, int aToIndex,
-                                      short[] b, int bFromIndex, int bToIndex) {
+    public static int compareUnsigned(@Unsigned short[] a, @IndexFor("#1") int aFromIndex, @IndexFor("#1") int aToIndex,
+                                      @Unsigned short[] b, @IndexFor("#3") int bFromIndex, @IndexFor("#3") int bToIndex) {
         rangeCheck(a.length, aFromIndex, aToIndex);
         rangeCheck(b.length, bFromIndex, bToIndex);
 
@@ -6763,7 +6765,7 @@ public class Arrays {
      *         lexicographically greater than the second array
      * @since 9
      */
-    public static int compareUnsigned(int[] a, int[] b) {
+    public static int compareUnsigned(@Unsigned int[] a, @Unsigned int[] b) {
         if (a == b)
             return 0;
         if (a == null || b == null)
@@ -6829,8 +6831,8 @@ public class Arrays {
      *         if either array is null
      * @since 9
      */
-    public static int compareUnsigned(int[] a, int aFromIndex, int aToIndex,
-                                      int[] b, int bFromIndex, int bToIndex) {
+    public static int compareUnsigned(@Unsigned int[] a, @IndexFor("#1") int aFromIndex, @IndexFor("#1") int aToIndex,
+                                      @Unsigned int[] b, @IndexFor("#3") int bFromIndex, @IndexFor("#3") int bToIndex) {
         rangeCheck(a.length, aFromIndex, aToIndex);
         rangeCheck(b.length, bFromIndex, bToIndex);
 
@@ -7017,7 +7019,7 @@ public class Arrays {
      *         lexicographically greater than the second array
      * @since 9
      */
-    public static int compareUnsigned(long[] a, long[] b) {
+    public static int compareUnsigned(@Unsigned long[] a, @Unsigned long[] b) {
         if (a == b)
             return 0;
         if (a == null || b == null)
@@ -7083,8 +7085,8 @@ public class Arrays {
      *         if either array is null
      * @since 9
      */
-    public static int compareUnsigned(long[] a, int aFromIndex, int aToIndex,
-                                      long[] b, int bFromIndex, int bToIndex) {
+    public static int compareUnsigned(@Unsigned long[] a, @IndexFor("#1") int aFromIndex, @IndexFor("#1") int aToIndex,
+                                      @Unsigned long[] b, @IndexFor("#3") int bFromIndex, @IndexFor("#3") int bToIndex) {
         rangeCheck(a.length, aFromIndex, aToIndex);
         rangeCheck(b.length, bFromIndex, bToIndex);
 
