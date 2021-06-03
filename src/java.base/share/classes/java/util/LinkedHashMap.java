@@ -477,8 +477,9 @@ public class LinkedHashMap<K,V>
     /**
      * {@inheritDoc}
      */
+    @Pure
     @SuppressWarnings("determinism:return.type.incompatible")
-    public @PolyDet V getOrDefault(@GuardSatisfied @PolyDet LinkedHashMap<K, V> this, @PolyDet @Nullable Object key, V defaultValue) {
+    public @PolyDet V getOrDefault(@PolyDet LinkedHashMap<K, V> this, @PolyDet @Nullable Object key, V defaultValue) {
        Node<K,V> e;
        if ((e = getNode(hash(key), key)) == null)
            return defaultValue;

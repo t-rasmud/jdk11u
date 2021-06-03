@@ -237,7 +237,7 @@ public interface Set<E> extends Collection<E> {
      * @throws NullPointerException if the specified array is null
      */
     @SideEffectFree
-    <T> @PolyDet("down") @Nullable T @PolyDet @PolyNull [] toArray(@PolyDet Set<E> this, T @PolyNull [] a);
+    <T> @PolyDet("down") @Nullable T @PolyDet [] toArray(@PolyDet Set<E> this, @PolyNull T[] a);
 
 
     // Modification Operations

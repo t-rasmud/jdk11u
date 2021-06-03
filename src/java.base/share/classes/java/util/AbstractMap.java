@@ -90,6 +90,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
      * Sole constructor.  (For invocation by subclass constructors, typically
      * implicit.)
      */
+    @SideEffectFree
     protected AbstractMap() {
     }
 

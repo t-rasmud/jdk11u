@@ -34,7 +34,9 @@ import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.EnsuresKeyFor;
 import org.checkerframework.checker.nullness.qual.EnsuresKeyForIf;
 import org.checkerframework.checker.nullness.qual.KeyFor;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -1089,7 +1091,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     // Overrides of JDK8 Map extension methods
 
     @Override
-    public @PolyDet V getOrDefault(@GuardSatisfied @PolyDet @Nullable HashMap<K, V> this, @PolyDet Object key, V defaultValue) {
+    @Pure
+    public @PolyDet V getOrDefault(@PolyDet HashMap<K, V> this, @PolyDet @Nullable Object key, V defaultValue) {
         Node<K,V> e;
         return (e = getNode(hash(key), key)) == null ? defaultValue : e.value;
     }
@@ -1145,8 +1148,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      */
     @Override
     @CheckReceiverForMutation
-    public V computeIfAbsent(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, K key,
-                             @PolyDet("use") Function<? super K, ? extends V> mappingFunction) {
+    public @PolyNull V computeIfAbsent(@PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, K key,
+                             @PolyDet("use") Function<? super K, ? extends @PolyNull V> mappingFunction) {
         if (mappingFunction == null)
             throw new NullPointerException();
         int hash = hash(key);
@@ -1212,8 +1215,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      */
     @Override
     @CheckReceiverForMutation
-    public V computeIfPresent(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, K key,
-                              @PolyDet("use") BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+    public @PolyNull V computeIfPresent(@PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, K key,
+                              @PolyDet("use") BiFunction<? super K, ? super V, ? extends @PolyNull V> remappingFunction) {
         if (remappingFunction == null)
             throw new NullPointerException();
         Node<K,V> e; V oldValue;
@@ -1246,8 +1249,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      */
     @Override
     @CheckReceiverForMutation
-    public V compute(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, K key,
-                     @PolyDet("use") BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+    public @PolyNull V compute(@PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, K key,
+                     @PolyDet("use") BiFunction<? super K, ? super V, ? extends @PolyNull V> remappingFunction) {
         if (remappingFunction == null)
             throw new NullPointerException();
         int hash = hash(key);
@@ -1312,8 +1315,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      */
     @Override
     @CheckReceiverForMutation
-    public V merge(@GuardSatisfied @PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, K key, V value,
-                   @PolyDet("use") BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+    public @PolyNull V merge(@PolyDet HashMap<@PolyDet("use") K, @PolyDet("use") V> this, K key, @NonNull V value,
+                   @PolyDet("use") BiFunction<? super V, ? super V, ? extends @PolyNull V> remappingFunction) {
         if (value == null)
             throw new NullPointerException();
         if (remappingFunction == null)

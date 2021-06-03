@@ -31,6 +31,7 @@ import org.checkerframework.checker.index.qual.LTLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.interning.qual.UsesObjectEquals;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.signedness.qual.PolySigned;
@@ -105,7 +106,7 @@ import sun.security.util.SecurityConstants;
  *
  * @since   1.0
  */
-@AnnotatedFor({"index", "interning", "lock", "nullness", "signedness"})
+@AnnotatedFor({"index", "interning", "lock", "mustcall", "nullness", "signedness"})
 public final @UsesObjectEquals class System {
     /* Register the natives via the static initializer.
      *
@@ -130,7 +131,7 @@ public final @UsesObjectEquals class System {
      * the host environment or user.
      */
     @CFComment("This field can be null. The Checker Framework conservatively annotates it as @NonNull, forbidding programs that set it to null.")
-    public static final InputStream in = null;
+    public static final @MustCall({}) InputStream in = null;
 
     /**
      * The "standard" output stream. This stream is already
@@ -158,7 +159,7 @@ public final @UsesObjectEquals class System {
      * @see     java.io.PrintStream#println(java.lang.String)
      */
     @CFComment("This field can be null. The Checker Framework conservatively annotates it as @NonNull, forbidding programs that set it to null.")
-    public static final PrintStream out = null;
+    public static final @MustCall({}) PrintStream out = null;
 
     /**
      * The "standard" error output stream. This stream is already
@@ -173,7 +174,7 @@ public final @UsesObjectEquals class System {
      * destination that is typically not continuously monitored.
      */
     @CFComment("This field can be null. The Checker Framework conservatively annotates it as @NonNull, forbidding programs that set it to null.")
-    public static final PrintStream err = null;
+    public static final @MustCall({}) PrintStream err = null;
 
     /* The security manager for the system.
      */

@@ -36,7 +36,9 @@ import org.checkerframework.checker.lock.qual.ReleasesNoLocks;
 import org.checkerframework.checker.nullness.qual.EnsuresKeyFor;
 import org.checkerframework.checker.nullness.qual.EnsuresKeyForIf;
 import org.checkerframework.checker.nullness.qual.KeyFor;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -541,6 +543,7 @@ public interface Map<K, V> {
          * @see Comparable
          * @since 1.8
          */
+        @Pure
         public static <K extends @NonDet Comparable<? super K>, V> @Det Comparator<Map.Entry<K, V>> comparingByKey() {
             return (Comparator<Map.Entry<K, V>> & Serializable)
                 (c1, c2) -> c1.getKey().compareTo(c2.getKey());
@@ -558,7 +561,8 @@ public interface Map<K, V> {
          * @see Comparable
          * @since 1.8
          */
-        public static <K, V extends @NonDet Comparable<? super V>> @Det Comparator<Map.Entry<K,V>> comparingByValue() {
+        @Pure
+        public static <K, V extends @NonDet Comparable<? super V>> @Det Comparator<Map.Entry<K, V>> comparingByValue() {
             return (Comparator<Map.Entry<K, V>> & Serializable)
                 (c1, c2) -> c1.getValue().compareTo(c2.getValue());
         }
@@ -576,6 +580,7 @@ public interface Map<K, V> {
          * @return a comparator that compares {@link Map.Entry} by the key.
          * @since 1.8
          */
+        @Pure
         public static <K, V> @PolyDet Comparator<Map.Entry<K, V>> comparingByKey(@PolyDet Comparator<? super K> cmp) {
             Objects.requireNonNull(cmp);
             return (Comparator<Map.Entry<K, V>> & Serializable)
@@ -595,6 +600,7 @@ public interface Map<K, V> {
          * @return a comparator that compares {@link Map.Entry} by the value.
          * @since 1.8
          */
+        @Pure
         public static <K, V> @PolyDet Comparator<Map.Entry<K, V>> comparingByValue(@PolyDet Comparator<? super V> cmp) {
             Objects.requireNonNull(cmp);
             return (Comparator<Map.Entry<K, V>> & Serializable)
@@ -657,7 +663,8 @@ public interface Map<K, V> {
      * (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
      * @since 1.8
      */
-    default @PolyDet V getOrDefault(@GuardSatisfied @PolyDet Map<K,V> this, @PolyDet Object key, V defaultValue) {
+    @Pure
+    default @PolyDet V getOrDefault(@PolyDet Map<K,V> this, @PolyDet Object key, V defaultValue) {
         V v;
         return (((v = get(key)) != null) || containsKey(key))
             ? v
@@ -1045,8 +1052,8 @@ public interface Map<K, V> {
      * @since 1.8
      */
     @CheckReceiverForMutation
-    default V computeIfAbsent(@GuardSatisfied @PolyDet Map<@PolyDet("use") K, @PolyDet("use") V> this, K key,
-            @PolyDet("use") Function<? super K, ? extends @Nullable V> mappingFunction) {
+    default @PolyNull V computeIfAbsent(@PolyDet Map<@PolyDet("use") K, @PolyDet("use") V> this, K key,
+            @PolyDet("use") Function<? super K, ? extends @PolyNull V> mappingFunction) {
         Objects.requireNonNull(mappingFunction);
         V v;
         if ((v = get(key)) == null) {
@@ -1123,8 +1130,8 @@ public interface Map<K, V> {
      * @since 1.8
      */
     @CheckReceiverForMutation
-    default V computeIfPresent(@GuardSatisfied @PolyDet Map<@PolyDet("use") K, @PolyDet("use") V> this, K key,
-            @PolyDet("use") BiFunction<? super K, ? super V, ? extends @Nullable V> remappingFunction) {
+    default @PolyNull V computeIfPresent(@PolyDet Map<@PolyDet("use") K, @PolyDet("use") V> this, K key,
+            @PolyDet("use") BiFunction<? super K, ? super V, ? extends @PolyNull V> remappingFunction) {
         Objects.requireNonNull(remappingFunction);
         V oldValue;
         if ((oldValue = get(key)) != null) {
@@ -1216,8 +1223,8 @@ public interface Map<K, V> {
      * @since 1.8
      */
     @CheckReceiverForMutation
-    default V compute(@GuardSatisfied @PolyDet Map<@PolyDet("use") K, @PolyDet("use") V> this, K key,
-            @PolyDet("use") BiFunction<? super K, ? super @Nullable V, ? extends @Nullable V> remappingFunction) {
+    default @PolyNull V compute(@PolyDet Map<@PolyDet("use") K, @PolyDet("use") V> this, K key,
+            @PolyDet("use") BiFunction<? super K, ? super @Nullable V, ? extends @PolyNull V> remappingFunction) {
         Objects.requireNonNull(remappingFunction);
         V oldValue = get(key);
 
@@ -1318,8 +1325,8 @@ public interface Map<K, V> {
     // remappingFunction that returns null is probably rare, and these annotations accommodate
     // the majority of uses that don't return null.
     @CheckReceiverForMutation
-    default V merge(@GuardSatisfied @PolyDet Map<@PolyDet("use") K, @PolyDet("use") V> this, K key, V value,
-                             @PolyDet("use") BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+    default @PolyNull V merge(@PolyDet Map<@PolyDet("use") K, @PolyDet("use") V> this, K key, @NonNull V value,
+            @PolyDet("use") BiFunction<? super V, ? super V, ? extends @PolyNull V> remappingFunction) {
         Objects.requireNonNull(remappingFunction);
         Objects.requireNonNull(value);
         V oldValue = get(key);

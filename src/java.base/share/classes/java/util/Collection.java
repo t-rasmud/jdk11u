@@ -369,7 +369,7 @@ public interface Collection<E> extends Iterable<E> {
      * @throws NullPointerException if the specified array is null
      */
     @SideEffectFree
-    <T extends @PolyDet("down") Object> @PolyDet("down") @Nullable T @PolyDet @PolyNull [] toArray(@PolyDet Collection<@PolyDet("down") E> this, T @PolyDet("use")  @PolyNull [] a);
+    <T extends @PolyDet("down") Object> @PolyDet("down") @Nullable T @PolyDet [] toArray(@PolyDet @PolyNull T[] a);
 
     /**
      * Returns an array containing all of the elements in this collection,

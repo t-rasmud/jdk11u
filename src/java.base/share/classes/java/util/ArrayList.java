@@ -172,6 +172,7 @@ public class ArrayList<E> extends AbstractList<E>
      *         is negative
      */
     @SuppressWarnings("determinism:throw.type.invalid")
+    @SideEffectFree
     public @PolyDet ArrayList(@PolyDet @NonNegative int initialCapacity) {
         if (initialCapacity > 0) {
             this.elementData = new @PolyDet("use") Object @PolyDet[initialCapacity];
@@ -186,6 +187,7 @@ public class ArrayList<E> extends AbstractList<E>
     /**
      * Constructs an empty list with an initial capacity of ten.
      */
+    @SideEffectFree
     public ArrayList() {
         this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
     }
@@ -198,15 +200,15 @@ public class ArrayList<E> extends AbstractList<E>
      * @param c the collection whose elements are to be placed into this list
      * @throws NullPointerException if the specified collection is null
      */
+    @SideEffectFree
     @SuppressWarnings("determinism:invalid.field.assignment")
-    public @PolyDet ArrayList(@PolyDet Collection<? extends E> c) {
-        Object[] a = c.toArray();
-        if ((size = a.length) != 0) {
-            if (c.getClass() == ArrayList.class) {
-                elementData = a;
-            } else {
-                elementData = Arrays.copyOf(a, size, Object[].class);
-            }
+    public ArrayList(@PolyDet Collection<? extends E> c) {
+        elementData = c.toArray();
+        if ((size = elementData.length) != 0) {
+            // defend against c.toArray (incorrectly) not returning Object[]
+            // (see e.g. https://bugs.openjdk.java.net/browse/JDK-6260652)
+            if (elementData.getClass() != Object[].class)
+                elementData = Arrays.copyOf(elementData, size, Object[].class);
         } else {
             // replace with empty array.
             elementData = EMPTY_ELEMENTDATA;

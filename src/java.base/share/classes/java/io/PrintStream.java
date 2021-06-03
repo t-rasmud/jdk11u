@@ -34,6 +34,8 @@ import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.LTLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.mustcall.qual.MustCallAlias;
+import org.checkerframework.checker.mustcall.qual.NotOwning;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -75,7 +77,7 @@ import java.nio.charset.UnsupportedCharsetException;
  */
 
 @CFComment({"lock: TODO: Should parameters be @GuardSatisfied, or is the default of @GuardedBy({}) appropriate? (@GuardedBy({}) is more conservative.)"})
-@AnnotatedFor({"formatter", "i18n", "index", "lock", "nullness", "signedness"})
+@AnnotatedFor({"formatter", "i18n", "index", "lock", "mustcall", "nullness", "signedness"})
 public class PrintStream extends FilterOutputStream
     implements Appendable, Closeable
 {
@@ -144,7 +146,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @see java.io.PrintWriter#PrintWriter(java.io.OutputStream)
      */
-    public @PolyDet PrintStream(@PolyDet OutputStream out) {
+    public @PolyDet @MustCallAlias PrintStream(@PolyDet @MustCallAlias OutputStream out) {
         this(out, false);
     }
 
@@ -160,7 +162,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @see java.io.PrintWriter#PrintWriter(java.io.OutputStream, boolean)
      */
-    public @PolyDet PrintStream(@PolyDet OutputStream out, @PolyDet boolean autoFlush) {
+    public @PolyDet @MustCallAlias PrintStream(@PolyDet @MustCallAlias OutputStream out, @PolyDet boolean autoFlush) {
         this(autoFlush, requireNonNull(out, "Null output stream"));
     }
 
@@ -182,7 +184,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @since  1.4
      */
-    public @PolyDet PrintStream(@PolyDet OutputStream out, @PolyDet boolean autoFlush, @PolyDet String encoding)
+    public @PolyDet @MustCallAlias PrintStream(@PolyDet @MustCallAlias OutputStream out, @PolyDet boolean autoFlush, @PolyDet String encoding)
         throws UnsupportedEncodingException
     {
         this(requireNonNull(out, "Null output stream"), autoFlush, toCharset(encoding));
@@ -204,7 +206,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @since  10
      */
-    public PrintStream(OutputStream out, boolean autoFlush, Charset charset) {
+    public @MustCallAlias PrintStream(@MustCallAlias OutputStream out, boolean autoFlush, Charset charset) {
         super(out);
         this.autoFlush = autoFlush;
         this.charOut = new OutputStreamWriter(this, charset);
@@ -966,7 +968,7 @@ public class PrintStream extends FilterOutputStream
     @CFComment({"lock/nullness: The vararg arrays can actually be null, but let's not annotate them because passing null is bad style; see whether this annotation is useful."})
     @RequiresDetToString
     @FormatMethod
-    public @Det PrintStream printf(@GuardSatisfied @Det PrintStream this, @Det String format, @Nullable @Det Object @Det ... args) {
+    public @Det @NotOwning PrintStream printf(@GuardSatisfied @Det PrintStream this, @Det String format, @Nullable @Det Object @Det ... args) {
         return format(format, args);
     }
 
@@ -1020,7 +1022,7 @@ public class PrintStream extends FilterOutputStream
      */
     @RequiresDetToString
     @FormatMethod
-    public @Det PrintStream printf(@GuardSatisfied @Det PrintStream this, @Nullable @Det Locale l, @Det String format, @Nullable @Det Object @Det ... args) {
+    public @Det @NotOwning PrintStream printf(@GuardSatisfied @Det PrintStream this, @Nullable @Det Locale l, @Det String format, @Nullable @Det Object ... args) {
         return format(l, format, args);
     }
 
@@ -1067,7 +1069,7 @@ public class PrintStream extends FilterOutputStream
      */
     @RequiresDetToString
     @FormatMethod
-    public @Det PrintStream format(@GuardSatisfied @Det PrintStream this, @Det String format, @Nullable @Det Object @Det ... args) {
+    public @Det @NotOwning PrintStream format(@GuardSatisfied @Det PrintStream this, @Det String format, @Nullable @Det Object @Det ... args) {
         try {
             synchronized (this) {
                 ensureOpen();
@@ -1128,7 +1130,7 @@ public class PrintStream extends FilterOutputStream
      */
     @RequiresDetToString
     @FormatMethod
-    public @Det PrintStream format(@GuardSatisfied @Det PrintStream this, @Nullable @Det Locale l, @Det String format, @Nullable @Det Object @Det ... args) {
+    public @Det @NotOwning PrintStream format(@GuardSatisfied @Det PrintStream this, @Nullable @Det Locale l, @Det String format, @Nullable @Det Object @Det ... args) {
         try {
             synchronized (this) {
                 ensureOpen();
@@ -1170,7 +1172,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @since  1.5
      */
-    public @Det PrintStream append(@Det PrintStream this, @Nullable @Det CharSequence csq) {
+    public @Det @MustCallAlias PrintStream append(@Det @MustCallAlias PrintStream this, @Nullable @Det CharSequence csq) {
         print(String.valueOf(csq));
         return this;
     }
@@ -1210,7 +1212,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @since  1.5
      */
-    public @Det PrintStream append(@Det PrintStream this, @Nullable @Det CharSequence csq, @IndexOrHigh({"#1"}) @Det int start, @IndexOrHigh({"#1"}) @Det int end) {
+    public @Det @MustCallAlias PrintStream append(@Det @MustCallAlias PrintStream this, @Nullable @Det CharSequence csq, @IndexOrHigh({"#1"}) @Det int start, @IndexOrHigh({"#1"}) @Det int end) {
         if (csq == null) csq = "null";
         return append(csq.subSequence(start, end));
     }
@@ -1232,7 +1234,7 @@ public class PrintStream extends FilterOutputStream
      *
      * @since  1.5
      */
-    public @Det PrintStream append(@Det PrintStream this, @Det char c) {
+    public @Det @MustCallAlias PrintStream append(@Det @MustCallAlias PrintStream this, @Det char c) {
         print(c);
         return this;
     }
